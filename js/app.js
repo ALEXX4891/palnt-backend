@@ -185,9 +185,15 @@ await getInfoFromDB(); // требуется подключить скрипт �
 // выбираем только активных контрагентов:
 let copyContractorList = [...contractorList];
 
+let isActive = 1;
+// выбираем только активных контрагентов:
+let activContractors = [];
+for (let i = 0; i < copyContractorList.length; i++) {
+  if (copyContractorList[i].isActive == 1) {
+    activContractors = [...activContractors, copyContractorList[i]];
+  }
+}
 
-// console.log(copyContractorList);
-// console.log(copyContractorList);
 let contractorListForRender = [];
 
 
@@ -204,7 +210,8 @@ toggleBtn.addEventListener("click", function () {
         activContractors = [...activContractors, copyContractorList[i]];
       }
     }
-    renderContractorsTable(activContractors);
+    let isActive = 0;
+    renderContractorsTable(activContractors, isActive);
   }
   if (!toggleBtn.checked) {
     let activContractors = [];
@@ -214,7 +221,8 @@ toggleBtn.addEventListener("click", function () {
         activContractors = [...activContractors, copyContractorList[i]];
       }
     }
-    renderContractorsTable(activContractors);
+    let isActive = 1;
+    renderContractorsTable(activContractors, isActive);
   }
 });
 
@@ -222,7 +230,7 @@ toggleBtn.addEventListener("click", function () {
 // как вы делали вывод одного дела в модуле 8. Функция должна вернуть html элемент
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
-function getContractorItem(contractortObj) {
+function getContractorItem(contractortObj, isActive = 1) {
   const item = document.createElement("tr"),
     tableDataId = document.createElement("td"),
     tableDataName = document.createElement("td"),
@@ -233,7 +241,8 @@ function getContractorItem(contractortObj) {
     tableDataDeleteCell = document.createElement("td"),
     tableDataEditCell = document.createElement("td"),
     tableDataReverCell = document.createElement("td"),
-    tableDataSaveCell = document.createElement("td");
+    tableDataSaveCell = document.createElement("td"),
+    tableDataEmptyCell = document.createElement("td");
 
   item.classList.add("table__row");
   tableDataId.classList.add("table__column", "table__column_1");
@@ -261,6 +270,11 @@ function getContractorItem(contractortObj) {
   tableDataSaveCell.classList.add(
     "table__column",
     "table__column_7",
+    "table__small-btn"
+  );
+  tableDataEmptyCell.classList.add(
+    "table__column",
+    "table__column_8",
     "table__small-btn"
   );
 
@@ -311,8 +325,13 @@ function getContractorItem(contractortObj) {
   item.append(tableDataAddress);
   item.append(tableDataPhone);
   item.append(tableDataEmail);
-  item.append(tableDataEditCell);
-  item.append(tableDataDeleteCell);
+  if (isActive == 1) {
+    item.append(tableDataEditCell);
+    item.append(tableDataDeleteCell);    
+  } else {
+    item.append(tableDataReverCell);
+    item.append(tableDataEmptyCell);
+  }
 
   tableBody.append(item); // добавление контрагента в таблицу
 
@@ -325,7 +344,7 @@ function getContractorItem(contractortObj) {
 // список контрагентов.Каждый раз при изменении списка контрагента вы будете вызывать
 // эту функцию для отрисовки таблицы.
 
-//подготовка массива для рендера, с объектами из 4-х элеменов.
+//подготовка массива для рендера.
 function preRender(arr) {
   for (const contractortObj of arr) {
     // let birthday = new Date(contractortObj.birthday)
@@ -356,14 +375,6 @@ function preRender(arr) {
   }
 }
 
-// выбираем только активных контрагентов:
-let activContractors = [];
-for (let i = 0; i < copyContractorList.length; i++) {
-  if (copyContractorList[i].isActive == 1) {
-    activContractors = [...activContractors, copyContractorList[i]];
-  }
-}
-
 preRender(activContractors);
 
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -380,7 +391,7 @@ function filterTable1(col, param, arr) {
 }
 
 //рендер подготовленного массива + фильтрация по всем колонкам.
-function renderContractorsTable(arr) {
+function renderContractorsTable(arr, isActive = 1) {
   tableBody.innerHTML = ""; // очищаем тело таблицы
   let copyList = [...arr]; // создаем копию массива
 
@@ -412,11 +423,11 @@ function renderContractorsTable(arr) {
 
   // рендерим всю таблицу
   for (const contractorObj of copyList) {
-    getContractorItem(contractorObj);
+    getContractorItem(contractorObj, isActive);
   }
 }
 
-renderContractorsTable(contractorListForRender);
+renderContractorsTable(contractorListForRender, isActive);
 
 // Этап 5. К форме добавления контрагента добавьте слушатель события отправки формы, в котором будет проверка введенных данных.Если проверка пройдет успешно, добавляйте объект с данными контрагентов в массив контрагентов и запустите функцию отрисовки таблицы контрагентов, созданную на этапе 4.
 
@@ -803,6 +814,7 @@ if (btnCancel) {
 
 // --------------------popup:------------------------
 
+
 const body = document.querySelector("body");
 const lockPadding = document.querySelectorAll(".lock-padding");
 // const btn = document.querySelector(".project-btn");
@@ -823,22 +835,6 @@ if (popupLinks.length > 0) {
   }
 }
 
-// if (popupLinks.length > 0) {
-//   for (let index = 0; index < popupLinks.length; index++) {
-//     const popupLink = popupLinks[index];
-//     popupLink.addEventListener("click", function (e) {
-//       const row = popupLink.closest(".table__row");
-//       row.classList.add("table__row_deletable");
-//       const id = row.querySelector(".table__column_1").innerHTML;
-//       console.log(id);
-//       const popupName = popupLink.getAttribute("href").replace("#", "");
-//       const curentPopup = document.getElementById(popupName); //получаем id попап-окна
-//       popupOpen(curentPopup);
-//       e.preventDefault();
-//     });
-//   }
-// }
-
 const popupCloseIcon = document.querySelectorAll(".popup-close");
 if (popupCloseIcon.length > 0) {
   for (let index = 0; index < popupCloseIcon.length; index++) {
@@ -849,19 +845,6 @@ if (popupCloseIcon.length > 0) {
     });
   }
 }
-
-// const popupCloseIcon = document.querySelectorAll(".popup-close");
-// if (popupCloseIcon.length > 0) {
-//   for (let index = 0; index < popupCloseIcon.length; index++) {
-//     const el = popupCloseIcon[index];
-//     el.addEventListener("click", function (e) {
-//       const row = document.querySelector(".table__row_deletable");
-//       row.classList.remove("table__row_deletable");
-//       popupClose(el.closest(".popup")); //ближайший родитель класса popup
-//       e.preventDefault();
-//     });
-//   }
-// }
 
 function popupOpen(curentPopup) {
   if (curentPopup && unlock) {
@@ -882,30 +865,6 @@ function popupOpen(curentPopup) {
     });
   }
 }
-
-// function popupOpen(curentPopup) {
-//   if (curentPopup && unlock) {
-//     const popupActive = document.querySelector(".popup.open");
-//     if (popupActive) {
-//       // закрываем текущий открытый попап, если он есть
-//       popupClose(popupActive, false);
-//     } else {
-//       bodyLock();
-//     }
-//     // console.log(curentPopup);
-//     curentPopup.classList.add("open");
-//     curentPopup.addEventListener("click", function (e) {
-//       if (!e.target.closest(".popup__content")) {
-//         // если клик был по области вокруг попапа то ничего не делаем и закрываем попап
-//         popupClose(e.target.closest(".popup"));
-//         const row = document.querySelector(".table__row_deletable");
-//         if (row) {
-//           row.classList.remove("table__row_deletable");
-//         }
-//       }
-//     });
-//   }
-// }
 
 function popupClose(popupActive, doUnlock = true) {
   if (unlock) {
