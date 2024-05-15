@@ -184,45 +184,21 @@ await getInfoFromDB(); // требуется подключить скрипт �
 
 // выбираем только активных контрагентов:
 let copyContractorList = [...contractorList];
-
-let isActive = 1;
-// выбираем только активных контрагентов:
-let activContractors = [];
-for (let i = 0; i < copyContractorList.length; i++) {
-  if (copyContractorList[i].isActive == 1) {
-    activContractors = [...activContractors, copyContractorList[i]];
-  }
-}
-
+let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
-
 
 //логика фильтрации активных и не активных контрагентов:
 const toggleBtn = document.querySelector(".toggle__checkbox");
 toggleBtn.addEventListener("click", function () {
-  tableBody.innerHTML = "";
-
   if (toggleBtn.checked) {
-    let activContractors = [];
-    // выбираем только неактивных контрагентов:
-    for (let i = 0; i < copyContractorList.length; i++) {
-      if (copyContractorList[i].isActive == 0) {
-        activContractors = [...activContractors, copyContractorList[i]];
-      }
-    }
     let isActive = 0;
-    renderContractorsTable(activContractors, isActive);
+    renderContractorsTable(copyContractorList, isActive);
+    popupFunc()
   }
   if (!toggleBtn.checked) {
-    let activContractors = [];
-    // выбираем только активных контрагентов:
-    for (let i = 0; i < copyContractorList.length; i++) {
-      if (copyContractorList[i].isActive == 1) {
-        activContractors = [...activContractors, copyContractorList[i]];
-      }
-    }
     let isActive = 1;
-    renderContractorsTable(activContractors, isActive);
+    renderContractorsTable(copyContractorList, isActive);
+    popupFunc()
   }
 });
 
@@ -301,15 +277,15 @@ function getContractorItem(contractortObj, isActive = 1) {
   tableDataDeleteCell.addEventListener("click", function () {
     onDelete({ contractortObj, element: item });
   });
+  
+  // добавляем обработчик на кнопку - редактирование контрагента
+  tableDataReverCell.addEventListener("click", function () {
+    onRevert({ contractortObj, element: item });
+  });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataEditCell.addEventListener("click", function () {
     onEdit({ contractortObj, element: item });
-  });
-
-  // добавляем обработчик на кнопку - редактирование контрагента
-  tableDataReverCell.addEventListener("click", function () {
-    onRevert({ contractortObj, element: item });
   });
 
   // добавляем обработчик на кнопку - сохранение контрагента
@@ -375,7 +351,7 @@ function preRender(arr) {
   }
 }
 
-preRender(activContractors);
+preRender(copyContractorList);
 
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function filterTable(col, param, arr) {
@@ -384,9 +360,9 @@ function filterTable(col, param, arr) {
   );
 }
 
-function filterTable1(col, param, arr) {
-  return arr.filter((oneContractor) =>
-    oneContractor[param].toLowerCase().includes(col.value.trim().toLowerCase())
+function filterTableActive(isActive, param, arr) {
+  return arr.filter((oneContractor) => 
+    oneContractor[param] == isActive
   );
 }
 
@@ -394,6 +370,10 @@ function filterTable1(col, param, arr) {
 function renderContractorsTable(arr, isActive = 1) {
   tableBody.innerHTML = ""; // очищаем тело таблицы
   let copyList = [...arr]; // создаем копию массива
+
+  // Фильтрация массива по активности:
+  copyList = filterTableActive(isActive, "isActive", copyList);
+
 
   // // Фильтрация таблицы по всем столбцам:
   // if (fio.value.trim() !== "") {
@@ -428,6 +408,7 @@ function renderContractorsTable(arr, isActive = 1) {
 }
 
 renderContractorsTable(contractorListForRender, isActive);
+popupFunc()
 
 // Этап 5. К форме добавления контрагента добавьте слушатель события отправки формы, в котором будет проверка введенных данных.Если проверка пройдет успешно, добавляйте объект с данными контрагентов в массив контрагентов и запустите функцию отрисовки таблицы контрагентов, созданную на этапе 4.
 
@@ -616,12 +597,31 @@ renderContractorsTable(contractorListForRender, isActive);
 // element.remove();
 // });
 
-function onDelete({ studentObj, element }) {
-  // console.log(element);
-  // popupFind()
-  // if (!confirm("Вы уверены?")) {
-  //   return;
-  // }
+function onDelete({ contractortObj, element: item }) {
+  const agree = document.querySelector('#btn-delete');
+  const element = item;
+  const contractort = contractortObj;
+  agree.addEventListener("click", function (e) {    
+    copyContractorList.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 0;
+    element.remove();
+    popupClose(e.target.closest(".popup"));
+  })
+  // element.remove();
+  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+  //   method: "DELETE",
+  // });
+}
+
+
+function onRevert({ contractortObj, element: item }) {
+  const agree = document.querySelector('#btn-revert');
+  const element = item;
+  const contractort = contractortObj;
+  agree.addEventListener("click", function (e) {    
+    copyContractorList.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
+    element.remove();
+    popupClose(e.target.closest(".popup"));
+  })
   // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
@@ -815,14 +815,63 @@ if (btnCancel) {
 // --------------------popup:------------------------
 
 
-const body = document.querySelector("body");
-const lockPadding = document.querySelectorAll(".lock-padding");
-// const btn = document.querySelector(".project-btn");
-const popupLinks = document.querySelectorAll(".popup-link");
-
 let unlock = true;
-const timeout = 800;
+const timeout = 300;
+const lockPadding = document.querySelectorAll(".lock-padding");
+const body = document.querySelector("body");
 
+function bodyLock() {
+  const lockPaddingValue =
+    window.innerWidth - document.querySelector(".header").offsetWidth + "px";
+  // console.log(lockPaddingValue);
+  for (let index = 0; index < lockPadding.length; index++) {
+    const el = lockPadding[index];
+    el.style.marginRight = lockPaddingValue;
+  }
+  body.style.paddingRight = lockPaddingValue;
+  body.classList.add("lock");
+
+  unlock = false;
+  setTimeout(function () {
+    unlock = true;
+  }, timeout);
+}
+
+function bodyUnLock() {
+  setTimeout(function () {
+    for (let index = 0; index < lockPadding.length; index++) {
+      const el = lockPadding[index];
+      el.style.marginRight = "0px";
+    }
+    body.style.paddingRight = "0px";
+    body.classList.remove("lock");
+  }, timeout);
+
+  unlock = false;
+  setTimeout(function () {
+    unlock = true;
+  }, timeout);
+}
+
+function popupClose(popupActive, doUnlock = true) {
+  if (unlock) {
+    popupActive.classList.remove("open");
+    if (doUnlock) {
+      bodyUnLock();
+    }
+  }
+}
+
+
+
+
+function popupFunc() {
+  const popupLinks = document.querySelectorAll(".popup-link");
+  // const body = document.querySelector("body");
+  // const lockPadding = document.querySelectorAll(".lock-padding");
+  // const btn = document.querySelector(".project-btn");
+  
+  
 if (popupLinks.length > 0) {
   for (let index = 0; index < popupLinks.length; index++) {
     const popupLink = popupLinks[index];
@@ -866,48 +915,10 @@ function popupOpen(curentPopup) {
   }
 }
 
-function popupClose(popupActive, doUnlock = true) {
-  if (unlock) {
-    popupActive.classList.remove("open");
-    if (doUnlock) {
-      bodyUnLock();
-    }
-  }
-}
+// popupClose(popupActive, doUnlock);
+
 
 // добавляем боди padding-right при открытии попапа, на ширину скролл-бара
-function bodyLock() {
-  const lockPaddingValue =
-    window.innerWidth - document.querySelector(".header").offsetWidth + "px";
-  // console.log(lockPaddingValue);
-  for (let index = 0; index < lockPadding.length; index++) {
-    const el = lockPadding[index];
-    el.style.marginRight = lockPaddingValue;
-  }
-  body.style.paddingRight = lockPaddingValue;
-  body.classList.add("lock");
-
-  unlock = false;
-  setTimeout(function () {
-    unlock = true;
-  }, timeout);
-}
-
-function bodyUnLock() {
-  setTimeout(function () {
-    for (let index = 0; index < lockPadding.length; index++) {
-      const el = lockPadding[index];
-      el.style.marginRight = "0px";
-    }
-    body.style.paddingRight = "0px";
-    body.classList.remove("lock");
-  }, timeout);
-
-  unlock = false;
-  setTimeout(function () {
-    unlock = true;
-  }, timeout);
-}
 
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape") {
@@ -915,6 +926,9 @@ document.addEventListener("keydown", function (e) {
     popupClose(popupActive);
   }
 });
+
+};
+
 
 // --------------------end popup:------------------------
 //--------------------------end разное----------------------------
