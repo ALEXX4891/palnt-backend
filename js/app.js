@@ -154,39 +154,71 @@ const tableBody = document.querySelector(".table__body");
 // let studyStart = document.getElementById("studyStart");
 //--------------------------end старье----------------------------
 
-
 // Загружаем список контрагентов с БД:
 let responce;
 let contractorList;
 async function getInfoFromDB() {
-  	// Блок try выполнится полностью, если не будет ошибок:	
-	try {		
-		// Выполняем запрос:		
-		responce = await fetch("main.php");
+  // Блок try выполнится полностью, если не будет ошибок:
+  try {
+    // Выполняем запрос:
+    responce = await fetch("main.php");
     contractorList = await responce.json();
-		return contractorList; // Возвращаем результат запроса		
-	}	
-	// Блок catch сработает только если будут какие-то ошибки в блоке try:	
-	catch(err) {
-		// Выведем в консоли информацию об ошибке:
-		console.log('При запросе IP произошла ошибка, детали ниже:');
-		console.error(err);
-		// Вернем исключение с текстом поясняющим детали ошибки:
-		throw new Error('Запрос завершился неудачно.');
+    return contractorList; // Возвращаем результат запроса
+  } catch (err) {
+    // Блок catch сработает только если будут какие-то ошибки в блоке try:
+    // Выведем в консоли информацию об ошибке:
+    console.log("При запросе IP произошла ошибка, детали ниже:");
+    console.error(err);
+    // Вернем исключение с текстом поясняющим детали ошибки:
+    throw new Error("Запрос завершился неудачно.");
     if (!contractorList.length) {
       alert("Данные на сервере отсутсуют");
       contractorList = [];
-    }		
-	}
+    }
+  }
 }
 
 await getInfoFromDB(); // требуется подключить скрипт как модуль, иначе await не работает!!!
 
+// copyContractorList = [...activContractors];
+
+// выбираем только активных контрагентов:
 let copyContractorList = [...contractorList];
+
+
+// console.log(copyContractorList);
 // console.log(copyContractorList);
 let contractorListForRender = [];
 
-// Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем, 
+
+//логика фильтрации активных и не активных контрагентов:
+const toggleBtn = document.querySelector(".toggle__checkbox");
+toggleBtn.addEventListener("click", function () {
+  tableBody.innerHTML = "";
+
+  if (toggleBtn.checked) {
+    let activContractors = [];
+    // выбираем только неактивных контрагентов:
+    for (let i = 0; i < copyContractorList.length; i++) {
+      if (copyContractorList[i].isActive == 0) {
+        activContractors = [...activContractors, copyContractorList[i]];
+      }
+    }
+    renderContractorsTable(activContractors);
+  }
+  if (!toggleBtn.checked) {
+    let activContractors = [];
+    // выбираем только активных контрагентов:
+    for (let i = 0; i < copyContractorList.length; i++) {
+      if (copyContractorList[i].isActive == 1) {
+        activContractors = [...activContractors, copyContractorList[i]];
+      }
+    }
+    renderContractorsTable(activContractors);
+  }
+});
+
+// Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем,
 // как вы делали вывод одного дела в модуле 8. Функция должна вернуть html элемент
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
@@ -203,27 +235,41 @@ function getContractorItem(contractortObj) {
     tableDataReverCell = document.createElement("td"),
     tableDataSaveCell = document.createElement("td");
 
-    item.classList.add("table__row");
-    tableDataId.classList.add("table__column", "table__column_1");
-    tableDataName.classList.add("table__column", "table__column_2");
-    tableDataTaxNumber.classList.add("table__column", "table__column_3");
-    tableDataAddress.classList.add("table__column", "table__column_4");
-    tableDataPhone.classList.add("table__column", "table__column_5");
-    tableDataEmail.classList.add("table__column", "table__column_6");
-    tableDataEditCell.classList.add("table__column", "table__column_7", "table__small-btn");
-    tableDataDeleteCell.classList.add("table__column", "table__column_8", "table__small-btn");
+  item.classList.add("table__row");
+  tableDataId.classList.add("table__column", "table__column_1");
+  tableDataName.classList.add("table__column", "table__column_2");
+  tableDataTaxNumber.classList.add("table__column", "table__column_3");
+  tableDataAddress.classList.add("table__column", "table__column_4");
+  tableDataPhone.classList.add("table__column", "table__column_5");
+  tableDataEmail.classList.add("table__column", "table__column_6");
+  tableDataEditCell.classList.add(
+    "table__column",
+    "table__column_7",
+    "table__small-btn"
+  );
+  tableDataDeleteCell.classList.add(
+    "table__column",
+    "table__column_8",
+    "table__small-btn"
+  );
 
-    tableDataReverCell.classList.add("table__column", "table__column_7", "table__small-btn");
-    tableDataSaveCell.classList.add("table__column", "table__column_7", "table__small-btn");
+  tableDataReverCell.classList.add(
+    "table__column",
+    "table__column_7",
+    "table__small-btn"
+  );
+  tableDataSaveCell.classList.add(
+    "table__column",
+    "table__column_7",
+    "table__small-btn"
+  );
 
-
-    tableDataId.textContent = contractortObj.idContractor;
-    tableDataName.textContent = contractortObj.name;
-    tableDataTaxNumber.textContent = contractortObj.taxNumber;
-    tableDataAddress.textContent = contractortObj.address;
-    tableDataPhone.textContent = contractortObj.telephone;
-    tableDataEmail.textContent = contractortObj.email;
-
+  tableDataId.textContent = contractortObj.idContractor;
+  tableDataName.textContent = contractortObj.name;
+  tableDataTaxNumber.textContent = contractortObj.taxNumber;
+  tableDataAddress.textContent = contractortObj.address;
+  tableDataPhone.textContent = contractortObj.telephone;
+  tableDataEmail.textContent = contractortObj.email;
 
   //создаем кнопку удаления контрагента:
   tableDataDeleteCell.innerHTML = deleteIcon;
@@ -236,7 +282,6 @@ function getContractorItem(contractortObj) {
   tableDataEditCell.setAttribute("id", contractortObj.idContractor);
   tableDataReverCell.setAttribute("id", contractortObj.idContractor);
   tableDataSaveCell.setAttribute("id", contractortObj.idContractor);
-
 
   // добавляем обработчик на кнопку - удаление контрагента
   tableDataDeleteCell.addEventListener("click", function () {
@@ -256,7 +301,7 @@ function getContractorItem(contractortObj) {
   // добавляем обработчик на кнопку - сохранение контрагента
   tableDataSaveCell.addEventListener("click", function () {
     onSave({ contractortObj, element: item });
-  })
+  });
 
   // присваеваем id контрагента элементу и добавляем информацию в таблицу:
   item.setAttribute("id", contractortObj.idContractor);
@@ -274,15 +319,15 @@ function getContractorItem(contractortObj) {
   return item;
 }
 
-// Этап 4. Создайте функцию отрисовки всех контрагентов. 
-// Аргументом функции будет массив контрагентов.Функция должна использовать 
-// ранее созданную функцию создания одной записи для контрагента.Цикл поможет вам создать 
-// список контрагентов.Каждый раз при изменении списка контрагента вы будете вызывать 
+// Этап 4. Создайте функцию отрисовки всех контрагентов.
+// Аргументом функции будет массив контрагентов.Функция должна использовать
+// ранее созданную функцию создания одной записи для контрагента.Цикл поможет вам создать
+// список контрагентов.Каждый раз при изменении списка контрагента вы будете вызывать
 // эту функцию для отрисовки таблицы.
 
 //подготовка массива для рендера, с объектами из 4-х элеменов.
-function preRender(copyContractorList) {
-  for (const contractortObj of copyContractorList) {
+function preRender(arr) {
+  for (const contractortObj of arr) {
     // let birthday = new Date(contractortObj.birthday)
     //   .toJSON()
     //   .split("T")[0]
@@ -296,7 +341,8 @@ function preRender(copyContractorList) {
       taxNumber: contractortObj.taxNumber,
       address: contractortObj.address,
       telephone: contractortObj.telephone,
-      email: contractortObj.email,      
+      email: contractortObj.email,
+      isActive: contractortObj.isActive,
       // fio:
       //   studentObj.surname + " " + studentObj.name + " " + studentObj.lastname,
       // faculty: studentObj.faculty,
@@ -310,14 +356,26 @@ function preRender(copyContractorList) {
   }
 }
 
-preRender(copyContractorList);
+// выбираем только активных контрагентов:
+let activContractors = [];
+for (let i = 0; i < copyContractorList.length; i++) {
+  if (copyContractorList[i].isActive == 1) {
+    activContractors = [...activContractors, copyContractorList[i]];
+  }
+}
 
-
+preRender(activContractors);
 
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function filterTable(col, param, arr) {
-  return arr.filter((oneUser) =>
-    oneUser[param].toLowerCase().includes(col.value.trim().toLowerCase())
+  return arr.filter((oneContractor) =>
+    oneContractor[param].toLowerCase().includes(col.value.trim().toLowerCase())
+  );
+}
+
+function filterTable1(col, param, arr) {
+  return arr.filter((oneContractor) =>
+    oneContractor[param].toLowerCase().includes(col.value.trim().toLowerCase())
   );
 }
 
@@ -538,29 +596,26 @@ renderContractorsTable(contractorListForRender);
 
 // вспомогательные функции >>>>-------------->
 
-// рассчитываем возраст контрагента
-function getAge(date) {
-  return (
-    ((new Date().getTime() - new Date(date)) / (24 * 3600 * 365.25 * 1000)) | 0
-  );
-}
-
-// рассчитываем курс контрагента
-function getCource(date) {
-  let cource = new Date().getFullYear() - date;
-  return cource > 4 ? "закончил" : cource;
-}
-
 // функция удлаения одного контрагента с сервера и с сайта:
-// function onDelete({ studentObj, element }) {
-//   if (!confirm("Вы уверены?")) {
-//     return;
-//   }
-//   element.remove();
-//   fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
-//     method: "DELETE",
-//   });
-// }
+// const popupApproval = document.querySelector('popup-approval');
+// console.log(popupApproval);
+
+// popupApproval.addEventListener("click", function (e) {
+// console.log('ssfsdf');
+// element.remove();
+// });
+
+function onDelete({ studentObj, element }) {
+  // console.log(element);
+  // popupFind()
+  // if (!confirm("Вы уверены?")) {
+  //   return;
+  // }
+  // element.remove();
+  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+  //   method: "DELETE",
+  // });
+}
 
 // // очиска списка контрагентов на сервере:
 // // задаем кнопку
@@ -581,8 +636,6 @@ function getCource(date) {
 //     });
 //   }
 // }
-
-
 
 //--------------------------разное----------------------------
 const fieldInput1 = document.querySelector("#field-input-1");
@@ -864,6 +917,22 @@ function popupClose(popupActive, doUnlock = true) {
 }
 
 // добавляем боди padding-right при открытии попапа, на ширину скролл-бара
+function bodyLock() {
+  const lockPaddingValue =
+    window.innerWidth - document.querySelector(".header").offsetWidth + "px";
+  // console.log(lockPaddingValue);
+  for (let index = 0; index < lockPadding.length; index++) {
+    const el = lockPadding[index];
+    el.style.marginRight = lockPaddingValue;
+  }
+  body.style.paddingRight = lockPaddingValue;
+  body.classList.add("lock");
+
+  unlock = false;
+  setTimeout(function () {
+    unlock = true;
+  }, timeout);
+}
 
 function bodyUnLock() {
   setTimeout(function () {
@@ -890,4 +959,3 @@ document.addEventListener("keydown", function (e) {
 
 // --------------------end popup:------------------------
 //--------------------------end разное----------------------------
-
