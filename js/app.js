@@ -187,16 +187,20 @@ let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
 
 //поиск максимального id в списке контрагентов:
-const ids = copyContractorList.map(object => {
-  return object.idContractor;
-});
-let maxId = Math.max(...ids);
+let maxId = 0;
+function getMaxId(arr) {
+  let copy = [...arr];
+  const ids = copy.map(object => {
+    return object.idContractor;
+  });
+  maxId = Math.max(...ids);
+  return maxId;
+}
 
-// Добавляем кнопку "Добавить контрагента":
-addContractorBtn.onclick = function () {  
-  maxId = maxId + 1;
+// Добавляем событие на кнопку "Добавить контрагента":
+addContractorBtn.onclick = function () {
+  maxId += 1;
   createContractorForm(maxId);
-
 }
 
 //функция переключения активности таблицы, так-же скрывает кнопку "добавить контрагента":
@@ -206,14 +210,14 @@ function toggleBtnFunc() {
     addContractorBtn.parentElement.style.display = "none"; // скрываем кнопку
     tableBodyWrapper.style.height = "calc(100vh - 300px)"; // увеличиваем высоту таблицы
     tableBodyWrapper.style.marginBottom = "0"; // убираем отступ снизу таблицы
-
+    getMaxId(contractorListForRender) // поиск максимального id в списке контрагентов
   }
   if (!toggleBtn.checked) {
     isActive = 1;
     addContractorBtn.parentElement.style.display = "block"; // показываем кнопку
     tableBodyWrapper.style.height = "calc(100vh - 360px)"; // уменьшаем высоту таблицы
     tableBodyWrapper.style.marginBottom = "30px"; // добавляем отступ снизу таблицы
-
+    getMaxId(contractorListForRender) // поиск максимального id в списке контрагентов
   }
 }
 
@@ -228,7 +232,7 @@ toggleBtn.addEventListener("click", function () {
 // как вы делали вывод одного дела в модуле 8. Функция должна вернуть html элемент
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
-function getContractorItem(contractortObj, isActive) {
+function getContractorItem(contractorObj, isActive = 1) {
   const item = document.createElement("tr"),
     tableDataId = document.createElement("td"),
     tableDataName = document.createElement("td"),
@@ -276,12 +280,12 @@ function getContractorItem(contractortObj, isActive) {
     "table__small-btn"
   );
 
-  tableDataId.textContent = contractortObj.idContractor;
-  tableDataName.textContent = contractortObj.name;
-  tableDataTaxNumber.textContent = contractortObj.taxNumber;
-  tableDataAddress.textContent = contractortObj.address;
-  tableDataPhone.textContent = contractortObj.telephone;
-  tableDataEmail.textContent = contractortObj.email;
+  tableDataId.textContent = contractorObj.idContractor;
+  tableDataName.textContent = contractorObj.name;
+  tableDataTaxNumber.textContent = contractorObj.taxNumber;
+  tableDataAddress.textContent = contractorObj.address;
+  tableDataPhone.textContent = contractorObj.telephone;
+  tableDataEmail.textContent = contractorObj.email;
 
   //создаем кнопку удаления контрагента:
   tableDataDeleteCell.innerHTML = deleteIcon;
@@ -290,33 +294,33 @@ function getContractorItem(contractortObj, isActive) {
   tableDataSaveCell.innerHTML = saveIcon;
 
   // присваеваем id контрагента кнопкам:
-  tableDataDeleteCell.setAttribute("id", contractortObj.idContractor);
-  tableDataEditCell.setAttribute("id", contractortObj.idContractor);
-  tableDataReverCell.setAttribute("id", contractortObj.idContractor);
-  tableDataSaveCell.setAttribute("id", contractortObj.idContractor);
+  tableDataDeleteCell.setAttribute("id", contractorObj.idContractor);
+  tableDataEditCell.setAttribute("id", contractorObj.idContractor);
+  tableDataReverCell.setAttribute("id", contractorObj.idContractor);
+  tableDataSaveCell.setAttribute("id", contractorObj.idContractor);
 
   // добавляем обработчик на кнопку - удаление контрагента
   tableDataDeleteCell.addEventListener("click", function () {
-    onDelete({ contractortObj, element: item });
+    onDelete({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataReverCell.addEventListener("click", function () {
-    onRevert({ contractortObj, element: item });
+    onRevert({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataEditCell.addEventListener("click", function () {
-    onEdit({ contractortObj, element: item });
+    onEdit({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - сохранение контрагента
   tableDataSaveCell.addEventListener("click", function () {
-    onSave({ contractortObj, element: item });
+    onSave({ contractorObj, element: item });
   });
 
   // присваеваем id контрагента элементу и добавляем информацию в таблицу:
-  item.setAttribute("id", contractortObj.idContractor);
+  item.setAttribute("id", contractorObj.idContractor);
   item.append(tableDataId);
   item.append(tableDataName);
   item.append(tableDataTaxNumber);
@@ -357,8 +361,8 @@ function getContractorItem(contractortObj, isActive) {
 
 //подготовка массива для рендера.
 function preRender(arr) {
-  for (const contractortObj of arr) {
-    // let birthday = new Date(contractortObj.birthday)
+  for (const contractorObj of arr) {
+    // let birthday = new Date(contractorObj.birthday)
     //   .toJSON()
     //   .split("T")[0]
     //   .split("-")
@@ -366,13 +370,13 @@ function preRender(arr) {
     //   .join(".");
 
     let contractorObjForRender = {
-      idContractor: contractortObj.idContractor,
-      name: contractortObj.name,
-      taxNumber: contractortObj.taxNumber,
-      address: contractortObj.address,
-      telephone: contractortObj.telephone,
-      email: contractortObj.email,
-      isActive: contractortObj.isActive,
+      idContractor: contractorObj.idContractor,
+      name: contractorObj.name,
+      taxNumber: contractorObj.taxNumber,
+      address: contractorObj.address,
+      telephone: contractorObj.telephone,
+      email: contractorObj.email,
+      isActive: contractorObj.isActive,
       // fio:
       //   studentObj.surname + " " + studentObj.name + " " + studentObj.lastname,
       // faculty: studentObj.faculty,
@@ -388,6 +392,7 @@ function preRender(arr) {
 
 preRender(copyContractorList);
 
+getMaxId(contractorListForRender)
 
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // function filterTable(col, param, arr) {
@@ -559,10 +564,10 @@ contractorSearch.addEventListener("input", () => {
 // element.remove();
 // });
 
-function onDelete({ contractortObj, element: item }) {
+function onDelete({ contractorObj, element: item }) {
   const agree = document.querySelector("#btn-delete");
   const element = item;
-  const contractort = contractortObj;
+  const contractort = contractorObj;
   agree.addEventListener("click", function (e) {
     contractorListForRender.filter(
       (contractor) => contractor.idContractor == contractort.idContractor
@@ -576,10 +581,10 @@ function onDelete({ contractortObj, element: item }) {
   // });
 }
 
-function onRevert({ contractortObj, element: item }) {
+function onRevert({ contractorObj, element: item }) {
   const agree = document.querySelector("#btn-revert");
   const element = item;
-  const contractort = contractortObj;
+  const contractort = contractorObj;
   agree.addEventListener("click", function (e) {
     contractorListForRender.filter(
       (contractor) => contractor.idContractor == contractort.idContractor
@@ -593,33 +598,61 @@ function onRevert({ contractortObj, element: item }) {
   // });
 }
 
-function onEdit({ contractortObj, element: item }) {
-  const agree = document.querySelector("#btn-revert");
-  const element = item;
-  const contractort = contractortObj;
-  agree.addEventListener("click", function (e) {
-    contractorListForRender.filter(
-      (contractor) => contractor.idContractor == contractort.idContractor
-    )[0].isActive = 1;
-    element.remove();
-    popupClose(e.target.closest(".popup"));
-  });
+function onEdit({ contractorObj, element: item }) {
+  console.log("onEdit");
+  // createContractorForm()
   // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
   // });
 }
 
-function onSave({ contractortObj, element: item }) {
-  console.log("save");
-  // const agree = document.querySelector('#btn-revert');
-  // const element = item;
-  // const contractort = contractortObj;
-  // agree.addEventListener("click", function (e) {
-  //   contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
-  //   element.remove();
-  //   popupClose(e.target.closest(".popup"));
-  // })
+function onSave({ element: item }) {
+  // console.log(item);
+  // console.log(contractorObj);
+  const id = item.querySelector('.table__column_1').innerText;
+  const name = item.querySelector('.table__column_2').querySelector('input').value;
+  const taxNumber = item.querySelector('.table__column_3').querySelector('input').value;
+  const address = item.querySelector('.table__column_4').querySelector('input').value;
+  const phone = item.querySelector('.table__column_5').querySelector('input').value;
+  const email = item.querySelector('.table__column_6').querySelector('input').value;
+  const contractor = {
+    idContractor: Number(id),
+    name: name,
+    taxNumber: Number(taxNumber),
+    address: address,
+    telephone: phone,
+    email: email,
+    isActive: 1
+  }
+
+  
+  
+  //проверки на заполянность полей:
+  if (!Number.isInteger(contractor.taxNumber)) {
+    alert('Номер ИНН должен быть числом');
+    return;
+  }
+
+  if (!contractor.name || !contractor.taxNumber || !contractor.address || !contractor.telephone || !contractor.email) {
+    alert('Заполните все поля таблицы');
+    return;
+  }
+  
+  //добавление или обновление контрагента в массиве
+  const index = contractorListForRender.findIndex((contractor) => contractor.idContractor == id);
+  if (index !== -1) {
+    contractorListForRender[index] = contractor;
+  } else {
+    contractorListForRender.push(contractor);
+  }
+
+  getContractorItem(contractor);
+  item.remove();
+  popupFunc();
+
+  // console.log(contractor);
+
   // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
@@ -716,30 +749,27 @@ function createContractorForm(maxId) {
     placeholder: "Заполните почту",
   })
 
-
-
   // присваеваем значения внутренним элементам формы:
   tableFormSaveCell.innerHTML = saveIcon;
-  // tableFormSaveCell.setAttribute("id", contractortObj.idContractor);
+  // tableFormSaveCell.setAttribute("id", contractorObj.idContractor);
 
+  
   // добавляем обработчик на кнопку - сохранение контрагента
   tableFormSaveCell.addEventListener("click", function () {
-    onSave({ contractortObj, element: item });
+    onSave({ element: item });
   });
 
-  // присваеваем id контрагента элементу и добавляем информацию в таблицу:
-  // item.setAttribute("id", contractortObj.idContractor);
+  // getMaxId()
   tableFormId.innerText = maxId;
-  // maxId++;
-  // console.log(maxId);
 
-
+  //присвоение инпутов ячейкам таблицы:
   tableFormName.append(tableFormInputName);
   tableFormTaxNumber.append(tableFormInputTaxNumber);
   tableFormAddress.append(tableFormInputAddress);
   tableFormPhone.append(tableFormInputPhone);
   tableFormEmail.append(tableFormInputEmail);
   
+  //добвление формы в строку:
   item.append(tableFormId);
   item.append(tableFormName);
   item.append(tableFormTaxNumber);
@@ -749,25 +779,7 @@ function createContractorForm(maxId) {
   item.append(tableFormSaveCell);
   item.append(tableFormEmptyCell);
 
-    //присвоение инпутов ячейкам таблицы:
-
-
-
-
-
-
-  tableBody.append(item); // добавление контрагента в таблицу
-
-  // setAttributes(tableFormId.querySelector("input"), {
-  //   type: "text",
-  //   required: true,
-  //   name: "address",
-  // });
-
-  // вычислить максимальный id в БД:
-
-
-  console.log(item);
+  tableBody.append(item); // добавление контрагента в таблицу  
   item.scrollIntoView(); // переход к созданной строке
   return item;
 }

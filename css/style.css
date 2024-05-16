@@ -976,6 +976,9 @@ img {
   align-items: center;
   justify-content: center;
   padding: 0 8px;
+  white-space: nowrap; /* Текст не переносится */
+  overflow: hidden; /* Обрезаем всё за пределами блока */
+  text-overflow: ellipsis; /* Добавляем многоточие */
 }
 @media (max-width: 1500px) {
   .table__column {
@@ -1000,10 +1003,10 @@ img {
   width: 28%;
 }
 .table__column_5 {
-  width: 13.4%;
+  width: 10.4%;
 }
 .table__column_6 {
-  width: 13.4%;
+  width: 16.4%;
 }
 .table__column_7 {
   width: 40px;
