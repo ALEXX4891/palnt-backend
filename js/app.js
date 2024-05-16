@@ -61,9 +61,14 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
 // });
 //--------------------------end переделать----------------------------
 
-//--------------------------старье----------------------------
 
 const tableBody = document.querySelector(".table__body");
+const contractorSearch = document.getElementById("contractorsSearch");
+// contractorSearch.addEventListener("input", function () {
+  
+//   console.log(contractorSearch.value);
+// })
+//--------------------------старье----------------------------
 
 // tableWrapper = document.getElementById("table"),
 //   table = document.createElement("table"),
@@ -167,7 +172,7 @@ async function getInfoFromDB() {
   } catch (err) {
     // Блок catch сработает только если будут какие-то ошибки в блоке try:
     // Выведем в консоли информацию об ошибке:
-    console.log("При запросе IP произошла ошибка, детали ниже:");
+    console.log("При запросе к БД произошла ошибка, детали ниже:");
     console.error(err);
     // Вернем исключение с текстом поясняющим детали ошибки:
     throw new Error("Запрос завершился неудачно.");
@@ -187,26 +192,30 @@ let copyContractorList = [...contractorList];
 let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
 
-//логика фильтрации активных и не активных контрагентов:
+
 const toggleBtn = document.querySelector(".toggle__checkbox");
-toggleBtn.addEventListener("click", function () {
+
+function toggleBtnFunc() {
   if (toggleBtn.checked) {
-    let isActive = 0;
-    renderContractorsTable(copyContractorList, isActive);
-    popupFunc()
+    isActive = 0;
   }
   if (!toggleBtn.checked) {
-    let isActive = 1;
-    renderContractorsTable(copyContractorList, isActive);
-    popupFunc()
+    isActive = 1;
   }
+}
+
+//логика фильтрации активных и не активных контрагентов:
+toggleBtn.addEventListener("click", function () {
+  toggleBtnFunc() //проверить выбранную активность контрагентов
+  renderContractorsTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
+  popupFunc() // навесить заново события открытия и закрытия модльного окна
 });
 
 // Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем,
 // как вы делали вывод одного дела в модуле 8. Функция должна вернуть html элемент
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
-function getContractorItem(contractortObj, isActive = 1) {
+function getContractorItem(contractortObj, isActive) {
   const item = document.createElement("tr"),
     tableDataId = document.createElement("td"),
     tableDataName = document.createElement("td"),
@@ -314,6 +323,31 @@ function getContractorItem(contractortObj, isActive = 1) {
   return item;
 }
 
+//Логика:
+// 1) получаем массив-0 всех контрагентов
+// 2) при первой отрисовке фильтруем массив-0 контрагентов по активности = 1, получаем массив-1, рендер.
+// 3) при переключении тогла фильтруем массив-0 контрагентов по активности = 0, получаем массив-2, рендер.
+// 4) при фильтрации массива по поиску работаем с массивом-1 или массивом-2, проверяем положение тогла
+// 5) при переключении тогла работаем с массивом-1 или массивом-2, проверяем наличие фильтра по поиску
+// 6) 
+// 7)
+// 8)
+// 9)
+// 10)
+// 11)
+// 12)
+// 13)
+// 14)
+// 15)
+// 16)
+// 17)
+// 18)
+// 19)
+// 20)
+
+
+
+
 // Этап 4. Создайте функцию отрисовки всех контрагентов.
 // Аргументом функции будет массив контрагентов.Функция должна использовать
 // ранее созданную функцию создания одной записи для контрагента.Цикл поможет вам создать
@@ -354,51 +388,45 @@ function preRender(arr) {
 preRender(copyContractorList);
 
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-function filterTable(col, param, arr) {
-  return arr.filter((oneContractor) =>
-    oneContractor[param].toLowerCase().includes(col.value.trim().toLowerCase())
-  );
+// function filterTable(col, param, arr) {
+//   return arr.filter((oneContractor) =>
+//     oneContractor[param].toLowerCase().includes(col.value.trim().toLowerCase())
+//   );
+// }
+
+function filterTable(search, isActive, arr) {
+  let copy = [...arr];
+  let res = copy.filter(function(obj) {
+    return Object.keys(obj).some(function(key) {
+      return obj[key].toString().toLowerCase().indexOf(search.toLowerCase().trim()) != -1;
+    })
+  })
+  return filterTableActive(isActive, "isActive", res);
 }
 
+
 function filterTableActive(isActive, param, arr) {
-  return arr.filter((oneContractor) => 
+  let copy = [...arr];
+  return copy.filter((oneContractor) => 
     oneContractor[param] == isActive
   );
 }
 
 //рендер подготовленного массива + фильтрация по всем колонкам.
-function renderContractorsTable(arr, isActive = 1) {
+function renderContractorsTable(arr, isActive) {
   tableBody.innerHTML = ""; // очищаем тело таблицы
   let copyList = [...arr]; // создаем копию массива
+
+  // Фильтрация таблицы по всем столбцам:
+  if (contractorSearch.value.trim() !== "") {
+    copyList = filterTable(contractorSearch.value, isActive, copyList);
+  }
 
   // Фильтрация массива по активности:
   copyList = filterTableActive(isActive, "isActive", copyList);
 
-
-  // // Фильтрация таблицы по всем столбцам:
-  // if (fio.value.trim() !== "") {
-  //   copyList = filterTable(fio, "fio", copyList);
-  // }
   // if (faculty.value.trim() !== "") {
   //   copyList = filterTable(faculty, "faculty", copyList);
-  // }
-  // if (birthDateAge.value.trim() !== "") {
-  //   copyList = filterTable(birthDateAge, "birthDateAge", copyList);
-  // }
-  // if (studyStart.value.trim() !== "") {
-  //   copyList = filterTable(studyStart, "studyStart", copyList);
-  // }
-
-  // показываем или скрываем кнопку сброса фильтра:
-  // if (
-  //   fio.value.trim() !== "" ||
-  //   faculty.value.trim() !== "" ||
-  //   birthDateAge.value.trim() !== "" ||
-  //   studyStart.value.trim() !== ""
-  // ) {
-  //   filterCancelBtn.classList.remove("d-none");
-  // } else {
-  //   filterCancelBtn.classList.add("d-none");
   // }
 
   // рендерим всю таблицу
@@ -445,35 +473,6 @@ popupFunc()
 //     return;
 //   }
 
-//   if (inputBirthDate.valueAsDate > new Date()) {
-//     errorMsg.textContent = "Дата рождения не корректна!";
-//     return;
-//   }
-
-//   if (inputBirthDate.valueAsDate < new Date(1900, 0, 1)) {
-//     errorMsg.textContent = "Дата рождения не корректна!";
-//     return;
-//   }
-
-//   if (inputStudyStart.value.trim() == "") {
-//     errorMsg.textContent = "Год начала обучения не введен!";
-//     return;
-//   }
-
-//   if (inputStudyStart.value > new Date().getFullYear()) {
-//     errorMsg.textContent = "Год начала обучения не корректен!";
-//     return;
-//   }
-
-//   if (inputStudyStart.value < new Date(2000, 0, 1).getFullYear()) {
-//     errorMsg.textContent = "Год начала обучения не корректен!";
-//     return;
-//   }
-
-//   if (inputFaculty.value.trim() == "") {
-//     errorMsg.textContent = "Факультет не введен!";
-//     return;
-//   }
 
 //   const responce = await fetch("http://localhost:3000/api/students", {
 //     method: "POST",
@@ -503,88 +502,46 @@ popupFunc()
 //   errorMsg.textContent = "";
 // });
 
-// // Этап 5. Создайте функцию сортировки массива контрагентов и добавьте события кликов на соответствующие колонки.
-// let sortDirection = true;
+// Функция сортировки массива контрагентов, события кликов на соответствующие колонки:
+let sortDirectionId = true; // индикотор сортировки по id
+let sortDirectionName = true; // индикатор сортировки по имени
+let iconTransmorm = "rotate(0deg)"; // положения иконки сортировки
+const nameContractorBtn = document.getElementById('nameContractorBtn'); // кнопка сортировки - поле таблицы
+const nameContractorBtnIcon = nameContractorBtn.querySelector('svg'); // иконка сортировки по имени
+const idContractorBtn = document.getElementById('idContractorBtn'); // кнопка сортировки - поле таблицы
+const idContractorBtnIcon = idContractorBtn.querySelector('svg'); // иконка сортировки по id
 
-// const sortArr = (arr, property, sortDirection) => {
-//   arr.sort((a, b) =>
-//     (sortDirection ? a[property] < b[property] : a[property] > b[property])
-//       ? -1
-//       : 1
-//   );
-//   renderContractorsTable(arr);
-// };
+const sortArr = (arr, property, sortDirection, isActive) => { // функция сортировки
+  arr.sort((a, b) =>
+    (sortDirection ? a[property] < b[property] : a[property] > b[property])
+      ? -1
+      : 1
+  );
+  renderContractorsTable(arr, isActive);
+  popupFunc();
+};
 
-// tableHeaderFio.addEventListener("click", () => {
-//   sortDirection = !sortDirection;
-//   sortArr(contractorListForRender, "fio", sortDirection);
-// });
+// обработчик события сортировки:
+nameContractorBtn.addEventListener("click", () => { // сортировка по имени при клике
+  sortDirectionName = !sortDirectionName; // меняем индикатор сортировки
+  iconTransmorm = sortDirectionName ? "rotate(0deg)" : "rotate(180deg)"; // задаем угол поворота иконки
+  nameContractorBtnIcon.style.transform = iconTransmorm; // меняем положение иконки
+  sortArr(contractorListForRender, "name", sortDirectionName, isActive); // сортируем массив
+});
 
-// tableHeaderFaculty.addEventListener("click", () => {
-//   sortDirection = !sortDirection;
-//   sortArr(contractorListForRender, "faculty", sortDirection);
-// });
+idContractorBtn.addEventListener("click", () => { // сортировка по id при клике
+  sortDirectionId = !sortDirectionId;
+  iconTransmorm = sortDirectionId ? "rotate(0deg)" : "rotate(180deg)";
+  idContractorBtnIcon.style.transform = iconTransmorm;
+  sortArr(contractorListForRender, "idContractor", sortDirectionId, isActive);
+});
 
-// tableHeaderstudyStart.addEventListener("click", () => {
-//   sortDirection = !sortDirection;
-//   let property = "studyStart";
-//   sortArr(contractorListForRender, "studyStart", sortDirection);
-// });
+// Фильтрация массива контрагентов при вводе текста инпут, ищет по всем столбцам
+contractorSearch.addEventListener("input", () => {
+  renderContractorsTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
+  popupFunc(); // навесить заново события открытия и закрытия модльного окна
+});
 
-// //сортировка по дате рождения (перевод даты формата дд.мм.гггг в обьект new Date)
-// const sortArrAge = (arr, sortDirection) => {
-//   arr.sort((a, b) =>
-//     (
-//       sortDirection
-//         ? new Date(
-//             a.birthDateAge.slice(0, 10).split(".")[2],
-//             a.birthDateAge.slice(0, 10).split(".")[1] - 1,
-//             a.birthDateAge.slice(0, 10).split(".")[0]
-//           ) <
-//           new Date(
-//             b.birthDateAge.slice(0, 10).split(".")[2],
-//             b.birthDateAge.slice(0, 10).split(".")[1] - 1,
-//             b.birthDateAge.slice(0, 10).split(".")[0]
-//           )
-//         : new Date(
-//             a.birthDateAge.slice(0, 10).split(".")[2],
-//             a.birthDateAge.slice(0, 10).split(".")[1] - 1,
-//             a.birthDateAge.slice(0, 10).split(".")[0]
-//           ) >
-//           new Date(
-//             b.birthDateAge.slice(0, 10).split(".")[2],
-//             b.birthDateAge.slice(0, 10).split(".")[1] - 1,
-//             b.birthDateAge.slice(0, 10).split(".")[0]
-//           )
-//     )
-//       ? -1
-//       : 1
-//   );
-//   renderContractorsTable(arr);
-// };
-
-// tableHeaderBirthDateAge.addEventListener("click", () => {
-//   sortDirection = !sortDirection;
-//   sortArrAge(contractorListForRender, sortDirection);
-// });
-
-// Этап 6. Создайте функцию фильтрации массива контрагентов и добавьте события для элементов формы.
-
-// fio.addEventListener("input", () => {
-//   renderContractorsTable(contractorListForRender);
-// });
-
-// faculty.addEventListener("input", () => {
-//   renderContractorsTable(contractorListForRender);
-// });
-
-// birthDateAge.addEventListener("input", () => {
-//   renderContractorsTable(contractorListForRender);
-// });
-
-// studyStart.addEventListener("input", () => {
-//   renderContractorsTable(contractorListForRender);
-// });
 
 // вспомогательные функции >>>>-------------->
 
@@ -602,7 +559,7 @@ function onDelete({ contractortObj, element: item }) {
   const element = item;
   const contractort = contractortObj;
   agree.addEventListener("click", function (e) {    
-    copyContractorList.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 0;
+    contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 0;
     element.remove();
     popupClose(e.target.closest(".popup"));
   })
@@ -618,7 +575,7 @@ function onRevert({ contractortObj, element: item }) {
   const element = item;
   const contractort = contractortObj;
   agree.addEventListener("click", function (e) {    
-    copyContractorList.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
+    contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
     element.remove();
     popupClose(e.target.closest(".popup"));
   })
@@ -628,24 +585,34 @@ function onRevert({ contractortObj, element: item }) {
   // });
 }
 
-// // очиска списка контрагентов на сервере:
-// // задаем кнопку
-// const deleteAll = document.getElementById("delete-all");
-// // вешаем событие клик - удаление на сервере
-// deleteAll.addEventListener("click", function () {
-//   if (!confirm("Удалить всех контрагентов?")) {
-//     return;
-//   }
-//   deleteAll();
-// });
+// function onEdit({ contractortObj, element: item }) {
+//   const agree = document.querySelector('#btn-revert');
+//   const element = item;
+//   const contractort = contractortObj;
+//   agree.addEventListener("click", function (e) {    
+//     contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
+//     element.remove();
+//     popupClose(e.target.closest(".popup"));
+//   })
+//   // element.remove();
+//   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+//   //   method: "DELETE",
+//   // });
+// }
 
-// функция удаления всех контрагентов на сервере:
-// function deleteAll() {
-//   for (const student of studentsList) {
-//     fetch(`http://localhost:3000/api/students/{student.id}`, {
-//       method: "DELETE",
-//     });
-//   }
+// function onSave({ contractortObj, element: item }) {
+//   const agree = document.querySelector('#btn-revert');
+//   const element = item;
+//   const contractort = contractortObj;
+//   agree.addEventListener("click", function (e) {    
+//     contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
+//     element.remove();
+//     popupClose(e.target.closest(".popup"));
+//   })
+//   // element.remove();
+//   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+//   //   method: "DELETE",
+//   // });
 // }
 
 //--------------------------разное----------------------------
@@ -867,6 +834,7 @@ function popupClose(popupActive, doUnlock = true) {
 
 function popupFunc() {
   const popupLinks = document.querySelectorAll(".popup-link");
+  // console.log(popupLinks);
   // const body = document.querySelector("body");
   // const lockPadding = document.querySelectorAll(".lock-padding");
   // const btn = document.querySelector(".project-btn");
