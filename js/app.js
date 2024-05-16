@@ -17,12 +17,6 @@ const deleteIcon = `<svg class="popup-link btn-delete" href="#popup-del" width="
     fill="#890000" />
 </svg>`;
 
-//--------------------------надо?----------------------------
-// const deleteCell = document.createElement('td');
-// deleteCell.classList.add('table__column', 'table__column_8', 'table__small-btn');
-// deleteCell.innerHTML = deleteIcon;
-//--------------------------end надо?----------------------------
-
 const saveIcon = `<svg class="btn-save" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path
     d="M6 4.5C5.60217 4.5 5.22064 4.65804 4.93934 4.93934C4.65804 5.22064 4.5 5.60217 4.5 6V18C4.5 18.3978 4.65804 18.7794 4.93934 19.0607C5.22064 19.342 5.60217 19.5 6 19.5V14.25C6 13.6533 6.23705 13.081 6.65901 12.659C7.08097 12.2371 7.65326 12 8.25 12H15.75C16.3467 12 16.919 12.2371 17.341 12.659C17.7629 13.081 18 13.6533 18 14.25V19.5C18.3978 19.5 18.7794 19.342 19.0607 19.0607C19.342 18.7794 19.5 18.3978 19.5 18V8.4315C19.4999 8.03371 19.3418 7.65224 19.0605 7.371L16.629 4.9395C16.3478 4.65818 15.9663 4.50008 15.5685 4.5H15V6.75C15 7.34674 14.7629 7.91903 14.341 8.34099C13.919 8.76295 13.3467 9 12.75 9H9.75C9.15326 9 8.58097 8.76295 8.15901 8.34099C7.73705 7.91903 7.5 7.34674 7.5 6.75V4.5H6ZM9 4.5V6.75C9 6.94891 9.07902 7.13968 9.21967 7.28033C9.36032 7.42098 9.55109 7.5 9.75 7.5H12.75C12.9489 7.5 13.1397 7.42098 13.2803 7.28033C13.421 7.13968 13.5 6.94891 13.5 6.75V4.5H9ZM16.5 19.5V14.25C16.5 14.0511 16.421 13.8603 16.2803 13.7197C16.1397 13.579 15.9489 13.5 15.75 13.5H8.25C8.05109 13.5 7.86032 13.579 7.71967 13.7197C7.57902 13.8603 7.5 14.0511 7.5 14.25V19.5H16.5ZM3 6C3 5.20435 3.31607 4.44129 3.87868 3.87868C4.44129 3.31607 5.20435 3 6 3H15.5685C16.3641 3.00017 17.127 3.31635 17.6895 3.879L20.121 6.3105C20.6836 6.87298 20.9998 7.63591 21 8.4315V18C21 18.7956 20.6839 19.5587 20.1213 20.1213C19.5587 20.6839 18.7956 21 18 21H6C5.20435 21 4.44129 20.6839 3.87868 20.1213C3.31607 19.5587 3 18.7956 3 18V6Z"
@@ -61,11 +55,14 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
 // });
 //--------------------------end переделать----------------------------
 
-
 const tableBody = document.querySelector(".table__body");
+const addContractorBtn = document.getElementById("addContractorBtn");
+const tableBodyWrapper = document.querySelector(".table-body-wrapper");
 const contractorSearch = document.getElementById("contractorsSearch");
+const toggleBtn = document.querySelector(".toggle__checkbox");
+
 // contractorSearch.addEventListener("input", function () {
-  
+
 //   console.log(contractorSearch.value);
 // })
 //--------------------------старье----------------------------
@@ -159,6 +156,7 @@ const contractorSearch = document.getElementById("contractorsSearch");
 // let studyStart = document.getElementById("studyStart");
 //--------------------------end старье----------------------------
 
+
 // Загружаем список контрагентов с БД:
 let responce;
 let contractorList;
@@ -176,10 +174,6 @@ async function getInfoFromDB() {
     console.error(err);
     // Вернем исключение с текстом поясняющим детали ошибки:
     throw new Error("Запрос завершился неудачно.");
-    if (!contractorList.length) {
-      alert("Данные на сервере отсутсуют");
-      contractorList = [];
-    }
   }
 }
 
@@ -192,23 +186,42 @@ let copyContractorList = [...contractorList];
 let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
 
+//поиск максимального id в списке контрагентов:
+const ids = copyContractorList.map(object => {
+  return object.idContractor;
+});
+let maxId = Math.max(...ids);
 
-const toggleBtn = document.querySelector(".toggle__checkbox");
+// Добавляем кнопку "Добавить контрагента":
+addContractorBtn.onclick = function () {  
+  maxId = maxId + 1;
+  createContractorForm(maxId);
 
+}
+
+//функция переключения активности таблицы, так-же скрывает кнопку "добавить контрагента":
 function toggleBtnFunc() {
   if (toggleBtn.checked) {
     isActive = 0;
+    addContractorBtn.parentElement.style.display = "none"; // скрываем кнопку
+    tableBodyWrapper.style.height = "calc(100vh - 300px)"; // увеличиваем высоту таблицы
+    tableBodyWrapper.style.marginBottom = "0"; // убираем отступ снизу таблицы
+
   }
   if (!toggleBtn.checked) {
     isActive = 1;
+    addContractorBtn.parentElement.style.display = "block"; // показываем кнопку
+    tableBodyWrapper.style.height = "calc(100vh - 360px)"; // уменьшаем высоту таблицы
+    tableBodyWrapper.style.marginBottom = "30px"; // добавляем отступ снизу таблицы
+
   }
 }
 
 //логика фильтрации активных и не активных контрагентов:
 toggleBtn.addEventListener("click", function () {
-  toggleBtnFunc() //проверить выбранную активность контрагентов
+  toggleBtnFunc(); //проверить выбранную активность контрагентов
   renderContractorsTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
-  popupFunc() // навесить заново события открытия и закрытия модльного окна
+  popupFunc(); // навесить заново события открытия и закрытия модльного окна
 });
 
 // Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем,
@@ -286,7 +299,7 @@ function getContractorItem(contractortObj, isActive) {
   tableDataDeleteCell.addEventListener("click", function () {
     onDelete({ contractortObj, element: item });
   });
-  
+
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataReverCell.addEventListener("click", function () {
     onRevert({ contractortObj, element: item });
@@ -312,7 +325,7 @@ function getContractorItem(contractortObj, isActive) {
   item.append(tableDataEmail);
   if (isActive == 1) {
     item.append(tableDataEditCell);
-    item.append(tableDataDeleteCell);    
+    item.append(tableDataDeleteCell);
   } else {
     item.append(tableDataReverCell);
     item.append(tableDataEmptyCell);
@@ -329,23 +342,11 @@ function getContractorItem(contractortObj, isActive) {
 // 3) при переключении тогла фильтруем массив-0 контрагентов по активности = 0, получаем массив-2, рендер.
 // 4) при фильтрации массива по поиску работаем с массивом-1 или массивом-2, проверяем положение тогла
 // 5) при переключении тогла работаем с массивом-1 или массивом-2, проверяем наличие фильтра по поиску
-// 6) 
+// 6)
 // 7)
 // 8)
 // 9)
 // 10)
-// 11)
-// 12)
-// 13)
-// 14)
-// 15)
-// 16)
-// 17)
-// 18)
-// 19)
-// 20)
-
-
 
 
 // Этап 4. Создайте функцию отрисовки всех контрагентов.
@@ -387,6 +388,7 @@ function preRender(arr) {
 
 preRender(copyContractorList);
 
+
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // function filterTable(col, param, arr) {
 //   return arr.filter((oneContractor) =>
@@ -396,20 +398,22 @@ preRender(copyContractorList);
 
 function filterTable(search, isActive, arr) {
   let copy = [...arr];
-  let res = copy.filter(function(obj) {
-    return Object.keys(obj).some(function(key) {
-      return obj[key].toString().toLowerCase().indexOf(search.toLowerCase().trim()) != -1;
-    })
-  })
+  let res = copy.filter(function (obj) {
+    return Object.keys(obj).some(function (key) {
+      return (
+        obj[key]
+          .toString()
+          .toLowerCase()
+          .indexOf(search.toLowerCase().trim()) != -1
+      );
+    });
+  });
   return filterTableActive(isActive, "isActive", res);
 }
 
-
 function filterTableActive(isActive, param, arr) {
   let copy = [...arr];
-  return copy.filter((oneContractor) => 
-    oneContractor[param] == isActive
-  );
+  return copy.filter((oneContractor) => oneContractor[param] == isActive);
 }
 
 //рендер подготовленного массива + фильтрация по всем колонкам.
@@ -436,7 +440,7 @@ function renderContractorsTable(arr, isActive) {
 }
 
 renderContractorsTable(contractorListForRender, isActive);
-popupFunc()
+popupFunc();
 
 // Этап 5. К форме добавления контрагента добавьте слушатель события отправки формы, в котором будет проверка введенных данных.Если проверка пройдет успешно, добавляйте объект с данными контрагентов в массив контрагентов и запустите функцию отрисовки таблицы контрагентов, созданную на этапе 4.
 
@@ -473,7 +477,6 @@ popupFunc()
 //     return;
 //   }
 
-
 //   const responce = await fetch("http://localhost:3000/api/students", {
 //     method: "POST",
 //     headers: { "Content-Type": "application/json" },
@@ -506,12 +509,13 @@ popupFunc()
 let sortDirectionId = true; // индикотор сортировки по id
 let sortDirectionName = true; // индикатор сортировки по имени
 let iconTransmorm = "rotate(0deg)"; // положения иконки сортировки
-const nameContractorBtn = document.getElementById('nameContractorBtn'); // кнопка сортировки - поле таблицы
-const nameContractorBtnIcon = nameContractorBtn.querySelector('svg'); // иконка сортировки по имени
-const idContractorBtn = document.getElementById('idContractorBtn'); // кнопка сортировки - поле таблицы
-const idContractorBtnIcon = idContractorBtn.querySelector('svg'); // иконка сортировки по id
+const nameContractorBtn = document.getElementById("nameContractorBtn"); // кнопка сортировки - поле таблицы
+const nameContractorBtnIcon = nameContractorBtn.querySelector("svg"); // иконка сортировки по имени
+const idContractorBtn = document.getElementById("idContractorBtn"); // кнопка сортировки - поле таблицы
+const idContractorBtnIcon = idContractorBtn.querySelector("svg"); // иконка сортировки по id
 
-const sortArr = (arr, property, sortDirection, isActive) => { // функция сортировки
+const sortArr = (arr, property, sortDirection, isActive) => {
+  // функция сортировки
   arr.sort((a, b) =>
     (sortDirection ? a[property] < b[property] : a[property] > b[property])
       ? -1
@@ -522,14 +526,16 @@ const sortArr = (arr, property, sortDirection, isActive) => { // функция 
 };
 
 // обработчик события сортировки:
-nameContractorBtn.addEventListener("click", () => { // сортировка по имени при клике
+nameContractorBtn.addEventListener("click", () => {
+  // сортировка по имени при клике
   sortDirectionName = !sortDirectionName; // меняем индикатор сортировки
   iconTransmorm = sortDirectionName ? "rotate(0deg)" : "rotate(180deg)"; // задаем угол поворота иконки
   nameContractorBtnIcon.style.transform = iconTransmorm; // меняем положение иконки
   sortArr(contractorListForRender, "name", sortDirectionName, isActive); // сортируем массив
 });
 
-idContractorBtn.addEventListener("click", () => { // сортировка по id при клике
+idContractorBtn.addEventListener("click", () => {
+  // сортировка по id при клике
   sortDirectionId = !sortDirectionId;
   iconTransmorm = sortDirectionId ? "rotate(0deg)" : "rotate(180deg)";
   idContractorBtnIcon.style.transform = iconTransmorm;
@@ -541,7 +547,6 @@ contractorSearch.addEventListener("input", () => {
   renderContractorsTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
   popupFunc(); // навесить заново события открытия и закрытия модльного окна
 });
-
 
 // вспомогательные функции >>>>-------------->
 
@@ -555,65 +560,219 @@ contractorSearch.addEventListener("input", () => {
 // });
 
 function onDelete({ contractortObj, element: item }) {
-  const agree = document.querySelector('#btn-delete');
+  const agree = document.querySelector("#btn-delete");
   const element = item;
   const contractort = contractortObj;
-  agree.addEventListener("click", function (e) {    
-    contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 0;
+  agree.addEventListener("click", function (e) {
+    contractorListForRender.filter(
+      (contractor) => contractor.idContractor == contractort.idContractor
+    )[0].isActive = 0;
     element.remove();
     popupClose(e.target.closest(".popup"));
-  })
+  });
   // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
   // });
 }
-
 
 function onRevert({ contractortObj, element: item }) {
-  const agree = document.querySelector('#btn-revert');
+  const agree = document.querySelector("#btn-revert");
   const element = item;
   const contractort = contractortObj;
-  agree.addEventListener("click", function (e) {    
-    contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
+  agree.addEventListener("click", function (e) {
+    contractorListForRender.filter(
+      (contractor) => contractor.idContractor == contractort.idContractor
+    )[0].isActive = 1;
     element.remove();
     popupClose(e.target.closest(".popup"));
-  })
+  });
   // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
   // });
 }
 
-// function onEdit({ contractortObj, element: item }) {
-//   const agree = document.querySelector('#btn-revert');
-//   const element = item;
-//   const contractort = contractortObj;
-//   agree.addEventListener("click", function (e) {    
-//     contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
-//     element.remove();
-//     popupClose(e.target.closest(".popup"));
-//   })
-//   // element.remove();
-//   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
-//   //   method: "DELETE",
-//   // });
-// }
+function onEdit({ contractortObj, element: item }) {
+  const agree = document.querySelector("#btn-revert");
+  const element = item;
+  const contractort = contractortObj;
+  agree.addEventListener("click", function (e) {
+    contractorListForRender.filter(
+      (contractor) => contractor.idContractor == contractort.idContractor
+    )[0].isActive = 1;
+    element.remove();
+    popupClose(e.target.closest(".popup"));
+  });
+  // element.remove();
+  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+  //   method: "DELETE",
+  // });
+}
 
-// function onSave({ contractortObj, element: item }) {
-//   const agree = document.querySelector('#btn-revert');
-//   const element = item;
-//   const contractort = contractortObj;
-//   agree.addEventListener("click", function (e) {    
-//     contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
-//     element.remove();
-//     popupClose(e.target.closest(".popup"));
-//   })
-//   // element.remove();
-//   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
-//   //   method: "DELETE",
-//   // });
-// }
+function onSave({ contractortObj, element: item }) {
+  console.log("save");
+  // const agree = document.querySelector('#btn-revert');
+  // const element = item;
+  // const contractort = contractortObj;
+  // agree.addEventListener("click", function (e) {
+  //   contractorListForRender.filter((contractor) => contractor.idContractor == contractort.idContractor)[0].isActive = 1;
+  //   element.remove();
+  //   popupClose(e.target.closest(".popup"));
+  // })
+  // element.remove();
+  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+  //   method: "DELETE",
+  // });
+}
+
+// функция добавления сразу множества атрибутов:
+function setAttributes(el, attrs) {
+  for (var key in attrs) {
+    el.setAttribute(key, attrs[key]);
+  }
+}
+
+// функция создания формы для добавления/редактирования контрагента:
+function createContractorForm(maxId) {
+  const item = document.createElement("tr"),
+    tableFormId = document.createElement("td"),
+    tableFormName = document.createElement("td"),
+    tableFormTaxNumber = document.createElement("td"),
+    tableFormAddress = document.createElement("td"),
+    tableFormPhone = document.createElement("td"),
+    tableFormEmail = document.createElement("td"),
+    tableFormSaveCell = document.createElement("td"),
+    tableFormEmptyCell = document.createElement("td"),
+    // tableFormInputId = document.createElement("input"),
+    tableFormInputName = document.createElement("input"),
+    tableFormInputTaxNumber = document.createElement("input"),
+    tableFormInputAddress = document.createElement("input"),
+    tableFormInputPhone = document.createElement("input"),
+    tableFormInputEmail = document.createElement("input");
+
+
+  //присвоение классов созданным элементам:
+  item.classList.add("table__row", "table__row_editable");
+  tableFormId.classList.add("table__column", "table__column_1");
+  tableFormName.classList.add("table__column", "table__column_2");
+  tableFormTaxNumber.classList.add("table__column", "table__column_3");
+  tableFormAddress.classList.add("table__column", "table__column_4");
+  tableFormPhone.classList.add("table__column", "table__column_5");
+  tableFormEmail.classList.add("table__column", "table__column_6");
+  tableFormSaveCell.classList.add(
+    "table__column",
+    "table__column_7",
+    "table__small-btn"
+  );
+  tableFormEmptyCell.classList.add(
+    "table__column",
+    "table__column_8",
+    "table__small-btn"
+  );
+
+  //присвоение классов созданным инпутам:
+  // tableFormInputId.classList.add("table__input");
+  tableFormInputName.classList.add("table__input");
+  tableFormInputTaxNumber.classList.add("table__input");
+  tableFormInputAddress.classList.add("table__input");
+  tableFormInputPhone.classList.add("table__input");
+  tableFormInputEmail.classList.add("table__input");
+
+  //присвоение атрибутов созданным инпутам:
+  setAttributes(tableFormInputName, {
+    type: "text",
+    name: "organization",
+    value: "",
+    required: true,
+    placeholder: "Заполните название",
+  })
+  setAttributes(tableFormInputTaxNumber, {
+    type: "text",
+    name: "taxNumber",
+    value: "",
+    required: true,
+    placeholder: "Заполните ИНН",
+  })
+  setAttributes(tableFormInputAddress, {
+    type: "text",
+    name: "address",
+    value: "",
+    required: true,
+    placeholder: "Заполните адрес",
+  })
+  setAttributes(tableFormInputPhone, {
+    type: "text",
+    name: "phone",
+    value: "",
+    required: true,
+    placeholder: "Заполните телефон",
+  })
+  setAttributes(tableFormInputEmail, {
+    type: "text",
+    name: "email",
+    value: "",
+    required: true,
+    placeholder: "Заполните почту",
+  })
+
+
+
+  // присваеваем значения внутренним элементам формы:
+  tableFormSaveCell.innerHTML = saveIcon;
+  // tableFormSaveCell.setAttribute("id", contractortObj.idContractor);
+
+  // добавляем обработчик на кнопку - сохранение контрагента
+  tableFormSaveCell.addEventListener("click", function () {
+    onSave({ contractortObj, element: item });
+  });
+
+  // присваеваем id контрагента элементу и добавляем информацию в таблицу:
+  // item.setAttribute("id", contractortObj.idContractor);
+  tableFormId.innerText = maxId;
+  // maxId++;
+  // console.log(maxId);
+
+
+  tableFormName.append(tableFormInputName);
+  tableFormTaxNumber.append(tableFormInputTaxNumber);
+  tableFormAddress.append(tableFormInputAddress);
+  tableFormPhone.append(tableFormInputPhone);
+  tableFormEmail.append(tableFormInputEmail);
+  
+  item.append(tableFormId);
+  item.append(tableFormName);
+  item.append(tableFormTaxNumber);
+  item.append(tableFormAddress);
+  item.append(tableFormPhone);
+  item.append(tableFormEmail);
+  item.append(tableFormSaveCell);
+  item.append(tableFormEmptyCell);
+
+    //присвоение инпутов ячейкам таблицы:
+
+
+
+
+
+
+  tableBody.append(item); // добавление контрагента в таблицу
+
+  // setAttributes(tableFormId.querySelector("input"), {
+  //   type: "text",
+  //   required: true,
+  //   name: "address",
+  // });
+
+  // вычислить максимальный id в БД:
+
+
+  console.log(item);
+  item.scrollIntoView(); // переход к созданной строке
+  return item;
+}
+
+
 
 //--------------------------разное----------------------------
 const fieldInput1 = document.querySelector("#field-input-1");
@@ -781,7 +940,6 @@ if (btnCancel) {
 
 // --------------------popup:------------------------
 
-
 let unlock = true;
 const timeout = 300;
 const lockPadding = document.querySelectorAll(".lock-padding");
@@ -829,74 +987,67 @@ function popupClose(popupActive, doUnlock = true) {
   }
 }
 
-
-
-
 function popupFunc() {
   const popupLinks = document.querySelectorAll(".popup-link");
   // console.log(popupLinks);
   // const body = document.querySelector("body");
   // const lockPadding = document.querySelectorAll(".lock-padding");
   // const btn = document.querySelector(".project-btn");
-  
-  
-if (popupLinks.length > 0) {
-  for (let index = 0; index < popupLinks.length; index++) {
-    const popupLink = popupLinks[index];
-    popupLink.addEventListener("click", function (e) {
-      const popupName = popupLink.getAttribute("href").replace("#", "");
-      const curentPopup = document.getElementById(popupName); //получаем id попап-окна
-      popupOpen(curentPopup);
-      e.preventDefault();
-    });
-  }
-}
 
-const popupCloseIcon = document.querySelectorAll(".popup-close");
-if (popupCloseIcon.length > 0) {
-  for (let index = 0; index < popupCloseIcon.length; index++) {
-    const el = popupCloseIcon[index];
-    el.addEventListener("click", function (e) {
-      popupClose(el.closest(".popup")); //ближайший родитель класса popup
-      e.preventDefault();
-    });
-  }
-}
-
-function popupOpen(curentPopup) {
-  if (curentPopup && unlock) {
-    const popupActive = document.querySelector(".popup.open");
-    if (popupActive) {
-      // закрываем текущий открытый попап, если он есть
-      popupClose(popupActive, false);
-    } else {
-      bodyLock();
+  if (popupLinks.length > 0) {
+    for (let index = 0; index < popupLinks.length; index++) {
+      const popupLink = popupLinks[index];
+      popupLink.addEventListener("click", function (e) {
+        const popupName = popupLink.getAttribute("href").replace("#", "");
+        const curentPopup = document.getElementById(popupName); //получаем id попап-окна
+        popupOpen(curentPopup);
+        e.preventDefault();
+      });
     }
-    // console.log(curentPopup);
-    curentPopup.classList.add("open");
-    curentPopup.addEventListener("click", function (e) {
-      if (!e.target.closest(".popup__content")) {
-        // если клик был по области вокруг попапа то ничего не делаем
-        popupClose(e.target.closest(".popup"));
+  }
+
+  const popupCloseIcon = document.querySelectorAll(".popup-close");
+  if (popupCloseIcon.length > 0) {
+    for (let index = 0; index < popupCloseIcon.length; index++) {
+      const el = popupCloseIcon[index];
+      el.addEventListener("click", function (e) {
+        popupClose(el.closest(".popup")); //ближайший родитель класса popup
+        e.preventDefault();
+      });
+    }
+  }
+
+  function popupOpen(curentPopup) {
+    if (curentPopup && unlock) {
+      const popupActive = document.querySelector(".popup.open");
+      if (popupActive) {
+        // закрываем текущий открытый попап, если он есть
+        popupClose(popupActive, false);
+      } else {
+        bodyLock();
       }
-    });
+      // console.log(curentPopup);
+      curentPopup.classList.add("open");
+      curentPopup.addEventListener("click", function (e) {
+        if (!e.target.closest(".popup__content")) {
+          // если клик был по области вокруг попапа то ничего не делаем
+          popupClose(e.target.closest(".popup"));
+        }
+      });
+    }
   }
+
+  // popupClose(popupActive, doUnlock);
+
+  // добавляем боди padding-right при открытии попапа, на ширину скролл-бара
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      const popupActive = document.querySelector(".popup.open");
+      popupClose(popupActive);
+    }
+  });
 }
-
-// popupClose(popupActive, doUnlock);
-
-
-// добавляем боди padding-right при открытии попапа, на ширину скролл-бара
-
-document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") {
-    const popupActive = document.querySelector(".popup.open");
-    popupClose(popupActive);
-  }
-});
-
-};
-
 
 // --------------------end popup:------------------------
 //--------------------------end разное----------------------------
