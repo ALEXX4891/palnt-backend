@@ -1,9 +1,13 @@
 <?php
 
+
 // $inputData = '{"table":"contractor","all":"*","select":"SELECT"}';
+$inputData = '{"function":"insert","table":"contractor","update":"UPDATE","idContractor":3,"isActive":"0"}';
+
+
 
 // блокировка получения данныех, если не переданы параметры:
-$inputData = file_get_contents('php://input');
+// $inputData = file_get_contents('php://input');
 if (!$inputData) {
   die('No data');
 }
@@ -11,10 +15,18 @@ if (!$inputData) {
 
 if ($inputData) {
   $data = json_decode($inputData, true);
+  // var_dump($data);
+  // echo '<pre>';
+  // print_r($data);
+  // echo '</pre>';
   $arrKeys = array_keys($data);
   $arrData = [];
 
   foreach ($arrKeys as $key) {
+    if ($key == 'function') {
+      $arrData['function'] = $data[$key];
+      $function = $data[$key];
+    }
     if ($key == 'select') {
       $arrData['operation'] = $data[$key];
       $operation = $data[$key];
@@ -39,7 +51,7 @@ if ($inputData) {
       $arrData['table'] = $data[$key];
       $table = $data[$key];
     }
-    if ($key == 'id') {
+    if ($key == 'idContractor') {
       $arrData['idContractor'] = $data[$key];
       $idContractor = $data[$key];
     }
@@ -63,33 +75,37 @@ if ($inputData) {
       $arrData['email'] = $data[$key];
       $email = $data[$key];
     }
+    if ($key == 'isActive') {
+      $arrData['isActive'] = $data[$key];
+      $isActive = $data[$key];
+    }
   }
 
   // if ($operation == 'UPDATE') {
-    //   $sql = $arrData['operation'];
-    // }
-    // if ($operation == 'DELETE') {
-      //   $sql = $arrData['operation'];
-      // }
-      // if ($operation == 'INSERT') {
-        //   $sql = $arrData['operation'];
-        // }
-        
-        // print_r($data);
-        // print_r($idContractor);
-        // print_r($arr);
+  //   $sql = $arrData['operation'];
+  // }
+  // if ($operation == 'DELETE') {
+  //   $sql = $arrData['operation'];
+  // }
+  // if ($operation == 'INSERT') {
+  //   $sql = $arrData['operation'];
+  // }
+
+  // print_r($data);
+  // print_r($idContractor);
+  // print_r($arr);
   // echo '<pre>';
   // print_r($arrData);
   // echo '</pre>';
 
-  
+
   // if ($idContractor) {
-    //   $sql = "UPDATE `contractor` SET `name` = '$name', `taxNumber` = '$taxNumber', `address` = '$address', `telephone` = '$telephone', `email` = '$email' WHERE `idContractor` = $idContractor";
-    // } else {
-      //   $sql = "INSERT INTO `contractor` (`name`, `taxNumber`, `address`, `telephone`, `email`) VALUES ('$name', '$taxNumber', '$address', '$telephone', '$email')";
-      // }
-      // $res = json_encode($arrData, true);
-      // echo $res;
+  //   $sql = "UPDATE `contractor` SET `name` = '$name', `taxNumber` = '$taxNumber', `address` = '$address', `telephone` = '$telephone', `email` = '$email' WHERE `idContractor` = $idContractor";
+  // } else {
+  //   $sql = "INSERT INTO `contractor` (`name`, `taxNumber`, `address`, `telephone`, `email`) VALUES ('$name', '$taxNumber', '$address', '$telephone', '$email')";
+  // }
+  // $res = json_encode($arrData, true);
+  // echo $res;
 }
 
 // $dbh = new PDO('mysql:host=localhost;dbname=plant', 'root', '');
@@ -97,6 +113,59 @@ if ($inputData) {
 // $sth = $dbh->prepare($sql);
 if ($operation == 'SELECT') {
   $sql = $operation . ' ' . $all . ' FROM ' . $table;
+  // echo $sql;
+}
+if (isset($function)) {
+  if ($function == 'delete' || $function == 'revert') {
+    $sql = $operation . ' ' . $table . ' SET ' . 'isActive = ' . $isActive . ' WHERE ' . 'idContractor = ' . $idContractor;
+    // echo $sql;
+    // echo '<br>';
+
+    // $sql = UPDATE `contractor` SET `isActive` = '$isActive', `taxNumber` = '$taxNumber', `address` = '$address', `telephone` = '$telephone', `email` = '$email' WHERE `idContractor` = $idContractor
+    // $sql = "UPDATE contractor SET isActive = 0 WHERE idContractor = 1";
+  }
+  if ($function == 'insert') {
+    // $sql = $operation . ' ' . $table . ' (' . $idContractor . ', ' . $isActive . ', ' . $address . ', ' . $telephone . ', ' . $email . ')';
+    // $sql = "UPDATE `$table` SET `cost` = :cost, `cost_1` = :cost_1, `cost_2` = :cost_2, `cost_3` = :cost_3, `cost_old` = :cost_old WHERE `idContractor` = :id";
+    // $sql = "UPDATE 'contractor' SET 
+    // 'name' = 'ООО « Длинное большое название песня2»', 
+    // 'taxNumber' = '978777111', 
+    // 'address' = 'г. Тюмень. ул. Фармана Салманова, д. 1', 
+    // 'telephone' = '+7 987 111 888', 
+    // 'email' = 'email1@example.com',
+    // 'isActive' = '1',
+    // WHERE 'idContractor' = 1";
+
+    $sql = "INSERT INTO contractor (
+      idContractor, 
+      name, 
+      taxNumber, 
+      address, 
+      telephone, 
+      email
+      ) VALUES (
+        '26', 
+        'ООО « Длинное большое название песня2»', 
+        '978777111', 
+        'г. Тюмень. ул. Фармана Салманова, д. 1', 
+        '+7 987 111 888', 
+        'email1@example.com'
+        )
+    ON DUPLICATE KEY UPDATE 
+    name = 'ООО « Длинное большое название песня2»',
+    taxNumber = '978777111',
+    address = 'г. Тюмень. ул. Фармана Салманова, д. 1',
+    telephone = '+7 987 111 888',
+    email = 'email1@example.com';";
+
+    
+
+
+
+
+    echo $sql;
+    echo '<br>';
+  }
 }
 // $sth->execute();
 
@@ -116,7 +185,7 @@ if ($operation == 'SELECT') {
 // }
 // print_r($data);
 
-// die('STOP');
+die('STOP');
 function getData($sql)
 {
 
