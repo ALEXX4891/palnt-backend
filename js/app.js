@@ -160,15 +160,24 @@ const toggleBtn = document.querySelector(".toggle__checkbox");
 // Загружаем список контрагентов с БД:
 let responce;
 let contractorList;
-let options = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    table: "contractor",
-    all: "*",
-    select: "SELECT",
+// let options = {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({
+//     table: "contractor",
+//     all: "*",
+//     select: "SELECT",
+    // idContractor: "idContractor",
+    // isActive: "isActive",
+    // name: "name",
+    // taxNumber: "taxNumber",
+    // address: "address",
+    // telephone: "telephone",
+    // email: "email",
+
+    // create: "CREATE",
     // update: "UPDATE",
     // where: "WHERE",
     // insert: "INSERT INTO",
@@ -183,15 +192,26 @@ let options = {
     // on: "ON",
     // groupby: "GROUP BY",
     // having: "HAVING",
+//   }),
+// }
 
-  }),
-}
-console.log(options.body);
-async function getInfoFromDB() {
+let options = {
+  table: "contractor",
+  all: "*",
+  select: "SELECT",
+};
+console.log(JSON.stringify(options));
+async function getInfoFromDB(options) {
   // Блок try выполнится полностью, если не будет ошибок:
   try {
     // Выполняем запрос:
-    responce = await fetch("main.php", options);
+    responce = await fetch("main.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(options),
+    });
     contractorList = await responce.json();
     return contractorList; // Возвращаем результат запроса
   } catch (err) {
@@ -204,9 +224,8 @@ async function getInfoFromDB() {
   }
 }
 
-await getInfoFromDB(); // требуется подключить скрипт как модуль, иначе await не работает!!!
+await getInfoFromDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
 //--------------------------end Запрос к БД----------------------------
-
 
 // copyContractorList = [...activContractors];
 
@@ -604,10 +623,17 @@ function onDelete({ contractorObj, element: item }) {
     element.remove();
     popupClose(e.target.closest(".popup"));
   });
-  // element.remove();
-  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
-  //   method: "DELETE",
-  // });
+  options = {
+    function: "delete",
+    table: "contractor",
+    update: "UPDATE",
+    idContractor: contractorObj.idContractor,
+    isActive: "0",
+  };
+  console.log(JSON.stringify(options));
+  getInfoFromDB(options);
+  console.log(contractorList);
+
 }
 
 function onRevert({ contractorObj, element: item }) {
@@ -621,10 +647,16 @@ function onRevert({ contractorObj, element: item }) {
     element.remove();
     popupClose(e.target.closest(".popup"));
   });
-  // element.remove();
-  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
-  //   method: "DELETE",
-  // });
+  options = {
+    function: "revert",
+    table: "contractor",
+    update: "UPDATE",
+    idContractor: contractorObj.idContractor,
+    isActive: "1",
+  };
+  console.log(JSON.stringify(options));
+  getInfoFromDB(options);
+  console.log(contractorList);
 }
 
 function onEdit({ contractorObj, element: item }) {
@@ -632,10 +664,6 @@ function onEdit({ contractorObj, element: item }) {
   const newItem = createContractorForm(idContractor, contractorObj);
   item.replaceWith(newItem);
   popupFunc(); // требуется для корректной работы событий
-  // element.remove();
-  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
-  //   method: "DELETE",
-  // });
 }
 
 function onSave({ element: item }) {
@@ -696,9 +724,21 @@ function onSave({ element: item }) {
   item.replaceWith(newItem);
   popupFunc(); // требуется для корректной работы событий
 
-  // fetch(`main.php`, {
-  //   method: "DELETE",
-  // });
+  options = {
+    function: "save",
+    table: "contractor",
+    update: "UPDATE",
+    idContractor: contractor.idContractor,
+    name: contractor.name,
+    taxNumber: contractor.taxNumber,
+    address: contractor.address,
+    telephone: contractor.telephone,
+    email: contractor.email,
+    isActive: contractor.isActive,
+  };
+  console.log(JSON.stringify(options));
+  getInfoFromDB(options);
+  console.log(contractorList);
 }
 
 // функция добавления сразу множества атрибутов:
