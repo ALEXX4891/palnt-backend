@@ -1,13 +1,14 @@
 <?php
 
 
+
 // $inputData = '{"table":"contractor","all":"*","select":"SELECT"}';
-// $inputData = '{"function":"insert","table":"contractor","update":"UPDATE","idContractor":3,"isActive":"0"}';
+$inputData = '{"function":"insert","table":"contractor","update":"UPDATE","idContractor":3,"isActive":"0"}';
 
 
 
 // блокировка получения данныех, если не переданы параметры:
-$inputData = file_get_contents('php://input');
+// $inputData = file_get_contents('php://input');
 if (!$inputData) {
   die('No data');
 }
@@ -158,13 +159,13 @@ if (isset($function)) {
     telephone = '+7 987 111 888',
     email = 'email1@example.com';";
 
+    
 
 
 
 
-
-    // echo $sql;
-    // echo '<br>';
+    echo $sql;
+    echo '<br>';
   }
 }
 // $sth->execute();
@@ -185,7 +186,7 @@ if (isset($function)) {
 // }
 // print_r($data);
 
-// die('STOP');
+die('STOP');
 function getData($sql)
 {
 
