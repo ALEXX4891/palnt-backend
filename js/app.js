@@ -160,11 +160,21 @@ const toggleBtn = document.querySelector(".toggle__checkbox");
 // Загружаем список контрагентов с БД:
 let responce;
 let contractorList;
+let options = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: "contractor",
+    id: 1,
+  }),
+}
 async function getInfoFromDB() {
   // Блок try выполнится полностью, если не будет ошибок:
   try {
     // Выполняем запрос:
-    responce = await fetch("main.php");
+    responce = await fetch("main.php", options);
     contractorList = await responce.json();
     return contractorList; // Возвращаем результат запроса
   } catch (err) {
