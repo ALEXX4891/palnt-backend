@@ -166,10 +166,27 @@ let options = {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    name: "contractor",
-    id: 1,
+    table: "contractor",
+    all: "*",
+    select: "SELECT",
+    // update: "UPDATE",
+    // where: "WHERE",
+    // insert: "INSERT INTO",
+    // delete: "DELETE FROM",
+    // orderby: "ORDER BY",
+    // limit: "LIMIT",
+    // select: "SELECT",
+    // from: "FROM",
+    // innerjoin: "INNER JOIN",
+    // leftjoin: "LEFT JOIN",
+    // rightjoin: "RIGHT JOIN",
+    // on: "ON",
+    // groupby: "GROUP BY",
+    // having: "HAVING",
+
   }),
 }
+console.log(options.body);
 async function getInfoFromDB() {
   // Блок try выполнится полностью, если не будет ошибок:
   try {
@@ -194,6 +211,7 @@ await getInfoFromDB(); // требуется подключить скрипт �
 // copyContractorList = [...activContractors];
 
 // выбираем только активных контрагентов:
+console.log(contractorList);
 let copyContractorList = [...contractorList];
 let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
@@ -678,7 +696,7 @@ function onSave({ element: item }) {
   item.replaceWith(newItem);
   popupFunc(); // требуется для корректной работы событий
 
-  // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
+  // fetch(`main.php`, {
   //   method: "DELETE",
   // });
 }
