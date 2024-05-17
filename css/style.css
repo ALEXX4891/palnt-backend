@@ -980,6 +980,11 @@ img {
   overflow: hidden; /* Обрезаем всё за пределами блока */
   text-overflow: ellipsis; /* Добавляем многоточие */
 }
+
+.table__column svg {
+margin-left: 3px;
+}
+
 @media (max-width: 1500px) {
   .table__column {
     font-size: 14px;

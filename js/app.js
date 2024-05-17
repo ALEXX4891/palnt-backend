@@ -156,7 +156,7 @@ const toggleBtn = document.querySelector(".toggle__checkbox");
 // let studyStart = document.getElementById("studyStart");
 //--------------------------end старье----------------------------
 
-
+//--------------------------Запрос к БД----------------------------
 // Загружаем список контрагентов с БД:
 let responce;
 let contractorList;
@@ -178,6 +178,8 @@ async function getInfoFromDB() {
 }
 
 await getInfoFromDB(); // требуется подключить скрипт как модуль, иначе await не работает!!!
+//--------------------------end Запрос к БД----------------------------
+
 
 // copyContractorList = [...activContractors];
 
@@ -190,7 +192,7 @@ let contractorListForRender = [];
 let maxId = 0;
 function getMaxId(arr) {
   let copy = [...arr];
-  const ids = copy.map(object => {
+  const ids = copy.map((object) => {
     return object.idContractor;
   });
   maxId = Math.max(...ids);
@@ -200,8 +202,9 @@ function getMaxId(arr) {
 // Добавляем событие на кнопку "Добавить контрагента":
 addContractorBtn.onclick = function () {
   maxId += 1;
-  createContractorForm(maxId);
-}
+  const item = createContractorForm(maxId);
+  item.scrollIntoView(); // переход к созданной строке
+};
 
 //функция переключения активности таблицы, так-же скрывает кнопку "добавить контрагента":
 function toggleBtnFunc() {
@@ -210,14 +213,14 @@ function toggleBtnFunc() {
     addContractorBtn.parentElement.style.display = "none"; // скрываем кнопку
     tableBodyWrapper.style.height = "calc(100vh - 300px)"; // увеличиваем высоту таблицы
     tableBodyWrapper.style.marginBottom = "0"; // убираем отступ снизу таблицы
-    getMaxId(contractorListForRender) // поиск максимального id в списке контрагентов
+    getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
   }
   if (!toggleBtn.checked) {
     isActive = 1;
     addContractorBtn.parentElement.style.display = "block"; // показываем кнопку
     tableBodyWrapper.style.height = "calc(100vh - 360px)"; // уменьшаем высоту таблицы
     tableBodyWrapper.style.marginBottom = "30px"; // добавляем отступ снизу таблицы
-    getMaxId(contractorListForRender) // поиск максимального id в списке контрагентов
+    getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
   }
 }
 
@@ -335,8 +338,6 @@ function getContractorItem(contractorObj, isActive = 1) {
     item.append(tableDataEmptyCell);
   }
 
-  tableBody.append(item); // добавление контрагента в таблицу
-
   return item;
 }
 
@@ -351,7 +352,6 @@ function getContractorItem(contractorObj, isActive = 1) {
 // 8)
 // 9)
 // 10)
-
 
 // Этап 4. Создайте функцию отрисовки всех контрагентов.
 // Аргументом функции будет массив контрагентов.Функция должна использовать
@@ -392,7 +392,7 @@ function preRender(arr) {
 
 preRender(copyContractorList);
 
-getMaxId(contractorListForRender)
+getMaxId(contractorListForRender);
 
 // функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // function filterTable(col, param, arr) {
@@ -440,7 +440,8 @@ function renderContractorsTable(arr, isActive) {
 
   // рендерим всю таблицу
   for (const contractorObj of copyList) {
-    getContractorItem(contractorObj, isActive);
+    const item = getContractorItem(contractorObj, isActive);
+    tableBody.append(item); // добавление контрагента в таблицу
   }
 }
 
@@ -599,8 +600,10 @@ function onRevert({ contractorObj, element: item }) {
 }
 
 function onEdit({ contractorObj, element: item }) {
-  console.log("onEdit");
-  // createContractorForm()
+  const idContractor = item.getAttribute("id");
+  const newItem = createContractorForm(idContractor, contractorObj);
+  item.replaceWith(newItem);
+  popupFunc(); // требуется для корректной работы событий
   // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
@@ -608,14 +611,22 @@ function onEdit({ contractorObj, element: item }) {
 }
 
 function onSave({ element: item }) {
-  // console.log(item);
-  // console.log(contractorObj);
-  const id = item.querySelector('.table__column_1').innerText;
-  const name = item.querySelector('.table__column_2').querySelector('input').value;
-  const taxNumber = item.querySelector('.table__column_3').querySelector('input').value;
-  const address = item.querySelector('.table__column_4').querySelector('input').value;
-  const phone = item.querySelector('.table__column_5').querySelector('input').value;
-  const email = item.querySelector('.table__column_6').querySelector('input').value;
+  const id = item.querySelector(".table__column_1").innerText;
+  const name = item
+    .querySelector(".table__column_2")
+    .querySelector("input").value;
+  const taxNumber = item
+    .querySelector(".table__column_3")
+    .querySelector("input").value;
+  const address = item
+    .querySelector(".table__column_4")
+    .querySelector("input").value;
+  const phone = item
+    .querySelector(".table__column_5")
+    .querySelector("input").value;
+  const email = item
+    .querySelector(".table__column_6")
+    .querySelector("input").value;
   const contractor = {
     idContractor: Number(id),
     name: name,
@@ -623,37 +634,40 @@ function onSave({ element: item }) {
     address: address,
     telephone: phone,
     email: email,
-    isActive: 1
-  }
+    isActive: 1,
+  };
 
-  
-  
   //проверки на заполянность полей:
   if (!Number.isInteger(contractor.taxNumber)) {
-    alert('Номер ИНН должен быть числом');
+    alert("Номер ИНН должен быть числом");
     return;
   }
 
-  if (!contractor.name || !contractor.taxNumber || !contractor.address || !contractor.telephone || !contractor.email) {
-    alert('Заполните все поля таблицы');
+  if (
+    !contractor.name ||
+    !contractor.taxNumber ||
+    !contractor.address ||
+    !contractor.telephone ||
+    !contractor.email
+  ) {
+    alert("Заполните все поля таблицы");
     return;
   }
-  
+
   //добавление или обновление контрагента в массиве
-  const index = contractorListForRender.findIndex((contractor) => contractor.idContractor == id);
+  const index = contractorListForRender.findIndex(
+    (contractor) => contractor.idContractor == id
+  );
   if (index !== -1) {
     contractorListForRender[index] = contractor;
   } else {
     contractorListForRender.push(contractor);
   }
 
-  getContractorItem(contractor);
-  item.remove();
-  popupFunc();
+  const newItem = getContractorItem(contractor);
+  item.replaceWith(newItem);
+  popupFunc(); // требуется для корректной работы событий
 
-  // console.log(contractor);
-
-  // element.remove();
   // fetch(`http://localhost:3000/api/students/{studentObj.id}`, {
   //   method: "DELETE",
   // });
@@ -667,7 +681,7 @@ function setAttributes(el, attrs) {
 }
 
 // функция создания формы для добавления/редактирования контрагента:
-function createContractorForm(maxId) {
+function createContractorForm(maxId, contractorObj) {
   const item = document.createElement("tr"),
     tableFormId = document.createElement("td"),
     tableFormName = document.createElement("td"),
@@ -683,7 +697,6 @@ function createContractorForm(maxId) {
     tableFormInputAddress = document.createElement("input"),
     tableFormInputPhone = document.createElement("input"),
     tableFormInputEmail = document.createElement("input");
-
 
   //присвоение классов созданным элементам:
   item.classList.add("table__row", "table__row_editable");
@@ -712,6 +725,14 @@ function createContractorForm(maxId) {
   tableFormInputPhone.classList.add("table__input");
   tableFormInputEmail.classList.add("table__input");
 
+  if (contractorObj) {
+    tableFormInputName.value = contractorObj.name;
+    tableFormInputTaxNumber.value = contractorObj.taxNumber;
+    tableFormInputAddress.value = contractorObj.address;
+    tableFormInputPhone.value = contractorObj.telephone;
+    tableFormInputEmail.value = contractorObj.email;
+  }
+
   //присвоение атрибутов созданным инпутам:
   setAttributes(tableFormInputName, {
     type: "text",
@@ -719,41 +740,40 @@ function createContractorForm(maxId) {
     value: "",
     required: true,
     placeholder: "Заполните название",
-  })
+  });
   setAttributes(tableFormInputTaxNumber, {
     type: "text",
     name: "taxNumber",
     value: "",
     required: true,
     placeholder: "Заполните ИНН",
-  })
+  });
   setAttributes(tableFormInputAddress, {
     type: "text",
     name: "address",
     value: "",
     required: true,
     placeholder: "Заполните адрес",
-  })
+  });
   setAttributes(tableFormInputPhone, {
     type: "text",
     name: "phone",
     value: "",
     required: true,
     placeholder: "Заполните телефон",
-  })
+  });
   setAttributes(tableFormInputEmail, {
     type: "text",
     name: "email",
     value: "",
     required: true,
     placeholder: "Заполните почту",
-  })
+  });
 
   // присваеваем значения внутренним элементам формы:
   tableFormSaveCell.innerHTML = saveIcon;
   // tableFormSaveCell.setAttribute("id", contractorObj.idContractor);
 
-  
   // добавляем обработчик на кнопку - сохранение контрагента
   tableFormSaveCell.addEventListener("click", function () {
     onSave({ element: item });
@@ -768,7 +788,7 @@ function createContractorForm(maxId) {
   tableFormAddress.append(tableFormInputAddress);
   tableFormPhone.append(tableFormInputPhone);
   tableFormEmail.append(tableFormInputEmail);
-  
+
   //добвление формы в строку:
   item.append(tableFormId);
   item.append(tableFormName);
@@ -779,12 +799,9 @@ function createContractorForm(maxId) {
   item.append(tableFormSaveCell);
   item.append(tableFormEmptyCell);
 
-  tableBody.append(item); // добавление контрагента в таблицу  
-  item.scrollIntoView(); // переход к созданной строке
+  tableBody.append(item); // добавление контрагента в таблицу
   return item;
 }
-
-
 
 //--------------------------разное----------------------------
 const fieldInput1 = document.querySelector("#field-input-1");
@@ -902,8 +919,9 @@ if (navLlink) {
 // setTimeout(function () {
 //   document.querySelector("main").classList.add("main_active");
 // }, 200);
+//--------------------------end разное---------------------------
 
-// simplebar:
+// --------------------------simplebar:---------------------------------------
 if (document.querySelector(".my-simplebar-1")) {
   const simpleBar1 = new SimpleBar(document.querySelector(".my-simplebar-1"), {
     scrollbarMaxSize: 85,
@@ -949,9 +967,9 @@ if (btnCancel) {
     });
   });
 }
+// --------------------------end simplebar:---------------------------------------
 
 // --------------------popup:------------------------
-
 let unlock = true;
 const timeout = 300;
 const lockPadding = document.querySelectorAll(".lock-padding");
