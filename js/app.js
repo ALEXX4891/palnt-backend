@@ -389,11 +389,13 @@ function getRow(contractorObj, isActive = 1) {
 
   // добавляем обработчик на кнопку - удаление контрагента
   tableDataDeleteCell.addEventListener("click", function () {
+    item.classList.add("table__row_deletable");
     setNoActive({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataReverCell.addEventListener("click", function () {
+    item.classList.add("table__row_deletable");
     setActive({ contractorObj, element: item });
   });
 
@@ -1051,6 +1053,11 @@ function bodyUnLock() {
 function popupClose(popupActive, doUnlock = true) {
   if (unlock) {
     popupActive.classList.remove("open");
+    //удалим у строк лишние классы:
+    const rows = document.querySelectorAll(".table__row");
+    rows.forEach((item) => {
+      item.classList.remove("table__row_deletable");
+    })
     if (doUnlock) {
       bodyUnLock();
     }

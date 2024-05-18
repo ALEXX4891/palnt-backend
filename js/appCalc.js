@@ -25,24 +25,14 @@ function simplebar() {
       });
     });
   }
-  
-  const btnVariant = document.querySelectorAll(".btn-variant");
-  if (btnVariant) {
-    btnVariant.forEach((item) => {
-      item.addEventListener("click", function () {
-        // window.location.href = item.getAttribute("href");
-        window.location.href = "calculating-done.html";
-      });
-    });
-  }
-  
-  const btnCancel = document.querySelectorAll(".btn-cancel");
-  if (btnCancel) {
-    btnCancel.forEach((item) => {
-      item.addEventListener("click", function () {
-        window.location.href = "calculating.html";
-      });
-    });
-  }
 }
 simplebar();
+
+// 1) вытаскиваем всех контрагентов для селекта
+// 2) вытаскиваем все типы картона для селекта
+// 3) создаем таблицу с необходимым количеством разделителей
+// 4) формируем из БД таблицу остатков картона
+
+// 5) программа должна предложить несколько вариантов расчета материалов для нарезки разделителей
+
+
