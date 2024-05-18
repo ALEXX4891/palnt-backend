@@ -25,26 +25,7 @@ function simplebar() {
         forceVisible: true,
       });
     });
-  }
-  
-  const btnVariant = document.querySelectorAll(".btn-variant");
-  if (btnVariant) {
-    btnVariant.forEach((item) => {
-      item.addEventListener("click", function () {
-        // window.location.href = item.getAttribute("href");
-        window.location.href = "calculating-done.html";
-      });
-    });
-  }
-  
-  const btnCancel = document.querySelectorAll(".btn-cancel");
-  if (btnCancel) {
-    btnCancel.forEach((item) => {
-      item.addEventListener("click", function () {
-        window.location.href = "calculating.html";
-      });
-    });
-  }
+  } 
 }
 simplebar();
 
@@ -932,10 +913,21 @@ if (fieldInput1) {
 const inputSearch = document.querySelectorAll(".input_search");
 if (inputSearch) {
   inputSearch.forEach((item) => {
-    item.addEventListener("click", function () {
-      item.classList.add("input_search_active");
+    item.querySelector("input").addEventListener("input", function () {
+      if (item.querySelector("input").value.trim() !== "") {
+        item.classList.add("input_search_active");
+        console.log(1);
+      }      
     });
+    document.addEventListener("click", function (e) {
+      if (item.querySelector("input") == e.target && item.querySelector("input").value.trim() == "") {
+        item.classList.add("input_search_active");
+      } else if (item.querySelector("input") !== e.target && item.querySelector("input").value.trim() == "") {
+        item.classList.remove("input_search_active");
+      }
+    })
   });
+
 }
 
 const inputFields = document.querySelectorAll(".input_search-field");
@@ -1007,17 +999,6 @@ if (selectField) {
   });
 }
 
-// const popupCloseIcon = document.querySelectorAll(".popup-close");
-// if (popupCloseIcon.length > 0) {
-//   for (let index = 0; index < popupCloseIcon.length; index++) {
-//     const el = popupCloseIcon[index];
-//     el.addEventListener("click", function (e) {
-//       popupClose(el.closest(".popup")); //ближайший родитель класса popup
-//       e.preventDefault();
-//     });
-//   }
-// }
-
 const navLlink = document.querySelectorAll(".nav__link");
 const thisPage = document.querySelector(".page").innerHTML;
 if (navLlink) {
@@ -1027,13 +1008,7 @@ if (navLlink) {
     }
   });
 }
-
-// setTimeout(function () {
-//   document.querySelector("main").classList.add("main_active");
-// }, 200);
 //--------------------------end разное---------------------------
-
-
 
 // --------------------popup:------------------------
 let unlock = true;
@@ -1044,7 +1019,6 @@ const body = document.querySelector("body");
 function bodyLock() {
   const lockPaddingValue =
     window.innerWidth - document.querySelector(".header").offsetWidth + "px";
-  // console.log(lockPaddingValue);
   for (let index = 0; index < lockPadding.length; index++) {
     const el = lockPadding[index];
     el.style.marginRight = lockPaddingValue;
@@ -1085,10 +1059,6 @@ function popupClose(popupActive, doUnlock = true) {
 
 function setPopupEvent() {
   const popupLinks = document.querySelectorAll(".popup-link");
-  // console.log(popupLinks);
-  // const body = document.querySelector("body");
-  // const lockPadding = document.querySelectorAll(".lock-padding");
-  // const btn = document.querySelector(".project-btn");
 
   if (popupLinks.length > 0) {
     for (let index = 0; index < popupLinks.length; index++) {
@@ -1133,10 +1103,7 @@ function setPopupEvent() {
     }
   }
 
-  // popupClose(popupActive, doUnlock);
-
   // добавляем боди padding-right при открытии попапа, на ширину скролл-бара
-
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
       const popupActive = document.querySelector(".popup.open");
@@ -1146,4 +1113,4 @@ function setPopupEvent() {
 }
 
 // --------------------end popup:------------------------
-//--------------------------end разное----------------------------
+
