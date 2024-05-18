@@ -1,3 +1,56 @@
+// --------------------------simplebar:---------------------------------------
+function simplebar() {
+  if (document.querySelector(".my-simplebar-1")) {
+    const simpleBar1 = new SimpleBar(document.querySelector(".my-simplebar-1"), {
+      scrollbarMaxSize: 80,
+      autoHide: false,
+      forceVisible: true,
+    });
+  }
+  
+  if (document.querySelector(".my-simplebar-2")) {
+    const simpleBar2 = new SimpleBar(document.querySelector(".my-simplebar-2"), {
+      scrollbarMaxSize: 80,
+      autoHide: false,
+      forceVisible: true,
+    });
+  }
+  
+  if (document.querySelectorAll(".my-simplebar-input")) {
+    document.querySelectorAll(".my-simplebar-input").forEach((item) => {
+      new SimpleBar(item, {
+        scrollbarMaxSize: 45,
+        scrollbarMinSize: 33,
+        autoHide: false,
+        forceVisible: true,
+      });
+    });
+  }
+  
+  const btnVariant = document.querySelectorAll(".btn-variant");
+  if (btnVariant) {
+    btnVariant.forEach((item) => {
+      item.addEventListener("click", function () {
+        // window.location.href = item.getAttribute("href");
+        window.location.href = "calculating-done.html";
+      });
+    });
+  }
+  
+  const btnCancel = document.querySelectorAll(".btn-cancel");
+  if (btnCancel) {
+    btnCancel.forEach((item) => {
+      item.addEventListener("click", function () {
+        window.location.href = "calculating.html";
+      });
+    });
+  }
+}
+simplebar();
+
+// --------------------------end simplebar:---------------------------------------
+
+
 //--------------------------приложение----------------------------
 // Этап 1. В HTML файле создайте верстку элементов, которые будут статичны(неизменны).
 
@@ -51,7 +104,7 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
 //   faculty.value = "";
 //   birthDateAge.value = "";
 //   studyStart.value = "";
-//   renderContractorsTable(contractorListForRender);
+//   renderTable(contractorListForRender);
 // });
 //--------------------------end переделать----------------------------
 
@@ -169,39 +222,41 @@ let contractorList;
 //     table: "contractor",
 //     all: "*",
 //     select: "SELECT",
-    // idContractor: "idContractor",
-    // isActive: "isActive",
-    // name: "name",
-    // taxNumber: "taxNumber",
-    // address: "address",
-    // telephone: "telephone",
-    // email: "email",
+// idContractor: "idContractor",
+// isActive: "isActive",
+// name: "name",
+// taxNumber: "taxNumber",
+// address: "address",
+// telephone: "telephone",
+// email: "email",
 
-    // create: "CREATE",
-    // update: "UPDATE",
-    // where: "WHERE",
-    // insert: "INSERT INTO",
-    // delete: "DELETE FROM",
-    // orderby: "ORDER BY",
-    // limit: "LIMIT",
-    // select: "SELECT",
-    // from: "FROM",
-    // innerjoin: "INNER JOIN",
-    // leftjoin: "LEFT JOIN",
-    // rightjoin: "RIGHT JOIN",
-    // on: "ON",
-    // groupby: "GROUP BY",
-    // having: "HAVING",
+// create: "CREATE",
+// update: "UPDATE",
+// where: "WHERE",
+// insert: "INSERT INTO",
+// delete: "DELETE FROM",
+// orderby: "ORDER BY",
+// limit: "LIMIT",
+// select: "SELECT",
+// from: "FROM",
+// innerjoin: "INNER JOIN",
+// leftjoin: "LEFT JOIN",
+// rightjoin: "RIGHT JOIN",
+// on: "ON",
+// groupby: "GROUP BY",
+// having: "HAVING",
 //   }),
 // }
 
 let options = {
+  // опции для получения списка всех контрагентов
+  function: "getAll",
   table: "contractor",
   all: "*",
-  select: "SELECT",
 };
-console.log(JSON.stringify(options));
-async function getInfoFromDB(options) {
+
+// console.log(JSON.stringify(options));
+async function fetchToDB(options) {
   // Блок try выполнится полностью, если не будет ошибок:
   try {
     // Выполняем запрос:
@@ -213,6 +268,7 @@ async function getInfoFromDB(options) {
       body: JSON.stringify(options),
     });
     contractorList = await responce.json();
+    // alert("Данные загружены");
     return contractorList; // Возвращаем результат запроса
   } catch (err) {
     // Блок catch сработает только если будут какие-то ошибки в блоке try:
@@ -220,17 +276,18 @@ async function getInfoFromDB(options) {
     console.log("При запросе к БД произошла ошибка, детали ниже:");
     console.error(err);
     // Вернем исключение с текстом поясняющим детали ошибки:
+    alert("Произошла ошибка при запросе к БД!");
     throw new Error("Запрос завершился неудачно.");
   }
 }
 
-await getInfoFromDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
+await fetchToDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
 //--------------------------end Запрос к БД----------------------------
 
 // copyContractorList = [...activContractors];
 
 // выбираем только активных контрагентов:
-console.log(contractorList);
+// console.log(contractorList);
 let copyContractorList = [...contractorList];
 let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
@@ -249,7 +306,7 @@ function getMaxId(arr) {
 // Добавляем событие на кнопку "Добавить контрагента":
 addContractorBtn.onclick = function () {
   maxId += 1;
-  const item = createContractorForm(maxId);
+  const item = createRowForm(maxId);
   item.scrollIntoView(); // переход к созданной строке
 };
 
@@ -274,15 +331,15 @@ function toggleBtnFunc() {
 //логика фильтрации активных и не активных контрагентов:
 toggleBtn.addEventListener("click", function () {
   toggleBtnFunc(); //проверить выбранную активность контрагентов
-  renderContractorsTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
-  popupFunc(); // навесить заново события открытия и закрытия модльного окна
+  renderTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
+  setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
 });
 
 // Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем,
 // как вы делали вывод одного дела в модуле 8. Функция должна вернуть html элемент
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
-function getContractorItem(contractorObj, isActive = 1) {
+function getRow(contractorObj, isActive = 1) {
   const item = document.createElement("tr"),
     tableDataId = document.createElement("td"),
     tableDataName = document.createElement("td"),
@@ -351,22 +408,22 @@ function getContractorItem(contractorObj, isActive = 1) {
 
   // добавляем обработчик на кнопку - удаление контрагента
   tableDataDeleteCell.addEventListener("click", function () {
-    onDelete({ contractorObj, element: item });
+    setNoActive({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataReverCell.addEventListener("click", function () {
-    onRevert({ contractorObj, element: item });
+    setActive({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataEditCell.addEventListener("click", function () {
-    onEdit({ contractorObj, element: item });
+    editItem({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - сохранение контрагента
   tableDataSaveCell.addEventListener("click", function () {
-    onSave({ contractorObj, element: item });
+    saveItem({ contractorObj, element: item });
   });
 
   // присваеваем id контрагента элементу и добавляем информацию в таблицу:
@@ -469,7 +526,7 @@ function filterTableActive(isActive, param, arr) {
 }
 
 //рендер подготовленного массива + фильтрация по всем колонкам.
-function renderContractorsTable(arr, isActive) {
+function renderTable(arr, isActive) {
   tableBody.innerHTML = ""; // очищаем тело таблицы
   let copyList = [...arr]; // создаем копию массива
 
@@ -487,13 +544,13 @@ function renderContractorsTable(arr, isActive) {
 
   // рендерим всю таблицу
   for (const contractorObj of copyList) {
-    const item = getContractorItem(contractorObj, isActive);
+    const item = getRow(contractorObj, isActive);
     tableBody.append(item); // добавление контрагента в таблицу
   }
 }
 
-renderContractorsTable(contractorListForRender, isActive);
-popupFunc();
+renderTable(contractorListForRender, isActive);
+setPopupEvent();
 
 // Этап 5. К форме добавления контрагента добавьте слушатель события отправки формы, в котором будет проверка введенных данных.Если проверка пройдет успешно, добавляйте объект с данными контрагентов в массив контрагентов и запустите функцию отрисовки таблицы контрагентов, созданную на этапе 4.
 
@@ -546,7 +603,7 @@ popupFunc();
 //   let newStudent = await responce.json();
 
 //   preRender(copyStudentsList); //пререндер - в массив объектов по 4 элемента
-//   renderContractorsTable(contractorListForRender); //отрисовываем таблицу
+//   renderTable(contractorListForRender); //отрисовываем таблицу
 
 //   // отчистка формы, после добавления контрагента в массив
 //   inputName.value = "";
@@ -574,8 +631,8 @@ const sortArr = (arr, property, sortDirection, isActive) => {
       ? -1
       : 1
   );
-  renderContractorsTable(arr, isActive);
-  popupFunc();
+  renderTable(arr, isActive);
+  setPopupEvent();
 };
 
 // обработчик события сортировки:
@@ -597,22 +654,12 @@ idContractorBtn.addEventListener("click", () => {
 
 // Фильтрация массива контрагентов при вводе текста инпут, ищет по всем столбцам
 contractorSearch.addEventListener("input", () => {
-  renderContractorsTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
-  popupFunc(); // навесить заново события открытия и закрытия модльного окна
+  renderTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
+  setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
 });
 
-// вспомогательные функции >>>>-------------->
-
-// функция удлаения одного контрагента с сервера и с сайта:
-// const popupApproval = document.querySelector('popup-approval');
-// console.log(popupApproval);
-
-// popupApproval.addEventListener("click", function (e) {
-// console.log('ssfsdf');
-// element.remove();
-// });
-
-function onDelete({ contractorObj, element: item }) {
+// ----------------- события на кнопки в таблице ------------------ 
+function setNoActive({ contractorObj, element: item }) {
   const agree = document.querySelector("#btn-delete");
   const element = item;
   const contractort = contractorObj;
@@ -622,21 +669,19 @@ function onDelete({ contractorObj, element: item }) {
     )[0].isActive = 0;
     element.remove();
     popupClose(e.target.closest(".popup"));
-  });
-  options = {
-    function: "delete",
-    table: "contractor",
-    update: "UPDATE",
-    idContractor: contractorObj.idContractor,
-    isActive: "0",
-  };
-  console.log(JSON.stringify(options));
-  getInfoFromDB(options);
-  console.log(contractorList);
 
+    options = {
+      function: "noActive",
+      table: "contractor",
+      update: "UPDATE",
+      idContractor: contractorObj.idContractor,
+      isActive: "0",
+    };
+    fetchToDB(options);
+  });
 }
 
-function onRevert({ contractorObj, element: item }) {
+function setActive({ contractorObj, element: item }) {
   const agree = document.querySelector("#btn-revert");
   const element = item;
   const contractort = contractorObj;
@@ -646,27 +691,25 @@ function onRevert({ contractorObj, element: item }) {
     )[0].isActive = 1;
     element.remove();
     popupClose(e.target.closest(".popup"));
+
+    options = {
+      function: "goActive",
+      table: "contractor",
+      idContractor: contractorObj.idContractor,
+      isActive: "1",
+    };
+    fetchToDB(options);
   });
-  options = {
-    function: "revert",
-    table: "contractor",
-    update: "UPDATE",
-    idContractor: contractorObj.idContractor,
-    isActive: "1",
-  };
-  console.log(JSON.stringify(options));
-  getInfoFromDB(options);
-  console.log(contractorList);
 }
 
-function onEdit({ contractorObj, element: item }) {
+function editItem({ contractorObj, element: item }) {
   const idContractor = item.getAttribute("id");
-  const newItem = createContractorForm(idContractor, contractorObj);
+  const newItem = createRowForm(idContractor, contractorObj);
   item.replaceWith(newItem);
-  popupFunc(); // требуется для корректной работы событий
+  setPopupEvent(); // требуется для корректной работы событий
 }
 
-function onSave({ element: item }) {
+function saveItem({ element: item }) {
   const id = item.querySelector(".table__column_1").innerText;
   const name = item
     .querySelector(".table__column_2")
@@ -710,36 +753,37 @@ function onSave({ element: item }) {
     return;
   }
 
-  //добавление или обновление контрагента в массиве
-  const index = contractorListForRender.findIndex(
-    (contractor) => contractor.idContractor == id
-  );
-  if (index !== -1) {
-    contractorListForRender[index] = contractor;
-  } else {
-    contractorListForRender.push(contractor);
-  }
-
-  const newItem = getContractorItem(contractor);
-  item.replaceWith(newItem);
-  popupFunc(); // требуется для корректной работы событий
-
+  // компановка параметров для запроса к БД:
   options = {
-    function: "save",
     table: "contractor",
-    update: "UPDATE",
     idContractor: contractor.idContractor,
     name: contractor.name,
     taxNumber: contractor.taxNumber,
     address: contractor.address,
     telephone: contractor.telephone,
     email: contractor.email,
-    isActive: contractor.isActive,
   };
-  console.log(JSON.stringify(options));
-  getInfoFromDB(options);
-  console.log(contractorList);
+
+  // определяем надо обновить контрагента или добавить нового (по idContractor):
+  const index = contractorListForRender.findIndex(
+    (contractor) => contractor.idContractor == id
+  );
+  if (index !== -1) {
+    contractorListForRender[index] = contractor; // обновление текущего контрагента
+    options.function = "update"; // определение типа запроса
+  } else {
+    contractorListForRender.push(contractor); // добавление нового контрагента
+    options.function = "create"; // определение типа запроса
+  }
+
+  const newItem = getRow(contractor); // создаем строку с новым контрагентом
+  item.replaceWith(newItem); // заменяем старую строку на новую
+  setPopupEvent(); // требуется для корректной работы событий
+  fetchToDB(options); // отправляем запрос к БД
 }
+
+// ----------------- end события на кнопки в таблице ------------------ 
+
 
 // функция добавления сразу множества атрибутов:
 function setAttributes(el, attrs) {
@@ -749,7 +793,7 @@ function setAttributes(el, attrs) {
 }
 
 // функция создания формы для добавления/редактирования контрагента:
-function createContractorForm(maxId, contractorObj) {
+function createRowForm(maxId, contractorObj) {
   const item = document.createElement("tr"),
     tableFormId = document.createElement("td"),
     tableFormName = document.createElement("td"),
@@ -844,7 +888,7 @@ function createContractorForm(maxId, contractorObj) {
 
   // добавляем обработчик на кнопку - сохранение контрагента
   tableFormSaveCell.addEventListener("click", function () {
-    onSave({ element: item });
+    saveItem({ element: item });
   });
 
   // getMaxId()
@@ -989,53 +1033,7 @@ if (navLlink) {
 // }, 200);
 //--------------------------end разное---------------------------
 
-// --------------------------simplebar:---------------------------------------
-if (document.querySelector(".my-simplebar-1")) {
-  const simpleBar1 = new SimpleBar(document.querySelector(".my-simplebar-1"), {
-    scrollbarMaxSize: 85,
-    autoHide: false,
-    forceVisible: true,
-  });
-}
 
-if (document.querySelector(".my-simplebar-2")) {
-  const simpleBar2 = new SimpleBar(document.querySelector(".my-simplebar-2"), {
-    scrollbarMaxSize: 85,
-    autoHide: false,
-    forceVisible: true,
-  });
-}
-
-if (document.querySelectorAll(".my-simplebar-input")) {
-  document.querySelectorAll(".my-simplebar-input").forEach((item) => {
-    new SimpleBar(item, {
-      scrollbarMaxSize: 45,
-      scrollbarMinSize: 33,
-      autoHide: false,
-      forceVisible: true,
-    });
-  });
-}
-
-const btnVariant = document.querySelectorAll(".btn-variant");
-if (btnVariant) {
-  btnVariant.forEach((item) => {
-    item.addEventListener("click", function () {
-      // window.location.href = item.getAttribute("href");
-      window.location.href = "calculating-done.html";
-    });
-  });
-}
-
-const btnCancel = document.querySelectorAll(".btn-cancel");
-if (btnCancel) {
-  btnCancel.forEach((item) => {
-    item.addEventListener("click", function () {
-      window.location.href = "calculating.html";
-    });
-  });
-}
-// --------------------------end simplebar:---------------------------------------
 
 // --------------------popup:------------------------
 let unlock = true;
@@ -1085,7 +1083,7 @@ function popupClose(popupActive, doUnlock = true) {
   }
 }
 
-function popupFunc() {
+function setPopupEvent() {
   const popupLinks = document.querySelectorAll(".popup-link");
   // console.log(popupLinks);
   // const body = document.querySelector("body");
