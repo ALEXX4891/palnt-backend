@@ -90,7 +90,6 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
 //--------------------------end переделать----------------------------
 
 const tableBody = document.querySelector(".table__body");
-const addContractorBtn = document.getElementById("addContractorBtn");
 const tableBodyWrapper = document.querySelector(".table-body-wrapper");
 const contractorSearch = document.getElementById("contractorsSearch");
 const toggleBtn = document.querySelector(".toggle__checkbox");
@@ -193,7 +192,7 @@ const toggleBtn = document.querySelector(".toggle__checkbox");
 //--------------------------Запрос к БД----------------------------
 // Загружаем список контрагентов с БД:
 let responce;
-let contractorList;
+let infoList;
 // let options = {
 //   method: "POST",
 //   headers: {
@@ -248,9 +247,8 @@ async function fetchToDB(options) {
       },
       body: JSON.stringify(options),
     });
-    contractorList = await responce.json();
-    // alert("Данные загружены");
-    return contractorList; // Возвращаем результат запроса
+    infoList = await responce.json();
+    return infoList; // Возвращаем результат запроса
   } catch (err) {
     // Блок catch сработает только если будут какие-то ошибки в блоке try:
     // Выведем в консоли информацию об ошибке:
@@ -269,7 +267,7 @@ await fetchToDB(options); // требуется подключить скрип�
 
 // выбираем только активных контрагентов:
 // console.log(contractorList);
-let copyContractorList = [...contractorList];
+let copyContractorList = [...infoList];
 let isActive = 1; // признак содержания таблицы
 let contractorListForRender = [];
 
@@ -285,6 +283,7 @@ function getMaxId(arr) {
 }
 
 // Добавляем событие на кнопку "Добавить контрагента":
+const addContractorBtn = document.getElementById("addContractorBtn");
 addContractorBtn.onclick = function () {
   maxId += 1;
   const item = createRowForm(maxId);
@@ -511,22 +510,22 @@ function filterTableActive(isActive, param, arr) {
 //рендер подготовленного массива + фильтрация по всем колонкам.
 function renderTable(arr, isActive) {
   tableBody.innerHTML = ""; // очищаем тело таблицы
-  let copyList = [...arr]; // создаем копию массива
+  let copyArr = [...arr]; // создаем копию массива
 
   // Фильтрация таблицы по всем столбцам:
   if (contractorSearch.value.trim() !== "") {
-    copyList = filterTable(contractorSearch.value, isActive, copyList);
+    copyArr = filterTable(contractorSearch.value, isActive, copyArr);
   }
 
   // Фильтрация массива по активности:
-  copyList = filterTableActive(isActive, "isActive", copyList);
+  copyArr = filterTableActive(isActive, "isActive", copyArr);
 
   // if (faculty.value.trim() !== "") {
-  //   copyList = filterTable(faculty, "faculty", copyList);
+  //   copyArr = filterTable(faculty, "faculty", copyArr);
   // }
 
   // рендерим всю таблицу
-  for (const contractorObj of copyList) {
+  for (const contractorObj of copyArr) {
     const item = getRow(contractorObj, isActive);
     tableBody.append(item); // добавление контрагента в таблицу
   }
