@@ -1,5 +1,5 @@
 // ----------------------simplebar:---------------------------------------
-function simplebar() {
+// function simplebar() {
   if (document.querySelector(".my-simplebar-1")) {
     const simpleBar1 = new SimpleBar(
       document.querySelector(".my-simplebar-1"),
@@ -22,6 +22,8 @@ function simplebar() {
     );
   }
 
+function simplebar() {
+
   if (document.querySelectorAll(".my-simplebar-input")) {
     document.querySelectorAll(".my-simplebar-input").forEach((item) => {
       new SimpleBar(item, {
@@ -33,7 +35,7 @@ function simplebar() {
     });
   }
 }
-simplebar();
+
 // --------------------end simplebar:---------------------------------------
 
 // --------------------popup:------------------------
@@ -157,10 +159,8 @@ const tableWarehouseBody = document.querySelector(".table__body_warehouse");
 
 //--------------------------Запрос к БД----------------------------
 // Загружаем список контрагентов с БД:
-let responce;
-let infoList;
 
-let options = {
+let options1 = {
   // опции для получения списка всех контрагентов
   function: "getAll",
   table: "carton",
@@ -171,6 +171,8 @@ async function fetchToDB(options) {
   // Блок try выполнится полностью, если не будет ошибок:
   try {
     // Выполняем запрос:
+    let infoList;
+    let responce;
     responce = await fetch("main.php", {
       method: "POST",
       headers: {
@@ -191,12 +193,113 @@ async function fetchToDB(options) {
   }
 }
 
-await fetchToDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
-//--------------------------end Запрос к БД----------------------------
+await fetchToDB(options1); // требуется подключить скрипт как модуль, иначе await не работает!!!
+let options2 = {
+  // опции для получения списка всех контрагентов
+  function: "getAll",
+  table: "contractor",
+  all: "*",
+};
 
-let cartonList = [...infoList];
+// await fetchToDB(options2);
+
+
+//--------------------------end Запрос к БД----------------------------
+let warehouseList = await fetchToDB(options1);
+let contractorsList = await fetchToDB(options2);
+
+// console.log(warehouseList);
+let copyContractorsList = [...contractorsList];
+const ContractorsListForInput = [];
+// console.log(copyContractorsList);
+
+let cartonList = [...warehouseList];
 let cartonListForRender = [];
 const TotalTableArr = [];
+
+const contractorsSelect = document.querySelector(".my-select_contractors");
+const contractorsSelectUl = document.querySelector(".my-select__list_contractors");
+const contractorsSelectInput = document.querySelector(".my-select__text_contractors");
+let contractorsSelectId = 0;
+// console.log(contractorsSelect);
+contractorsSelect.addEventListener("click", (event) => {
+  contractorsSelect.classList.add("my-select_active");
+  contractorsSelect.classList.toggle("my-select_open");
+
+  // console.log(event.target);
+  // console.log(event.target.getAttribute("idContractor"));
+})
+
+document.addEventListener("click", function (e) {
+  if (!contractorsSelect.contains(e.target) && contractorsSelect !== e.target) {
+    // contractorsSelect.classList.remove("my-select_active");
+    contractorsSelect.classList.remove("my-select_open");
+    console.log(e.target);
+  }
+  if (contractorsSelectInput.textContent) {
+    contractorsSelect.DOCUMENT_FRAGMENT_NODE
+  }
+});
+
+
+// function preRenderContractorsList(arr) { // пререндер нужен если мы хотим преобразовать данные перед рендером
+//   let copyArr = [...arr]; 
+
+//   for (const contractorObj of copyArr) {
+//     let contractorObjForRender = {
+//       name: contractorObj.name,
+//       id: contractorObj.idContractor,
+//     };
+//     ContractorsListForInput.push(contractorObjForRender);
+//   }
+// }
+// preRenderContractorsList(copyContractorsList);
+// console.log(ContractorsListForInput);
+
+function getContractorListRow(contractorObj) {
+  const item = document.createElement("li");
+
+    // console.log(contractorLi);
+    
+    item.classList.add("my-select__item");
+    item.textContent = contractorObj.name;
+    item.setAttribute("id", contractorObj.idContractor);
+
+    // console.log(item);
+    item.addEventListener("click", (event) => {      
+      contractorsSelectId = item.getAttribute("id");
+      console.log(contractorsSelectId);
+      contractorsSelectInput.textContent = item.textContent;
+      contractorsSelectInput.setAttribute("idContractor", item.getAttribute("id"));
+      contractorsSelectInput.classList.add("my-select__text_active");
+    })
+    
+    // console.log(item);
+  return item;
+}
+
+
+// contractorsList.forEach((contractorObj) => {
+//   getContractorListRow(contractorObj);
+// })
+// getContractorListRow(contractorsList);
+
+function renderContractorsSelect(arr) {
+  contractorsSelectUl.innerHTML = ""; // очищаем тело таблицы
+  console.log(contractorsSelectUl);
+  let copyArr = [...arr]; // создаем копию массива
+
+  // рендерим всю таблицу
+  for (const contractorObj of copyArr) {
+    const item = getContractorListRow(contractorObj);
+    contractorsSelectUl.append(item); // добавление контрагента в таблицу
+  }
+}
+
+renderContractorsSelect(contractorsList);
+// simplebar();
+
+// console.log(contractorsList);
 
 // функция формирования результирующей таблицы
 function crateResultTable(arr) {
@@ -227,7 +330,7 @@ function crateResultTable(arr) {
     };
     TotalTableArr.push(unicObj); // собираем массив для рендера результирующей таблицы
   }
-  console.log(TotalTableArr);
+  // console.log(TotalTableArr);
   // return TotalTableArr;
 }
 
@@ -319,3 +422,5 @@ function renderWarehouseTable(arr) {
 }
 
 renderWarehouseTable(cartonListForRender);
+simplebar();
+

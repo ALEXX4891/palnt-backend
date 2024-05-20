@@ -258,6 +258,7 @@ img {
 }
 .my-select .my-select__list {
   position: absolute;
+  overflow: hidden;
   top: 100%;
   left: 0;
   width: 100%;
@@ -302,7 +303,10 @@ img {
   transform: rotate(180deg);
 }
 .my-select_active .my-select__placeholder {
+  position: absolute;
   font-size: 10px;
+  top: 9px;
+  left: 14px;
 }
 .my-select .my-select__checkbox {
   margin-bottom: 0;

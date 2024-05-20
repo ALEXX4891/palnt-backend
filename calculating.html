@@ -103,11 +103,11 @@
               <div class="calculating__fields">
                 <div class="calculating__fields-left">
                   <div class="section__input input input_date input_date_w_250">
-                    <input class="input__datepicker" type="date" name="date">
+                    <input class="input__datepicker" type="date" name="date" id="invoice-data">
                     <span class="input__placeholder">Дата</span>
                     <img class="input__calendar" src="img/calendar.png">
                   </div>
-                  <div class="my-select my-select_w_250">
+                  <div class="my-select my-select_carton my-select_w_250">
                     <div class="my-select__wrapper">
                       <span class="my-select__placeholder">
                         Тип картона
@@ -118,7 +118,7 @@
                     <span class="my-select__arrow">
                       <img src="img/arrow-down.svg" alt="arrow">
                     </span>
-                    <ul class="my-select__list my-simplebar-input" data-simplebar>
+                    <ul class="my-select__list my-select__list_carton my-simplebar-input" data-simplebar>
                       <li class="my-select__item">Тип №1</li>
                       <li class="my-select__item">Тип №2</li>
                       <li class="my-select__item">Тип №3</li>
@@ -129,18 +129,18 @@
                 </div>
                 <div class="calculating__fields-right">
 
-                  <div class="my-select my-select_w_350">
+                  <div class="my-select my-select_contractors my-select_w_350">
                     <div class="my-select__wrapper">
                       <span class="my-select__placeholder">
                         Контрагент
                       </span>
-                      <p class="my-select__text">
+                      <p class="my-select__text my-select__text_contractors">
                       </p>
                     </div>
                     <span class="my-select__arrow">
                       <img src="img/arrow-down.svg" alt="arrow">
                     </span>
-                    <ul class="my-select__list my-simplebar-input" data-simplebar>
+                    <ul class="my-select__list my-select__list_contractors my-simplebar-input" data-simplebar>
                       <li class="my-select__item">ООО «Длинное большое название»</li>
                       <li class="my-select__item">ООО «Длинное большое название»</li>
                       <li class="my-select__item">ООО «Длинное большое название»</li>
