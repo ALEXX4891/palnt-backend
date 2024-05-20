@@ -196,19 +196,42 @@ await fetchToDB(options); // требуется подключить скрип�
 
 let cartonList = [...infoList];
 let cartonListForRender = [];
-console.log(cartonList);
+const TotalTableArr = [];
 
-// функция формирования данных с остатками картона
+// функция формирования результирующей таблицы
 function crateResultTable(arr) {
   const copyArr = [...arr];
-  const quantity = copyArr.reduce((acc, cartonObj) => {
-    return acc + cartonObj.coming;
-  }, 0);
-  console.log(quantity);
+  copyArr.forEach((cartonObj) => { // добавляем в объект уникальное имя
+    cartonObj.idName = `${cartonObj.name} - ${cartonObj.typeCarton} - ${cartonObj.width} x ${cartonObj.lengthCarton} - ${cartonObj.price}$`;
+  });
+  const unicList = [...new Set(copyArr.map((cartonObj) => cartonObj.idName))];   // формируем массив уникальных названий
+  // фильтруем результирующий массив:
+  for (let i = 0; i < unicList.length; i++) {
+    let filterList = copyArr.filter( // фильтруем по уникальному названию
+      (cartonObj) => cartonObj.idName === unicList[i] 
+    ); 
+
+    let quantity = filterList.reduce( // считаем остатки картона на складе
+      (acc, cartonObj) => acc + cartonObj.coming - cartonObj.expense,
+      0
+    );
+    const unicObj = { // создаем объект с уникальным названием для рендера результирующей таблицы      
+      idName: unicList[i],
+      name: filterList[0].name,
+      typeCarton: filterList[0].typeCarton,
+      width: filterList[0].width,
+      lengthCarton: filterList[0].lengthCarton,
+      price: filterList[0].price,
+      quantity: quantity,
+      cost: quantity * filterList[0].price,
+    };
+    TotalTableArr.push(unicObj); // собираем массив для рендера результирующей таблицы
+  }
+  console.log(TotalTableArr);
+  // return TotalTableArr;
 }
 
 crateResultTable(cartonList);
-
 
 // Добавляем событие на кнопку "Добавить контрагента":
 // const addRowBtn = document.getElementById("btn-add-row");
@@ -218,20 +241,8 @@ crateResultTable(cartonList);
 //   item.scrollIntoView(); // переход к созданной строке
 // };
 
-function preRender(arr) {
-  let copyArr = [...arr]; // создаем копию массива
-  //посчитаем количество и стоимость:
-  // copyArr.forEach((cartonObj) => {
-  //   cartonObj.quantity = cartonObj.quantity;
-  //   cartonObj.cost = cartonObj.cost;
-  //   cartonObj.isActive = cartonObj.isActive;
-  //   cartonObj.email = cartonObj.email;
-  //   cartonObj.price = cartonObj.price;
-  //   cartonObj.lengthCarton = cartonObj.lengthCarton;
-  //   cartonObj.width = cartonObj.width;
-  //   cartonObj.typeCarton = cartonObj.typeCarton;
-  //   cartonObj.name = cartonObj.name;
-  // })
+function preRender(arr) { // пререндер нужен если мы хотим преобразовать данные перед рендером
+  let copyArr = [...arr]; 
 
   for (const cartonObj of copyArr) {
     let cartonObjForRender = {
@@ -240,13 +251,13 @@ function preRender(arr) {
       width: cartonObj.width,
       lengthCarton: cartonObj.lengthCarton,
       price: cartonObj.price,
-      quantity: cartonObj.quantity, // посчитать количество
-      cost: cartonObj.cost, // посчитать стоимость
+      quantity: cartonObj.quantity,
+      cost: cartonObj.cost,
     };
     cartonListForRender.push(cartonObjForRender);
   }
 }
-preRender(cartonList);
+preRender(TotalTableArr);
 
 let number = 0;
 function getWarehouseRow(cartonObj) {
