@@ -1,36 +1,15 @@
 // --------------------------simplebar:---------------------------------------
-function simplebar() {
-  if (document.querySelector(".my-simplebar-1")) {
-    const simpleBar1 = new SimpleBar(document.querySelector(".my-simplebar-1"), {
-      scrollbarMaxSize: 80,
-      autoHide: false,
-      forceVisible: true,
-    });
-  }
-  
-  if (document.querySelector(".my-simplebar-2")) {
-    const simpleBar2 = new SimpleBar(document.querySelector(".my-simplebar-2"), {
-      scrollbarMaxSize: 80,
-      autoHide: false,
-      forceVisible: true,
-    });
-  }
-  
-  if (document.querySelectorAll(".my-simplebar-input")) {
-    document.querySelectorAll(".my-simplebar-input").forEach((item) => {
-      new SimpleBar(item, {
-        scrollbarMaxSize: 45,
-        scrollbarMinSize: 33,
-        autoHide: false,
-        forceVisible: true,
-      });
-    });
-  } 
-}
-simplebar();
+// function simplebar() {
+  const simpleBar = new SimpleBar(document.querySelector(".my-simplebar-1"), {
+    scrollbarMaxSize: 80,
+    autoHide: false,
+    forceVisible: true,
+  });
+  simpleBar.getScrollElement().scrollTo(0,0);
+// }
+// simplebar();
 
 // --------------------------end simplebar:---------------------------------------
-
 
 //--------------------------приложение----------------------------
 // Этап 1. В HTML файле создайте верстку элементов, которые будут статичны(неизменны).
@@ -89,7 +68,7 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
 // });
 //--------------------------end переделать----------------------------
 
-const tableBody = document.querySelector(".table__body");
+const tableBody = document.querySelector(".table__body_contractors");
 const tableBodyWrapper = document.querySelector(".table-body-wrapper");
 const contractorSearch = document.getElementById("contractorsSearch");
 const toggleBtn = document.querySelector(".toggle__checkbox");
@@ -298,6 +277,7 @@ function toggleBtnFunc() {
     tableBodyWrapper.style.height = "calc(100vh - 300px)"; // увеличиваем высоту таблицы
     tableBodyWrapper.style.marginBottom = "0"; // убираем отступ снизу таблицы
     getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
+    simpleBar.getScrollElement().scrollTo(0,0);
   }
   if (!toggleBtn.checked) {
     isActive = 1;
@@ -305,6 +285,7 @@ function toggleBtnFunc() {
     tableBodyWrapper.style.height = "calc(100vh - 360px)"; // уменьшаем высоту таблицы
     tableBodyWrapper.style.marginBottom = "30px"; // добавляем отступ снизу таблицы
     getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
+    simpleBar.getScrollElement().scrollTo(0,0);
   }
 }
 
@@ -393,10 +374,12 @@ function getRow(contractorObj, isActive = 1) {
   });
 
   // добавляем обработчик на кнопку - редактирование контрагента
-  tableDataReverCell.addEventListener("click", function () {
-    item.classList.add("table__row_deletable");
-    setActive({ contractorObj, element: item });
-  });
+  tableDataReverCell
+    .querySelector("svg")
+    .addEventListener("click", function () {
+      item.classList.add("table__row_deletable");
+      setActive({ contractorObj, element: item });
+    });
 
   // добавляем обработчик на кнопку - редактирование контрагента
   tableDataEditCell.addEventListener("click", function () {
@@ -640,7 +623,7 @@ contractorSearch.addEventListener("input", () => {
   setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
 });
 
-// ----------------- события на кнопки в таблице ------------------ 
+// ----------------- события на кнопки в таблице ------------------
 function setNoActive({ contractorObj, element: item }) {
   const agree = document.querySelector("#btn-delete");
   const element = item;
@@ -764,8 +747,7 @@ function saveItem({ element: item }) {
   fetchToDB(options); // отправляем запрос к БД
 }
 
-// ----------------- end события на кнопки в таблице ------------------ 
-
+// ----------------- end события на кнопки в таблице ------------------
 
 // функция добавления сразу множества атрибутов:
 function setAttributes(el, attrs) {
@@ -918,17 +900,22 @@ if (inputSearch) {
       if (item.querySelector("input").value.trim() !== "") {
         item.classList.add("input_search_active");
         console.log(1);
-      }      
+      }
     });
     document.addEventListener("click", function (e) {
-      if (item.querySelector("input") == e.target && item.querySelector("input").value.trim() == "") {
+      if (
+        item.querySelector("input") == e.target &&
+        item.querySelector("input").value.trim() == ""
+      ) {
         item.classList.add("input_search_active");
-      } else if (item.querySelector("input") !== e.target && item.querySelector("input").value.trim() == "") {
+      } else if (
+        item.querySelector("input") !== e.target &&
+        item.querySelector("input").value.trim() == ""
+      ) {
         item.classList.remove("input_search_active");
       }
-    })
+    });
   });
-
 }
 
 const inputFields = document.querySelectorAll(".input_search-field");
@@ -1056,7 +1043,7 @@ function popupClose(popupActive, doUnlock = true) {
     const rows = document.querySelectorAll(".table__row");
     rows.forEach((item) => {
       item.classList.remove("table__row_deletable");
-    })
+    });
     if (doUnlock) {
       bodyUnLock();
     }
@@ -1119,4 +1106,3 @@ function setPopupEvent() {
 }
 
 // --------------------end popup:------------------------
-
