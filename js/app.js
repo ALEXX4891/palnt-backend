@@ -880,18 +880,7 @@ function createRowForm(maxId, contractorObj) {
 }
 
 //--------------------------разное----------------------------
-const fieldInput1 = document.querySelector("#field-input-1");
-const btn1 = document.querySelector("#btn-1");
 
-if (fieldInput1) {
-  fieldInput1.addEventListener("input", function () {
-    if (fieldInput1.value.length > 0) {
-      btn1.classList.remove("btn_disabled");
-    } else {
-      btn1.classList.add("btn_disabled");
-    }
-  });
-}
 
 const inputSearch = document.querySelectorAll(".input_search");
 if (inputSearch) {
@@ -917,6 +906,8 @@ if (inputSearch) {
     });
   });
 }
+
+
 
 const inputFields = document.querySelectorAll(".input_search-field");
 

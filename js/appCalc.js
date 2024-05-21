@@ -229,8 +229,9 @@ let contractorsSelectId = 0;
 // ---------------------------setCastomSelectEvents:-------------------------
 function setCastomSelectEvents() {
   const selects = document.querySelectorAll(".my-select");
-  const inputs = document.querySelectorAll(".my-select__text");
-  const selectLists = document.querySelectorAll(".my-select__list");
+  // const inputs = document.querySelectorAll(".my-select__text");
+  // const selectLists = document.querySelectorAll(".my-select__list");
+  // const inputFieldsFields = document.querySelectorAll(".input_search-field");
   selects.forEach((select) => {
     select.addEventListener("click", (event) => {
       select.classList.toggle("my-select_open");
@@ -248,6 +249,22 @@ function setCastomSelectEvents() {
     });
   });
 
+  const inputFields = document.querySelectorAll(".input_search-field");
+  if (inputFields) {
+    inputFields.forEach((item) => {
+      item.addEventListener("click", (event) => {
+        item.classList.add("input_search-field_active");
+      });
+      item.querySelector("input").addEventListener("input", function () {
+        if (item.querySelector("input").value.trim() !== "") {
+          item.classList.add("input_search-field_active");
+          console.log(1);
+        }
+      });
+      document.addEventListener("click", function (e) {});
+    });
+  }
+
   document.addEventListener("click", function (e) {
     selects.forEach((select) => {
       if (!select.contains(e.target)) {
@@ -259,11 +276,43 @@ function setCastomSelectEvents() {
         }
       }
     });
+
+    inputFields.forEach((item) => {
+      if (
+        item.querySelector("input") == e.target &&
+        item.querySelector("input").value.trim() == ""
+      ) {
+        item.classList.add("input_search-field_active");
+      } else if (
+        item.querySelector("input") !== e.target &&
+        item.querySelector("input").value.trim() == ""
+      ) {
+        item.classList.remove("input_search-field_active");
+      }
+    });
   });
 }
 
-// ---------------------------end setCastomSelectEvents:-------------------------
+// // кастомный селект для поиска:
+// inputFieldsFields.forEach((input) => {
+//   input.addEventListener("input", (event) => {
+//     const target = event.target;
+//     const value = target.value;
+//     const list = target.closest(".my-select").querySelector(
+//       ".my-select__list"
+//     );
+//     const options = list.querySelectorAll(".my-select__item");
+//     options.forEach((option) => {
+//       if (option.innerHTML.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+//         option.style.display = "";
+//       } else {
+//         option.style.display = "none";
+//       }
+//     });
+//   });
+// });
 
+// ---------------------------end setCastomSelectEvents:-------------------------
 
 // function preRenderContractorsList(arr) { // пререндер нужен если мы хотим преобразовать данные перед рендером
 //   let copyArr = [...arr];

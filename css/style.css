@@ -230,18 +230,21 @@ img {
   line-height: 110%;
 }
 .my-select .my-select__text {
+  position: absolute;
+  top: 20px;
+  left: 11px;
   color: rgb(34, 34, 34);
   font-size: 16px;
   font-weight: 400;
   line-height: 110%;
-  width: 0;
-  height: 0;
   display: none;
   white-space: nowrap;
+  width: 88%;
+  white-space: nowrap; /* Текст не переносится */
+  overflow: hidden; /* Обрезаем всё за пределами блока */
+  text-overflow: ellipsis; /* Добавляем многоточие */
 }
 .my-select .my-select__text_active {
-  width: 100%;
-  height: 100%;
   display: block;
 }
 .my-select .simplebar-track.simplebar-vertical {
@@ -292,6 +295,12 @@ img {
   border: 1px solid rgb(140, 139, 139);
   background: rgb(249, 249, 249);
 }
+
+.my-select_active {
+  /* border: 1px solid rgb(140, 139, 139); */
+  background: rgb(249, 249, 249);
+}
+
 .my-select_open {
   border: 1px solid rgb(140, 139, 139);
   background: rgb(249, 249, 249);
@@ -305,8 +314,8 @@ img {
 .my-select_active .my-select__placeholder {
   position: absolute;
   font-size: 10px;
-  top: 9px;
-  left: 14px;
+  top: 8px;
+  left: 11px;
 }
 .my-select .my-select__checkbox {
   margin-bottom: 0;
@@ -987,9 +996,7 @@ img {
   align-items: center;
   justify-content: center;
   padding: 0 8px;
-  white-space: nowrap; /* Текст не переносится */
-  overflow: hidden; /* Обрезаем всё за пределами блока */
-  text-overflow: ellipsis; /* Добавляем многоточие */
+  white-space: wrap; /* Текст переносится */
 }
 
 .table__column svg {
@@ -1202,6 +1209,10 @@ margin-left: 3px;
   width: 100%;
   height: 100%;
   opacity: 1;
+}
+.input_search-field_active {
+  background-color: #f9f9f9;
+  border-radius: 5px;
 }
 .input_search-field:hover {
   background-color: #f9f9f9;
