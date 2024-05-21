@@ -368,7 +368,9 @@ function getRow(contractorObj, isActive = 1) {
   tableDataSaveCell.setAttribute("id", contractorObj.idContractor);
 
   // добавляем обработчик на кнопку - удаление контрагента
-  tableDataDeleteCell.addEventListener("click", function () {
+  tableDataDeleteCell
+  .querySelector("svg")
+  .addEventListener("click", function () {
     item.classList.add("table__row_deletable");
     setNoActive({ contractorObj, element: item });
   });
@@ -382,12 +384,16 @@ function getRow(contractorObj, isActive = 1) {
     });
 
   // добавляем обработчик на кнопку - редактирование контрагента
-  tableDataEditCell.addEventListener("click", function () {
+  tableDataEditCell
+  .querySelector("svg")
+  .addEventListener("click", function () {
     editItem({ contractorObj, element: item });
   });
 
   // добавляем обработчик на кнопку - сохранение контрагента
-  tableDataSaveCell.addEventListener("click", function () {
+  tableDataSaveCell
+  .querySelector("svg")
+  .addEventListener("click", function () {
     saveItem({ contractorObj, element: item });
   });
 

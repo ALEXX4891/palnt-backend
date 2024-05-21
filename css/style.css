@@ -2178,7 +2178,7 @@ img {
   min-width: 33px;
 }
 .calculating__variant .variant__table-wrapper .table__column_2 {
-  min-width: 129px;
+  min-width: 150px;
   justify-content: flex-start;
 }
 .calculating__variant .variant__table-wrapper .table__column_3 {
@@ -2190,6 +2190,82 @@ img {
   text-align: center;
 }
 .calculating__variant .variant__table-wrapper .table__column_5 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_6 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_7 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_8 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_9 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_10 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_11 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_12 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_13 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_14 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_15 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_16 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_17 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_18 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_19 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_20 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_21 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_22 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_23 {
+  min-width: 80px;
+  text-align: center;
+}
+.calculating__variant .variant__table-wrapper .table__column_24 {
   min-width: 80px;
   text-align: center;
 }

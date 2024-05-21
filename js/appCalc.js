@@ -234,6 +234,441 @@ let contractorsSelectId = 0;
 //   // console.log(event.target.getAttribute("idContractor"));
 // })
 
+// ---------------------------создание таблицы с параметрами заказа:-------------------------
+// функция добавления сразу множества атрибутов:
+function setAttributes(el, attrs) {
+  for (var key in attrs) {
+    el.setAttribute(key, attrs[key]);
+  }
+}
+
+const orderParamsTable = document.querySelector(".table__body_orderParams");
+
+function createOrderParamsTable() {
+  const table = document.createElement("table");
+  table.classList.add("table");
+  return table;
+}
+
+const addOrderParamsBtn = document.getElementById("btn-add-row");
+addOrderParamsBtn.onclick = function () {
+  // maxId += 1;
+  const item = createOrderParamsForm();
+  // item.scrollIntoView(); // переход к созданной строке
+};
+
+const orderParamsDelBtn = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+  d="M17.8908 4.79999L11.9999 10.6909L6.10896 4.79999C5.93536 4.62639 5.69991 4.52887 5.45441 4.52887C5.20891 4.52887 4.97346 4.62639 4.79986 4.79999C4.62627 4.97359 4.52874 5.20903 4.52874 5.45454C4.52874 5.70004 4.62627 5.93549 4.79986 6.10908L10.6908 12L4.79986 17.8909C4.62627 18.0645 4.52874 18.3 4.52874 18.5455C4.52874 18.791 4.62627 19.0264 4.79986 19.2C4.97346 19.3736 5.20891 19.4711 5.45441 19.4711C5.69991 19.4711 5.93536 19.3736 6.10896 19.2L11.9999 13.3091L17.8908 19.2C18.0644 19.3736 18.2998 19.4711 18.5453 19.4711C18.7908 19.4711 19.0263 19.3736 19.1999 19.2C19.3735 19.0264 19.471 18.791 19.471 18.5455C19.471 18.3 19.3735 18.0645 19.1999 17.8909L13.309 12L19.1999 6.10908C19.3735 5.93549 19.471 5.70004 19.471 5.45454C19.471 5.20903 19.3735 4.97359 19.1999 4.79999C19.0263 4.62639 18.7908 4.52887 18.5453 4.52887C18.2998 4.52887 18.0644 4.62639 17.8908 4.79999Z"
+  fill="#890000" />
+</svg>`;
+
+let numberOrderTableRow = 0;
+function createOrderParamsForm() {
+  const item = document.createElement("tr"),
+    numberCell = document.createElement("td"),
+    widthCell = document.createElement("td"),
+    lengthCell = document.createElement("td"),
+    quantityCell = document.createElement("td"),
+    deleteCell = document.createElement("td"),
+    inputwidth = document.createElement("input"),
+    inputlength = document.createElement("input"),
+    inputquantity = document.createElement("input");
+
+  //присвоение классов созданным элементам:
+  item.classList.add("table__row");
+  numberCell.classList.add("table__column", "table__column_1");
+  widthCell.classList.add("table__column", "table__column_2");
+  lengthCell.classList.add("table__column", "table__column_3");
+  quantityCell.classList.add("table__column", "table__column_4");
+  deleteCell.classList.add("table__column", "table__column_5");
+
+  //присвоение классов созданным инпутам:
+  inputwidth.classList.add("table__cell-frame");
+  inputlength.classList.add("table__cell-frame");
+  inputquantity.classList.add("table__cell-frame");
+
+  //присвоение атрибутов созданным инпутам:
+  setAttributes(inputwidth, {
+    type: "number",
+    name: "width",
+    value: "",
+    required: true,
+  });
+  setAttributes(inputlength, {
+    type: "number",
+    name: "length",
+    value: "",
+    required: true,
+  });
+  setAttributes(inputquantity, {
+    type: "number",
+    name: "quantity",
+    value: "",
+    required: true,
+  });
+
+  //создаем кнопку удаления строки:
+  deleteCell.innerHTML = orderParamsDelBtn;
+  // добавляем обработчик на кнопку - удаления строки
+  deleteCell.querySelector("svg").addEventListener("click", function () {
+    item.remove();
+    numberOrderTableRow--;
+  });
+
+  numberOrderTableRow++;
+  numberCell.textContent = numberOrderTableRow;
+
+  //присвоение инпутов ячейкам таблицы:
+  widthCell.append(inputwidth);
+  lengthCell.append(inputlength);
+  quantityCell.append(inputquantity);
+
+  //добвление формы в строку:
+  item.append(numberCell, widthCell, lengthCell, quantityCell, deleteCell);
+
+  orderParamsTable.append(item); // добавление контрагента в таблицу
+  return item;
+}
+
+createOrderParamsForm();
+// ---------------------------end создание таблицы с параметрами заказа:-------------------------
+
+// ---------------------------end создание таблиц варианта:-------------------------
+// блок варианта:
+const variant = document.querySelector(".variant");
+// if (variant) {
+//таблица расстановки ножей (с head):
+const variantTableKnives = variant.querySelector(".table__body_knives");
+//результирующая таблица:
+const variantTableKnivesRes = variant.querySelector(".table__body_knives_res");
+//таблица калькуляции:
+const variantTableCalculation = variant.querySelector(
+  ".table__body_calculation"
+);
+
+//от блины объекта посчтиаем количество ножей<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+// variantTable.addEventListener("click", (event) => {
+//   event.preventDefault();
+//   createOrderParamsForm();
+// });
+
+// variant.addEventListener("click", (event) => {
+//   event.preventDefault();
+//   createVariantForm();
+// });
+// }
+// ---------------------------end создание таблиц варианта:-------------------------
+
+const variantTableKnivesData = [
+  {
+    id: 1,
+    resource: "Лист 72х126",
+    type: "Тип №1",
+    quantity: 179,
+    knife1: 15,
+    knife2: 16,
+    knife3: 20,
+    knife4: 20,
+    knife5: 15,
+    knife6: 15,
+    knife7: 15,
+    knife8: 15,
+    knife9: 15,
+    knife10: 15,
+    knife11: 15,
+    knife12: 15,
+    knife13: 15,
+    knife14: 15,
+    knife15: 15,
+    knife16: 15,
+    knife17: 15,
+    knife18: 15,
+    knife19: 15,
+    knife20: 15,
+  },
+  {
+    id: 2,
+    resource: "Полоска 72х126",
+    type: "Тип №1",
+    quantity: 754,
+    knife1: 15,
+    knife2: 16,
+    knife3: 20,
+    knife4: 20,
+    knife5: 15,
+    knife6: 15,
+    knife7: 15,
+    knife8: 15,
+    knife9: 15,
+    knife10: 15,
+    knife11: 15,
+    knife12: 15,
+    knife13: 15,
+    knife14: 15,
+    knife15: 15,
+    knife16: 15,
+    knife17: 15,
+    knife18: 15,
+    knife19: 15,
+    knife20: 15,
+  },
+  {
+    id: 3,
+    resource: "Лист 72х126",
+    type: "Тип №1",
+    quantity: 502,
+    knife1: 15,
+    knife2: 16,
+    knife3: 20,
+    knife4: 20,
+    knife5: 15,
+    knife6: 15,
+    knife7: 15,
+    knife8: 15,
+    knife9: 15,
+    knife10: 15,
+    knife11: 15,
+    knife12: 15,
+    knife13: 15,
+    knife14: 15,
+    knife15: 15,
+    knife16: 15,
+    knife17: 15,
+    knife18: 15,
+    knife19: 15,
+    knife20: 15,
+  },
+];
+
+const variantTableKnivesResData = [
+  {
+    id: 1,
+    resource: "Лист 72х126",
+    type: "Тип №1",
+    quantity: 179,
+    prise: 15,
+    cost: 16,
+    remains: 2,
+  },
+  {
+    id: 2,
+    resource: "Полоска 72х126",
+    type: "Тип №1",
+    quantity: 754,
+    prise: 18,
+    cost: 18,
+    remains: 2,
+  },
+];
+
+const variantTableCalculationData = [
+  {
+    id: 1,
+    width: 15,
+    length: 18,
+    quantity: 5000,
+    prise: 19.34,
+    cost: 21.34,
+    marginedCost: 31.34,
+    profit: 10,
+    sum: 156.7,
+  },
+  {
+    id: 2,
+    width: 15,
+    length: 18,
+    quantity: 3000,
+    prise: 19.34,
+    cost: 21.34,
+    marginedCost: 31.34,
+    profit: 10,
+    sum: 156.7,
+  },
+  {
+    id: 3,
+    width: 15,
+    length: 18,
+    quantity: 5000,
+    prise: 19.34,
+    cost: 21.34,
+    marginedCost: 31.34,
+    profit: 10,
+    sum: 156.7,
+  },
+  {
+    id: 4,
+    width: 14,
+    length: 18,
+    quantity: 5000,
+    prise: 19.34,
+    cost: 21.34,
+    marginedCost: 31.34,
+    profit: 10,
+    sum: 156.7,
+  },
+  {
+    id: 5,
+    width: 15,
+    length: 18,
+    quantity: 6000,
+    prise: 19.34,
+    cost: 21.34,
+    marginedCost: 31.34,
+    profit: 10,
+    sum: 156.7,
+  },
+  // {
+  //   prositResult: 40,
+  //   sumResult: 839.15
+  // }
+];
+
+//------------------------- универсальная функция создания таблицы ----------------------------
+// создание таблицы:
+// 1) получение данных,
+// 2) подготовка данных (пререндер),
+// 3) формирование head (если есть) c классами,
+// 4) формирование строк c классами,
+// 5) создание таблицы.
+
+function createTable(
+  table,
+  tableData,
+  tableHeadData = false,
+  inputs = false,
+  tableResRow = false
+) {
+  // table - html элемент, таблица, либо тело таблицы;
+  // tableData - массив объектов с данными;
+  // tableHead - массив с названиями столбцов;
+  // tableResRow - объект с данными;
+  // inputs - массив объектов, в объекте: номер столбца, классы, атрибуты, значения;
+
+  // 1) получение данных:
+
+  // 2) подготовка данных (пререндер):
+  let tableBody = table;
+  tableBody.innerHTML = "";
+  const tableDataCopy = [...tableData];
+  
+  if (tableHeadData) {
+    const tableHead = document.createElement("thead");
+    const tableHeadRowEl = document.createElement("tr");
+    
+    tableHead.classList.add("table__head");
+    tableHeadRowEl.classList.add("table__row");
+    tableHead.append(tableHeadRowEl);
+    table.append(tableHead);
+    
+    for (let i = 0; i < tableHeadData.length; i++) {
+      const tableHeadColumn = document.createElement("th");
+      tableHeadColumn.classList.add(`table__column_${i + 1}`);
+      tableHeadColumn.textContent = tableHeadData[i];
+      tableHeadRowEl.append(tableHeadColumn);
+    }
+    
+    const tablebody = document.createElement("thead");
+    tableBody = tablebody;
+    table.append(tablebody);
+  }
+
+
+  tableDataCopy.forEach((item) => {
+    // 3) формирование head (если есть) c классами:
+
+    // 4) формирование строк c классами:
+    const tableBodyRow = document.createElement("tr");
+    tableBodyRow.classList.add("table__row");
+    tableBody.append(tableBodyRow);
+
+    let colNumber = 0;
+    for (let key in item) {
+      colNumber++;
+      const tableColumn = document.createElement("td");
+      tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
+      tableColumn.textContent = item[key];
+      tableBodyRow.append(tableColumn);
+
+      if (inputs) {
+        inputs.forEach((el) => {
+          if (colNumber == el.numberColumn) {
+            const input = document.createElement("input");
+            input.classList.add("table__cell-frame");
+            input.setAttribute("type", "number");
+            input.setAttribute("value", item[key]);
+            tableColumn.textContent = "";
+            tableColumn.append(input);
+          }
+        });
+      }
+      // if (inputs) {
+      //   for (let i = 0; i < inputs.length; i++) {
+      //     if (key == inputs[i].numberColumn) {
+      //       const input = document.createElement("input");
+      //       input.classList.add("table__input");
+      //       input.setAttribute("type", "number");
+      //       input.setAttribute("value", item[key]);
+      //       tableColumn.append(input);
+      //     }
+      //   }
+      // }
+    }
+  });
+}
+
+const variant1 = document.querySelector(".variant_1");
+const table2 = variant1.querySelector(".table__body_knives_res");
+const table3 = variant1.querySelector(".table__body_calculation");
+
+const inputs1 = [
+  {
+    numberColumn: 1,
+    classInput: "table__input",
+    type: "number",
+    value: 10,
+  },
+];
+const inputsForTable = [];
+variantTableCalculationData.forEach((item) => {
+  let obj = {
+    numberColumn: 7,
+    classInput: "table__input",
+    type: "number",
+    value: item.marginedCost,
+  };
+  inputsForTable.push(obj);
+});
+
+// let headsForTable = []
+// функция формирования заголовков для таблицы ножей:
+function createKnifesTableHead(variantTableKnivesData) {
+  const arr = [];
+  const obj1 = variantTableKnivesData[0];
+  arr.push(`№`);
+  arr.push(`Что берем`);
+  arr.push(`Тип картона`);
+  arr.push(`Кол-во, шт`);
+  for (let i = 0; i < Object.keys(obj1).length - 4; i++) {
+    arr.push(`Нож №${i + 1}`);
+  }
+  return arr;
+}
+const headsForTable = createKnifesTableHead(variantTableKnivesData);
+console.log(headsForTable);
+
+createTable(variantTableKnives, variantTableKnivesData, headsForTable);
+createTable(variantTableKnivesRes, variantTableKnivesResData);
+createTable(
+  variantTableCalculation,
+  variantTableCalculationData,
+  false,
+  inputsForTable
+);
+
+//------------------------- end универсальная функция создания таблицы ----------------------------
+
 // ---------------------------setCastomInputsEvents:-------------------------
 //обрабатываем события кастомных инпутов:
 function setCastomInputsEvents() {
@@ -265,7 +700,6 @@ function setCastomInputsEvents() {
       item.addEventListener("click", (event) => {
         item.classList.add("input_date_active");
         input.value = new Date().toISOString().slice(0, 10); //удаляет время
-
       });
     });
   }
@@ -346,10 +780,8 @@ if (inputLabels) {
     } else {
       btnPrintLabels.classList.add("btn_disabled");
     }
-  })
+  });
 }
-
-
 
 // ---------------------------end setCastomInputsEvents:-------------------------
 
@@ -476,7 +908,7 @@ function preRender(arr) {
 }
 preRender(TotalTableArr);
 
-let number = 0;
+let numberWarehouseTableRow = 0;
 function getWarehouseRow(cartonObj) {
   const item = document.createElement("tr"),
     tableNumber = document.createElement("td"),
@@ -498,8 +930,8 @@ function getWarehouseRow(cartonObj) {
   tableDataQuantity.classList.add("table__column", "table__column_7");
   tableDataCost.classList.add("table__column", "table__column_8");
 
-  number++;
-  tableNumber.textContent = number;
+  numberWarehouseTableRow++;
+  tableNumber.textContent = numberWarehouseTableRow;
   tableDataName.textContent = cartonObj.name;
   tableDataType.textContent = cartonObj.typeCarton;
   tableDataWidth.textContent = cartonObj.width;
