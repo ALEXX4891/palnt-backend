@@ -1,14 +1,16 @@
 @font-face {
   font-family: Roboto;
   font-display: swap;
-  src: url("../fonts/Roboto-Bold.woff2") format("woff2"), url("../fonts/Roboto-Bold.woff") format("woff");
+  src: url("../fonts/Roboto-Bold.woff2") format("woff2"),
+    url("../fonts/Roboto-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: Roboto;
   font-display: swap;
-  src: url("../fonts/Roboto-Regular.woff2") format("woff2"), url("../fonts/Roboto-Regular.woff") format("woff");
+  src: url("../fonts/Roboto-Regular.woff2") format("woff2"),
+    url("../fonts/Roboto-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
@@ -84,7 +86,7 @@ input::-ms-clear {
 }
 
 button,
-input[type=submit] {
+input[type="submit"] {
   display: inline-block;
   box-shadow: none;
   background-color: transparent;
@@ -766,7 +768,8 @@ img {
   font-weight: 400;
   line-height: 130%;
 }
-.toggle__knobs, .toggle__layer {
+.toggle__knobs,
+.toggle__layer {
   position: absolute;
   top: 0;
   right: 0;
@@ -816,7 +819,9 @@ img {
   transition: 0.3s ease all;
   z-index: 1;
 }
-.toggle__knobs, .toggle__knobs:before, .toggle__layer {
+.toggle__knobs,
+.toggle__knobs:before,
+.toggle__layer {
   transition: 0.3s ease all;
 }
 
@@ -996,11 +1001,11 @@ img {
   align-items: center;
   justify-content: center;
   padding: 0 8px;
-  white-space: wrap; /* Текст переносится */
+  white-space: wrap;
 }
 
 .table__column svg {
-margin-left: 3px;
+  margin-left: 3px;
 }
 
 @media (max-width: 1500px) {
@@ -1220,6 +1225,7 @@ margin-left: 3px;
 }
 
 .input_date {
+  padding: 0 10px 0;
   position: relative;
   margin-right: 0;
   width: 150px;
@@ -1244,6 +1250,7 @@ margin-left: 3px;
 }
 .input_date .input__datepicker {
   opacity: 0;
+  /* height: 30px; */
 }
 .input_date .input__placeholder {
   position: absolute;
@@ -1262,16 +1269,25 @@ margin-left: 3px;
   pointer-events: none;
   cursor: pointer;
 }
+.input_date_active {
+  background-color: #f9f9f9;
+}
 .input_date_active .input__placeholder {
   position: absolute;
-  top: 9px;
-  left: 9px;
+  top: 8px;
+  left: 11px;
   font-size: 10px;
   line-height: 110%;
   height: auto;
 }
 .input_date_active .input__datepicker {
-  padding: 15px 9px 0;
+  position: absolute;
+  top: 20px;
+  left: 11px;
+  width: 90%;
+  opacity: 1;
+}
+.input__datepicker_active .input__datepicker {
   opacity: 1;
 }
 .section__head_archive {
@@ -1348,7 +1364,8 @@ margin-left: 3px;
 .table__column_archive.table__column_9 {
   width: 40px;
 }
-.table__column_archive.table__column_8, .table__column_archive.table__column_9 {
+.table__column_archive.table__column_8,
+.table__column_archive.table__column_9 {
   padding: 7px 8px 1px;
 }
 
@@ -1645,7 +1662,9 @@ margin-left: 3px;
   background-color: #d2d2d2;
   border-radius: 100px;
 }
-.deal__variant .variant__table-wrapper .simplebar-scrollbar.simplebar-visible:before {
+.deal__variant
+  .variant__table-wrapper
+  .simplebar-scrollbar.simplebar-visible:before {
   opacity: 1;
 }
 
@@ -2174,16 +2193,22 @@ margin-left: 3px;
   min-width: 80px;
   text-align: center;
 }
-.calculating__variant .variant__table-wrapper .simplebar-track.simplebar-vertical {
+.calculating__variant
+  .variant__table-wrapper
+  .simplebar-track.simplebar-vertical {
   display: none;
 }
-.calculating__variant .variant__table-wrapper .simplebar-track.simplebar-horizontal {
+.calculating__variant
+  .variant__table-wrapper
+  .simplebar-track.simplebar-horizontal {
   right: 0px;
   bottom: 0px;
   background-color: #d2d2d2;
   border-radius: 100px;
 }
-.calculating__variant .variant__table-wrapper .simplebar-scrollbar.simplebar-visible:before {
+.calculating__variant
+  .variant__table-wrapper
+  .simplebar-scrollbar.simplebar-visible:before {
   opacity: 1;
 }
 .calculating .wrap_vertical {
@@ -2767,7 +2792,7 @@ margin-left: 3px;
 .input_select .choices__list--dropdown .choices__placeholder {
   display: none;
 }
-.input_select .choices[data-type*=select-one] .choices__inner {
+.input_select .choices[data-type*="select-one"] .choices__inner {
   padding-bottom: 0;
 }
 .input_select .input__placeholder {
@@ -2788,7 +2813,7 @@ margin-left: 3px;
   justify-content: flex-start;
   padding-top: 15px;
 }
-.input_select .choices[data-type*=select-one]::after {
+.input_select .choices[data-type*="select-one"]::after {
   top: 15px;
   right: 18px;
   z-index: 10;
@@ -2800,11 +2825,11 @@ margin-left: 3px;
   background-size: auto;
   background-position: center;
 }
-.input_select .choices[data-type*=select-one].is-open::after {
+.input_select .choices[data-type*="select-one"].is-open::after {
   transform: rotate(180deg);
   top: 23px;
 }
-.input_select .choices__list[role=listbox] {
+.input_select .choices__list[role="listbox"] {
   max-height: 112px !important;
   overflow: auto;
   border-radius: 5px;

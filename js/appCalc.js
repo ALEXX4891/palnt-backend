@@ -258,6 +258,19 @@ function setCastomInputsEvents() {
     });
   }
 
+  const datePicker = document.querySelectorAll(".input_date");
+  if (datePicker) {
+    datePicker.forEach((item) => {
+      const input = item.querySelector("input");
+      item.addEventListener("click", (event) => {
+        item.classList.add("input_date_active");
+        input.value = new Date().toISOString().slice(0, 10); //удаляет время
+
+      });
+    });
+  }
+  // .input__datepicker
+
   //для инпутов:
   const inputFields = document.querySelectorAll(".input_search-field");
   if (inputFields) {
@@ -268,7 +281,6 @@ function setCastomInputsEvents() {
       item.querySelector("input").addEventListener("input", function () {
         if (item.querySelector("input").value.trim() !== "") {
           item.classList.add("input_search-field_active");
-          console.log(1);
         }
       });
       document.addEventListener("click", function (e) {});
@@ -323,6 +335,22 @@ function setCastomInputsEvents() {
 //   });
 // });
 
+// событие на активацию кнопики распечатки этикеток:
+const inputLabels = document.querySelector("#input-labels");
+const btnPrintLabels = document.querySelector("#btn-print-labels");
+
+if (inputLabels) {
+  inputLabels.addEventListener("input", (event) => {
+    if (inputLabels.value.trim() !== "") {
+      btnPrintLabels.classList.remove("btn_disabled");
+    } else {
+      btnPrintLabels.classList.add("btn_disabled");
+    }
+  })
+}
+
+
+
 // ---------------------------end setCastomInputsEvents:-------------------------
 
 // function preRenderContractorsList(arr) { // пререндер нужен если мы хотим преобразовать данные перед рендером
@@ -345,7 +373,6 @@ function getSelectLi(field) {
   const item = document.createElement("li");
   item.classList.add("my-select__item");
   item.textContent = field;
-  console.log(item);
   return item;
 }
 //--------------------------end getSelectLi:-------------------------

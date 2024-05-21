@@ -278,10 +278,10 @@
             <div class="calculating__bottom">
               <div class="input_search-field input_search-field_w_230">
                 <span class="input__placeholder">Кол-во этикеток на 1000</span>
-                <input id="field-input-1" type="text" class="input__field-input" name="field-input" value="">
+                <input id="input-labels" type="number" class="input__field-input" name="field-input" value="">
               </div>
               <div class="btn-wrapper">
-                <button id="btn-1" class="btn btn-reset popup__btn popup-close btn_disabled" href="#">Распечатать этикетки</button>
+                <button id="btn-print-labels" class="btn btn-reset popup__btn popup-close btn_disabled" href="#">Распечатать этикетки</button>
                 <a class="btn btn_red btn-reset popup__btn popup-approval"
                   onclick='window.location.href="order-graphic.html"'>Графика заказа</a>
               </div>
@@ -334,15 +334,15 @@
             <div class="calculating__fields">
               <div class="input_search-field input_search-field_w_280">
                 <span class="input__placeholder">Затраты на производство, $</span>
-                <input type="text" class="input__field-input" name="field-input" value="2">
+                <input type="number" class="input__field-input" name="field-input" value="">
               </div>
               <div class="input_search-field input_search-field_w_250">
                 <span class="input__placeholder">Маржа, $</span>
-                <input type="text" class="input__field-input" name="field-input" value="5">
+                <input type="number" class="input__field-input" name="field-input" value="">
               </div>
               <div class="input_search-field">
                 <span class="input__placeholder">НДС, %</span>
-                <input type="text" class="input__field-input" name="field-input" value="15">
+                <input type="number" class="input__field-input" name="field-input" value="">
               </div>
               <button class="btn btn-reset btn_disabled">Рассчитать
               </button>
