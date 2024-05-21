@@ -1,29 +1,22 @@
 // ----------------------simplebar:---------------------------------------
 // function simplebar() {
-  if (document.querySelector(".my-simplebar-1")) {
-    const simpleBar1 = new SimpleBar(
-      document.querySelector(".my-simplebar-1"),
-      {
-        scrollbarMaxSize: 80,
-        autoHide: false,
-        forceVisible: true,
-      }
-    );
-  }
+if (document.querySelector(".my-simplebar-1")) {
+  const simpleBar1 = new SimpleBar(document.querySelector(".my-simplebar-1"), {
+    scrollbarMaxSize: 80,
+    autoHide: false,
+    forceVisible: true,
+  });
+}
 
-  if (document.querySelector(".my-simplebar-2")) {
-    const simpleBar2 = new SimpleBar(
-      document.querySelector(".my-simplebar-2"),
-      {
-        scrollbarMaxSize: 80,
-        autoHide: false,
-        forceVisible: true,
-      }
-    );
-  }
+if (document.querySelector(".my-simplebar-2")) {
+  const simpleBar2 = new SimpleBar(document.querySelector(".my-simplebar-2"), {
+    scrollbarMaxSize: 80,
+    autoHide: false,
+    forceVisible: true,
+  });
+}
 
 function simplebar() {
-
   if (document.querySelectorAll(".my-simplebar-input")) {
     document.querySelectorAll(".my-simplebar-input").forEach((item) => {
       new SimpleBar(item, {
@@ -203,7 +196,6 @@ let options2 = {
 
 // await fetchToDB(options2);
 
-
 //--------------------------end Запрос к БД----------------------------
 let warehouseList = await fetchToDB(options1);
 let contractorsList = await fetchToDB(options2);
@@ -218,32 +210,63 @@ let cartonListForRender = [];
 const TotalTableArr = [];
 
 const contractorsSelect = document.querySelector(".my-select_contractors");
-const contractorsSelectUl = document.querySelector(".my-select__list_contractors");
-const contractorsSelectInput = document.querySelector(".my-select__text_contractors");
+const contractorsSelectUl = document.querySelector(
+  ".my-select__list_contractors"
+);
+const contractorsSelectInput = document.querySelector(
+  ".my-select__text_contractors"
+);
 let contractorsSelectId = 0;
 // console.log(contractorsSelect);
-contractorsSelect.addEventListener("click", (event) => {
-  contractorsSelect.classList.add("my-select_active");
-  contractorsSelect.classList.toggle("my-select_open");
+// contractorsSelect.addEventListener("click", (event) => {
+//   contractorsSelect.classList.add("my-select_active");
+//   contractorsSelect.classList.toggle("my-select_open");
 
-  // console.log(event.target);
-  // console.log(event.target.getAttribute("idContractor"));
-})
+//   // console.log(event.target);
+//   // console.log(event.target.getAttribute("idContractor"));
+// })
 
-document.addEventListener("click", function (e) {
-  if (!contractorsSelect.contains(e.target) && contractorsSelect !== e.target) {
-    // contractorsSelect.classList.remove("my-select_active");
-    contractorsSelect.classList.remove("my-select_open");
-    console.log(e.target);
-  }
-  if (contractorsSelectInput.textContent) {
-    contractorsSelect.DOCUMENT_FRAGMENT_NODE
-  }
-});
+// ---------------------------setCastomSelectEvents:-------------------------
+function setCastomSelectEvents() {
+  const selects = document.querySelectorAll(".my-select");
+  const inputs = document.querySelectorAll(".my-select__text");
+  const selectLists = document.querySelectorAll(".my-select__list");
+  selects.forEach((select) => {
+    select.addEventListener("click", (event) => {
+      select.classList.toggle("my-select_open");
+    });
+    const selectOptions = select.querySelectorAll(".my-select__item");
+    selectOptions.forEach((item) => {
+      item.addEventListener("click", (event) => {
+        event.stopPropagation(); // отменяем всплытие, что бы повторно не сработало событие на самом селекте
+        const input = select.querySelector(".my-select__text");
+        input.innerHTML = item.innerHTML;
+        input.classList.add("my-select__text_active");
+        select.classList.remove("my-select_open");
+        select.classList.add("my-select_active");
+      });
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    selects.forEach((select) => {
+      if (!select.contains(e.target)) {
+        select.classList.remove("my-select_open");
+        if (select.querySelector(".my-select__text").innerHTML == "") {
+          select
+            .querySelector(".my-select__text")
+            .classList.remove("my-select__text_active");
+        }
+      }
+    });
+  });
+}
+
+// ---------------------------end setCastomSelectEvents:-------------------------
 
 
 // function preRenderContractorsList(arr) { // пререндер нужен если мы хотим преобразовать данные перед рендером
-//   let copyArr = [...arr]; 
+//   let copyArr = [...arr];
 
 //   for (const contractorObj of copyArr) {
 //     let contractorObjForRender = {
@@ -259,25 +282,24 @@ document.addEventListener("click", function (e) {
 function getContractorListRow(contractorObj) {
   const item = document.createElement("li");
 
-    // console.log(contractorLi);
-    
-    item.classList.add("my-select__item");
-    item.textContent = contractorObj.name;
-    item.setAttribute("id", contractorObj.idContractor);
+  // console.log(contractorLi);
 
-    // console.log(item);
-    item.addEventListener("click", (event) => {      
-      contractorsSelectId = item.getAttribute("id");
-      console.log(contractorsSelectId);
-      contractorsSelectInput.textContent = item.textContent;
-      contractorsSelectInput.setAttribute("idContractor", item.getAttribute("id"));
-      contractorsSelectInput.classList.add("my-select__text_active");
-    })
-    
-    // console.log(item);
+  item.classList.add("my-select__item");
+  item.textContent = contractorObj.name;
+  item.setAttribute("id", contractorObj.idContractor);
+
+  // console.log(item);
+  // item.addEventListener("click", (event) => {
+  //   // contractorsSelectId = item.getAttribute("id");
+  //   // console.log(contractorsSelectId);
+  //   contractorsSelectInput.textContent = item.textContent;
+  //   contractorsSelectInput.setAttribute("idContractor", item.getAttribute("id"));
+  //   contractorsSelectInput.classList.add("my-select__text_active");
+  // })
+
+  // console.log(item);
   return item;
 }
-
 
 // contractorsList.forEach((contractorObj) => {
 //   getContractorListRow(contractorObj);
@@ -286,7 +308,7 @@ function getContractorListRow(contractorObj) {
 
 function renderContractorsSelect(arr) {
   contractorsSelectUl.innerHTML = ""; // очищаем тело таблицы
-  console.log(contractorsSelectUl);
+  // console.log(contractorsSelectUl);
   let copyArr = [...arr]; // создаем копию массива
 
   // рендерим всю таблицу
@@ -304,21 +326,25 @@ renderContractorsSelect(contractorsList);
 // функция формирования результирующей таблицы
 function crateResultTable(arr) {
   const copyArr = [...arr];
-  copyArr.forEach((cartonObj) => { // добавляем в объект уникальное имя
+  copyArr.forEach((cartonObj) => {
+    // добавляем в объект уникальное имя
     cartonObj.idName = `${cartonObj.name} - ${cartonObj.typeCarton} - ${cartonObj.width} x ${cartonObj.lengthCarton} - ${cartonObj.price}$`;
   });
-  const unicList = [...new Set(copyArr.map((cartonObj) => cartonObj.idName))];   // формируем массив уникальных названий
+  const unicList = [...new Set(copyArr.map((cartonObj) => cartonObj.idName))]; // формируем массив уникальных названий
   // фильтруем результирующий массив:
   for (let i = 0; i < unicList.length; i++) {
-    let filterList = copyArr.filter( // фильтруем по уникальному названию
-      (cartonObj) => cartonObj.idName === unicList[i] 
-    ); 
+    let filterList = copyArr.filter(
+      // фильтруем по уникальному названию
+      (cartonObj) => cartonObj.idName === unicList[i]
+    );
 
-    let quantity = filterList.reduce( // считаем остатки картона на складе
+    let quantity = filterList.reduce(
+      // считаем остатки картона на складе
       (acc, cartonObj) => acc + cartonObj.coming - cartonObj.expense,
       0
     );
-    const unicObj = { // создаем объект с уникальным названием для рендера результирующей таблицы      
+    const unicObj = {
+      // создаем объект с уникальным названием для рендера результирующей таблицы
       idName: unicList[i],
       name: filterList[0].name,
       typeCarton: filterList[0].typeCarton,
@@ -344,8 +370,9 @@ crateResultTable(cartonList);
 //   item.scrollIntoView(); // переход к созданной строке
 // };
 
-function preRender(arr) { // пререндер нужен если мы хотим преобразовать данные перед рендером
-  let copyArr = [...arr]; 
+function preRender(arr) {
+  // пререндер нужен если мы хотим преобразовать данные перед рендером
+  let copyArr = [...arr];
 
   for (const cartonObj of copyArr) {
     let cartonObjForRender = {
@@ -423,4 +450,4 @@ function renderWarehouseTable(arr) {
 
 renderWarehouseTable(cartonListForRender);
 simplebar();
-
+setCastomSelectEvents();
