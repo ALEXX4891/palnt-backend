@@ -1,11 +1,13 @@
+////@ts-check // проверка ошибок типизации
+
 // --------------------------simplebar:---------------------------------------
 // function simplebar() {
-  const simpleBar = new SimpleBar(document.querySelector(".my-simplebar-1"), {
-    scrollbarMaxSize: 80,
-    autoHide: false,
-    forceVisible: true,
-  });
-  simpleBar.getScrollElement().scrollTo(0,0);
+const simpleBar = new SimpleBar(document.querySelector(".my-simplebar-1"), {
+  scrollbarMaxSize: 80,
+  autoHide: false,
+  forceVisible: true,
+});
+simpleBar.getScrollElement().scrollTo(0, 0);
 // }
 // simplebar();
 
@@ -13,7 +15,6 @@
 
 //--------------------------приложение----------------------------
 // Этап 1. В HTML файле создайте верстку элементов, которые будут статичны(неизменны).
-
 const editIcon = `<svg class="btn-edit" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path
     d="M18.6665 20H3.99984V5.33333H12.8132L14.1465 4H3.99984C3.64622 4 3.30708 4.14048 3.05703 4.39052C2.80698 4.64057 2.6665 4.97971 2.6665 5.33333V20C2.6665 20.3536 2.80698 20.6928 3.05703 20.9428C3.30708 21.1929 3.64622 21.3333 3.99984 21.3333H18.6665C19.0201 21.3333 19.3593 21.1929 19.6093 20.9428C19.8594 20.6928 19.9998 20.3536 19.9998 20V10L18.6665 11.3333V20Z"
@@ -41,171 +42,15 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
   <path d="M6.15385 9.50769L2 5.35384L6.15385 1.2" stroke="#225F0D" stroke-opacity="0.75" stroke-width="2.30769" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg>`;
 
-//--------------------------старье----------------------------
-// const tableHeader = [
-//   "ФИО",
-//   "Факультет",
-//   "Дата рождения (возраст)",
-//   "Годы обучения (курс)",
-//   "Удаление",
-// ];
-
-// const tableClass = ["table", "caption-top", "table-striped", "table-hover"],
-//   tableBtnClass = ["btn", "btn-outline-primary", "btn-th"],
-//   errorMsg = document.querySelector(".validation-error"),
-//   filterCancelBtn = document.querySelector(".btn-cancel");
-//--------------------------end старье----------------------------
-
-//--------------------------переделать----------------------------
-
-// очищаем поля фильтра
-// filterCancelBtn.addEventListener("click", function () {
-//   fio.value = "";
-//   faculty.value = "";
-//   birthDateAge.value = "";
-//   studyStart.value = "";
-//   renderTable(contractorListForRender);
-// });
-//--------------------------end переделать----------------------------
-
 const tableBody = document.querySelector(".table__body_contractors");
 const tableBodyWrapper = document.querySelector(".table-body-wrapper");
 const contractorSearch = document.getElementById("contractorsSearch");
 const toggleBtn = document.querySelector(".toggle__checkbox");
 
-// contractorSearch.addEventListener("input", function () {
-
-//   console.log(contractorSearch.value);
-// })
-//--------------------------старье----------------------------
-
-// tableWrapper = document.getElementById("table"),
-//   table = document.createElement("table"),
-//   tableCaption = document.createElement("caption"),
-//   tableHead = document.createElement("thead"),
-//   tableHeadRow = document.createElement("tr"),
-//   tableHeaderCol1 = document.createElement("th"),
-//   tableHeaderCol2 = document.createElement("th"),
-//   tableHeaderCol3 = document.createElement("th"),
-//   tableHeaderCol4 = document.createElement("th"),
-//   tableHeaderCol5 = document.createElement("th"),
-//   tableHeaderFio = document.createElement("button"),
-//   tableHeaderFaculty = document.createElement("button"),
-//   tableHeaderBirthDateAge = document.createElement("button"),
-//   tableHeaderstudyStart = document.createElement("button"),
-//   tableFilterBody = document.createElement("tbody"),
-//   tableBody = document.createElement("tbody");
-
-// for (let i = 0; i < tableClass.length; i++) {
-//   table.classList.add(tableClass[i]); // добавляем классы таблице
-// }
-
-// tableHeaderFio.textContent = tableHeader[0];
-// tableHeaderFaculty.textContent = tableHeader[1];
-// tableHeaderBirthDateAge.textContent = tableHeader[2];
-// tableHeaderstudyStart.textContent = tableHeader[3];
-// tableHeaderCol5.textContent = tableHeader[4];
-
-// tableHeaderCol5.classList.add("delete-btn-header");
-
-// tableCaption.textContent = "Список контрагентов:";
-
-// for (let i = 0; i < tableBtnClass.length; i++) {
-//   tableHeaderFio.classList.add(tableBtnClass[i]);
-//   tableHeaderFaculty.classList.add(tableBtnClass[i]);
-//   tableHeaderBirthDateAge.classList.add(tableBtnClass[i]);
-//   tableHeaderstudyStart.classList.add(tableBtnClass[i]);
-// }
-
-// tableHeaderCol1.append(tableHeaderFio);
-// tableHeaderCol2.append(tableHeaderFaculty);
-// tableHeaderCol3.append(tableHeaderBirthDateAge);
-// tableHeaderCol4.append(tableHeaderstudyStart);
-// tableHeadRow.append(
-//   tableHeaderCol1,
-//   tableHeaderCol2,
-//   tableHeaderCol3,
-//   tableHeaderCol4,
-//   tableHeaderCol5
-// );
-// tableHead.append(tableHeadRow);
-// table.append(tableHead, tableCaption);
-// tableWrapper.append(table);
-
-// добавляем строку для фильтрации:
-// const filterHeadRow = document.createElement("tr"),
-//   filterCol1 = document.createElement("td"),
-//   filterCol2 = document.createElement("td"),
-//   filterCol3 = document.createElement("td"),
-//   filterCol4 = document.createElement("td"),
-//   filterCol5 = document.createElement("td"),
-//   filterBody = document.createElement("tbody");
-
-// filterCol1.innerHTML =
-//   '<input type="text" id="fio" class="form-control" placeholder="Фильтр по ФИО" required id="inputName">';
-// filterCol2.innerHTML =
-//   '<input type="text" id="faculty" class="form-control" placeholder="Фильтр по факультету" required id="inputName">';
-// filterCol3.innerHTML =
-//   '<input type="text" id="birthDateAge" class="form-control" placeholder="Фильтр по возрасту" required id="inputName">';
-// filterCol4.innerHTML =
-//   '<input type="text" id="studyStart" class="form-control" placeholder="Фильтр по годам обучения" required id="inputName">';
-// filterCol5.innerHTML =
-//   '<button id="delete-all" class="btn btn-outline-primary col-md-3 col-sm-6 btn-th">Удалить всех</button>';
-
-// filterHeadRow.append(
-//   filterCol1,
-//   filterCol2,
-//   filterCol3,
-//   filterCol4,
-//   filterCol5
-// );
-// tableFilterBody.append(filterHeadRow);
-// table.append(tableFilterBody);
-
-// let fio = document.getElementById("fio");
-// let faculty = document.getElementById("faculty");
-// let birthDateAge = document.getElementById("birthDateAge");
-// let studyStart = document.getElementById("studyStart");
-//--------------------------end старье----------------------------
-
 //--------------------------Запрос к БД----------------------------
 // Загружаем список контрагентов с БД:
 let responce;
 let infoList;
-// let options = {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({
-//     table: "contractor",
-//     all: "*",
-//     select: "SELECT",
-// idContractor: "idContractor",
-// isActive: "isActive",
-// name: "name",
-// taxNumber: "taxNumber",
-// address: "address",
-// telephone: "telephone",
-// email: "email",
-
-// create: "CREATE",
-// update: "UPDATE",
-// where: "WHERE",
-// insert: "INSERT INTO",
-// delete: "DELETE FROM",
-// orderby: "ORDER BY",
-// limit: "LIMIT",
-// select: "SELECT",
-// from: "FROM",
-// innerjoin: "INNER JOIN",
-// leftjoin: "LEFT JOIN",
-// rightjoin: "RIGHT JOIN",
-// on: "ON",
-// groupby: "GROUP BY",
-// having: "HAVING",
-//   }),
-// }
 
 let options = {
   // опции для получения списка всех контрагентов
@@ -214,7 +59,6 @@ let options = {
   all: "*",
 };
 
-// console.log(JSON.stringify(options));
 async function fetchToDB(options) {
   // Блок try выполнится полностью, если не будет ошибок:
   try {
@@ -242,13 +86,9 @@ async function fetchToDB(options) {
 await fetchToDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
 //--------------------------end Запрос к БД----------------------------
 
-// copyContractorList = [...activContractors];
-
 // выбираем только активных контрагентов:
-// console.log(contractorList);
-let copyContractorList = [...infoList];
+let contractorListForRender = [...infoList];
 let isActive = 1; // признак содержания таблицы
-let contractorListForRender = [];
 
 //поиск максимального id в списке контрагентов:
 let maxId = 0;
@@ -277,7 +117,7 @@ function toggleBtnFunc() {
     tableBodyWrapper.style.height = "calc(100vh - 300px)"; // увеличиваем высоту таблицы
     tableBodyWrapper.style.marginBottom = "0"; // убираем отступ снизу таблицы
     getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
-    simpleBar.getScrollElement().scrollTo(0,0);
+    simpleBar.getScrollElement().scrollTo(0, 0);
   }
   if (!toggleBtn.checked) {
     isActive = 1;
@@ -285,7 +125,7 @@ function toggleBtnFunc() {
     tableBodyWrapper.style.height = "calc(100vh - 360px)"; // уменьшаем высоту таблицы
     tableBodyWrapper.style.marginBottom = "30px"; // добавляем отступ снизу таблицы
     getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
-    simpleBar.getScrollElement().scrollTo(0,0);
+    simpleBar.getScrollElement().scrollTo(0, 0);
   }
 }
 
@@ -294,6 +134,7 @@ toggleBtn.addEventListener("click", function () {
   toggleBtnFunc(); //проверить выбранную активность контрагентов
   renderTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
   setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
+  setBtnEvents(); // навесить заново события удаления и редактирования контрагента
 });
 
 // Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем,
@@ -301,6 +142,7 @@ toggleBtn.addEventListener("click", function () {
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
 function getRow(contractorObj, isActive = 1) {
+  //??????????????????????????????????????
   const item = document.createElement("tr"),
     tableDataId = document.createElement("td"),
     tableDataName = document.createElement("td"),
@@ -367,36 +209,6 @@ function getRow(contractorObj, isActive = 1) {
   tableDataReverCell.setAttribute("id", contractorObj.idContractor);
   tableDataSaveCell.setAttribute("id", contractorObj.idContractor);
 
-  // добавляем обработчик на кнопку - удаление контрагента
-  tableDataDeleteCell
-  .querySelector("svg")
-  .addEventListener("click", function () {
-    item.classList.add("table__row_deletable");
-    setNoActive({ contractorObj, element: item });
-  });
-
-  // добавляем обработчик на кнопку - редактирование контрагента
-  tableDataReverCell
-    .querySelector("svg")
-    .addEventListener("click", function () {
-      item.classList.add("table__row_deletable");
-      setActive({ contractorObj, element: item });
-    });
-
-  // добавляем обработчик на кнопку - редактирование контрагента
-  tableDataEditCell
-  .querySelector("svg")
-  .addEventListener("click", function () {
-    editItem({ contractorObj, element: item });
-  });
-
-  // добавляем обработчик на кнопку - сохранение контрагента
-  tableDataSaveCell
-  .querySelector("svg")
-  .addEventListener("click", function () {
-    saveItem({ contractorObj, element: item });
-  });
-
   // присваеваем id контрагента элементу и добавляем информацию в таблицу:
   item.setAttribute("id", contractorObj.idContractor);
   item.append(tableDataId);
@@ -416,65 +228,57 @@ function getRow(contractorObj, isActive = 1) {
   return item;
 }
 
-//Логика:
-// 1) получаем массив-0 всех контрагентов
-// 2) при первой отрисовке фильтруем массив-0 контрагентов по активности = 1, получаем массив-1, рендер.
-// 3) при переключении тогла фильтруем массив-0 контрагентов по активности = 0, получаем массив-2, рендер.
-// 4) при фильтрации массива по поиску работаем с массивом-1 или массивом-2, проверяем положение тогла
-// 5) при переключении тогла работаем с массивом-1 или массивом-2, проверяем наличие фильтра по поиску
-// 6)
-// 7)
-// 8)
-// 9)
-// 10)
+// добавляем обработчик на кнопку - удаление контрагента
+function setBtnEvents() {
+  let delBtns = document.querySelectorAll(".btn-delete");
+  // console.log(delBtns);
+  if (delBtns) {
+    delBtns.forEach((item) => {
+      item.addEventListener("click", function () {
+        const row = this.closest(".table__row");
+        console.log(row);
+        row.classList.add("table__row_deletable");
+        setNoActive(row);
+      });
+    });
+  }
 
-// Этап 4. Создайте функцию отрисовки всех контрагентов.
-// Аргументом функции будет массив контрагентов.Функция должна использовать
-// ранее созданную функцию создания одной записи для контрагента.Цикл поможет вам создать
-// список контрагентов.Каждый раз при изменении списка контрагента вы будете вызывать
-// эту функцию для отрисовки таблицы.
+  // добавляем обработчик на кнопку - редактирование контрагента
+  let revertBtns = document.querySelectorAll(".btn-revert");
+  if (revertBtns) {
+    revertBtns.forEach((item) => {
+      item.addEventListener("click", function () {
+        const row = this.closest(".table__row");
+        row.classList.add("table__row_deletable");
+        setActive(row);
+      });
+    });
+  }
 
-//подготовка массива для рендера.
-function preRender(arr) {
-  for (const contractorObj of arr) {
-    // let birthday = new Date(contractorObj.birthday)
-    //   .toJSON()
-    //   .split("T")[0]
-    //   .split("-")
-    //   .reverse()
-    //   .join(".");
+  // добав обработчик на кнопку - редактирование контрагента
+  let editBtns = document.querySelectorAll(".btn-edit");
+  if (editBtns) {
+    editBtns.forEach((item) => {
+      item.addEventListener("click", function () {
+        const row = this.closest(".table__row");
+        editItem(row);
+      });
+    });
+  }
 
-    let contractorObjForRender = {
-      idContractor: contractorObj.idContractor,
-      name: contractorObj.name,
-      taxNumber: contractorObj.taxNumber,
-      address: contractorObj.address,
-      telephone: contractorObj.telephone,
-      email: contractorObj.email,
-      isActive: contractorObj.isActive,
-      // fio:
-      //   studentObj.surname + " " + studentObj.name + " " + studentObj.lastname,
-      // faculty: studentObj.faculty,
-      // birthDateAge: `{birthday} ({getAge(studentObj.birthday)})`,
-      // studyStart: `{studentObj.studyStart} - {
-      //   parseInt(studentObj.studyStart) + 4
-      // } ({getCource(studentObj.studyStart)})`,
-      // id: studentObj.id,
-    };
-    contractorListForRender.push(contractorObjForRender);
+  let saveBtns = document.querySelectorAll(".btn-save");
+  if (saveBtns) {
+    saveBtns.forEach((item) => {
+      item.addEventListener("click", function () {
+        console.log("save");
+        const row = this.closest(".table__row");
+        saveItem(row);
+      });
+    });
   }
 }
 
-preRender(copyContractorList);
-
 getMaxId(contractorListForRender);
-
-// функция фильтрации массива:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// function filterTable(col, param, arr) {
-//   return arr.filter((oneContractor) =>
-//     oneContractor[param].toLowerCase().includes(col.value.trim().toLowerCase())
-//   );
-// }
 
 function filterTable(search, isActive, arr) {
   let copy = [...arr];
@@ -498,6 +302,7 @@ function filterTableActive(isActive, param, arr) {
 
 //рендер подготовленного массива + фильтрация по всем колонкам.
 function renderTable(arr, isActive) {
+  //??????????????????????????????????????
   tableBody.innerHTML = ""; // очищаем тело таблицы
   let copyArr = [...arr]; // создаем копию массива
 
@@ -515,76 +320,15 @@ function renderTable(arr, isActive) {
 
   // рендерим всю таблицу
   for (const contractorObj of copyArr) {
-    const item = getRow(contractorObj, isActive);
+    const item = getRow(contractorObj, isActive); //??????????????????????????????????????????????
     tableBody.append(item); // добавление контрагента в таблицу
   }
+  setBtnEvents();
 }
 
 renderTable(contractorListForRender, isActive);
+setBtnEvents();
 setPopupEvent();
-
-// Этап 5. К форме добавления контрагента добавьте слушатель события отправки формы, в котором будет проверка введенных данных.Если проверка пройдет успешно, добавляйте объект с данными контрагентов в массив контрагентов и запустите функцию отрисовки таблицы контрагентов, созданную на этапе 4.
-
-// const studentForm = document.getElementById("studentForm");
-
-// studentForm.addEventListener("submit", async function (event) {
-//   event.preventDefault(); // отменяем перезагрузку страницы
-
-//   const inputName = document.getElementById("inputName"),
-//     inputLastname = document.getElementById("inputLastname"),
-//     inputSurname = document.getElementById("inputSurname"),
-//     inputBirthDate = document.getElementById("inputBirthDate"),
-//     inputStudyStart = document.getElementById("inputStudyStart"),
-//     inputFaculty = document.getElementById("inputFaculty");
-
-//   // Валидация
-//   if (inputName.value.trim() == "") {
-//     errorMsg.textContent = "Имя не введено!";
-//     return;
-//   }
-
-//   if (inputLastname.value.trim() == "") {
-//     errorMsg.textContent = "Отчество не введено!";
-//     return;
-//   }
-
-//   if (inputSurname.value.trim() == "") {
-//     errorMsg.textContent = "Фамилия не введена!";
-//     return;
-//   }
-
-//   if (inputBirthDate.value == "") {
-//     errorMsg.textContent = "Дата рождения не введена!";
-//     return;
-//   }
-
-//   const responce = await fetch("http://localhost:3000/api/students", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({
-//       name: inputName.value,
-//       surname: inputSurname.value,
-//       lastname: inputLastname.value,
-//       birthday: inputBirthDate.valueAsDate,
-//       studyStart: inputStudyStart.value,
-//       faculty: inputFaculty.value,
-//     }),
-//   });
-
-//   let newStudent = await responce.json();
-
-//   preRender(copyStudentsList); //пререндер - в массив объектов по 4 элемента
-//   renderTable(contractorListForRender); //отрисовываем таблицу
-
-//   // отчистка формы, после добавления контрагента в массив
-//   inputName.value = "";
-//   inputSurname.value = "";
-//   inputLastname.value = "";
-//   inputBirthDate.value = "";
-//   inputStudyStart.value = "";
-//   inputFaculty.value = "";
-//   errorMsg.textContent = "";
-// });
 
 // Функция сортировки массива контрагентов, события кликов на соответствующие колонки:
 let sortDirectionId = true; // индикотор сортировки по id
@@ -630,57 +374,65 @@ contractorSearch.addEventListener("input", () => {
 });
 
 // ----------------- события на кнопки в таблице ------------------
-function setNoActive({ contractorObj, element: item }) {
-  const agree = document.querySelector("#btn-delete");
-  const element = item;
-  const contractort = contractorObj;
-  agree.addEventListener("click", function (e) {
+function setNoActive(item) {
+  const agreeBtn = document.querySelector("#btn-delete");
+  const id = item.getAttribute("id");
+
+  agreeBtn.addEventListener("click", function (e) {
     contractorListForRender.filter(
-      (contractor) => contractor.idContractor == contractort.idContractor
+      // смена активности в массиве контрагентов
+      (contractor) => contractor.idContractor == id
     )[0].isActive = 0;
-    element.remove();
+
+    item.remove();
     popupClose(e.target.closest(".popup"));
 
     options = {
       function: "noActive",
       table: "contractor",
       update: "UPDATE",
-      idContractor: contractorObj.idContractor,
+      idContractor: id,
       isActive: "0",
     };
-    fetchToDB(options);
+    fetchToDB(options); // смена активности в БД
   });
 }
 
-function setActive({ contractorObj, element: item }) {
-  const agree = document.querySelector("#btn-revert");
-  const element = item;
-  const contractort = contractorObj;
-  agree.addEventListener("click", function (e) {
+function setActive(item) {
+  console.log(item);
+  const agreeBtn = document.querySelector("#btn-revert");
+  const id = item.getAttribute("id");
+
+  agreeBtn.addEventListener("click", function (e) {
     contractorListForRender.filter(
-      (contractor) => contractor.idContractor == contractort.idContractor
+      (contractor) => contractor.idContractor == id
     )[0].isActive = 1;
-    element.remove();
+    item.remove();
     popupClose(e.target.closest(".popup"));
 
     options = {
       function: "goActive",
       table: "contractor",
-      idContractor: contractorObj.idContractor,
+      idContractor: id,
       isActive: "1",
     };
     fetchToDB(options);
   });
 }
 
-function editItem({ contractorObj, element: item }) {
-  const idContractor = item.getAttribute("id");
-  const newItem = createRowForm(idContractor, contractorObj);
+function editItem(item) {
+  const id = item.getAttribute("id");
+  const contractorObj = contractorListForRender.filter(
+    (contractor) => contractor.idContractor == id
+  );
+  // console.log(contractorObj);
+  const newItem = createRowForm(id, contractorObj);
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   item.replaceWith(newItem);
   setPopupEvent(); // требуется для корректной работы событий
 }
 
-function saveItem({ element: item }) {
+function saveItem(item) {
   const id = item.querySelector(".table__column_1").innerText;
   const name = item
     .querySelector(".table__column_2")
@@ -747,9 +499,10 @@ function saveItem({ element: item }) {
     options.function = "create"; // определение типа запроса
   }
 
-  const newItem = getRow(contractor); // создаем строку с новым контрагентом
+  const newItem = getRow(contractor); // создаем строку с новым контрагентом!!!!!!!!!!!!!!!!!!!!!!!!
   item.replaceWith(newItem); // заменяем старую строку на новую
   setPopupEvent(); // требуется для корректной работы событий
+  setBtnEvents();
   fetchToDB(options); // отправляем запрос к БД
 }
 
@@ -800,7 +553,6 @@ function createRowForm(maxId, contractorObj) {
   );
 
   //присвоение классов созданным инпутам:
-  // tableFormInputId.classList.add("table__input");
   tableFormInputName.classList.add("table__input");
   tableFormInputTaxNumber.classList.add("table__input");
   tableFormInputAddress.classList.add("table__input");
@@ -808,11 +560,11 @@ function createRowForm(maxId, contractorObj) {
   tableFormInputEmail.classList.add("table__input");
 
   if (contractorObj) {
-    tableFormInputName.value = contractorObj.name;
-    tableFormInputTaxNumber.value = contractorObj.taxNumber;
-    tableFormInputAddress.value = contractorObj.address;
-    tableFormInputPhone.value = contractorObj.telephone;
-    tableFormInputEmail.value = contractorObj.email;
+    tableFormInputName.value = contractorObj[0].name;
+    tableFormInputTaxNumber.value = contractorObj[0].taxNumber;
+    tableFormInputAddress.value = contractorObj[0].address;
+    tableFormInputPhone.value = contractorObj[0].telephone;
+    tableFormInputEmail.value = contractorObj[0].email;
   }
 
   //присвоение атрибутов созданным инпутам:
@@ -851,17 +603,12 @@ function createRowForm(maxId, contractorObj) {
     required: true,
     placeholder: "Заполните почту",
   });
+  console.log("maxId: ", maxId);
+  console.log("contractorObj: ", contractorObj);
+  console.log("item: ", item);
 
   // присваеваем значения внутренним элементам формы:
   tableFormSaveCell.innerHTML = saveIcon;
-  // tableFormSaveCell.setAttribute("id", contractorObj.idContractor);
-
-  // добавляем обработчик на кнопку - сохранение контрагента
-  tableFormSaveCell.addEventListener("click", function () {
-    saveItem({ element: item });
-  });
-
-  // getMaxId()
   tableFormId.innerText = maxId;
 
   //присвоение инпутов ячейкам таблицы:
@@ -882,11 +629,11 @@ function createRowForm(maxId, contractorObj) {
   item.append(tableFormEmptyCell);
 
   tableBody.append(item); // добавление контрагента в таблицу
+  setBtnEvents();
   return item;
 }
 
 //--------------------------разное----------------------------
-
 
 const inputSearch = document.querySelectorAll(".input_search");
 if (inputSearch) {
@@ -912,8 +659,6 @@ if (inputSearch) {
     });
   });
 }
-
-
 
 const inputFields = document.querySelectorAll(".input_search-field");
 
@@ -1103,3 +848,126 @@ function setPopupEvent() {
 }
 
 // --------------------end popup:------------------------
+
+//------------------------- универсальная функция создания таблицы ----------------------------
+// создание таблицы:
+// 1) получение данных,
+// 2) подготовка данных (пререндер),
+// 3) формирование head (если есть) c классами,
+// 4) формирование строк c классами,
+// 5) создание таблицы.
+
+/**
+ *
+ * @param {Object?} table
+ * @param {Array?} tableData
+ * @param {Array?} tableHeadData
+ * @param {Array?} inputs
+ * @param {Object?} tableResRow
+ * @param {Array?} btns
+ */
+
+function createTable(
+  table,
+  tableData,
+  tableHeadData,
+  inputs,
+  tableResRow,
+  btns
+) {
+  // console.log('table: ', table);
+  // console.log('tableData: ', tableData);
+  // console.log('tableHeadData: ', tableHeadData);
+  // console.log('inputs: ', inputs);
+  // console.log('tableResRow: ', tableResRow);
+  // console.log('btns: ', btns);
+
+  // table - html элемент, таблица, либо тело таблицы;
+  // tableData - массив объектов с данными;
+  // tableHead - массив с названиями столбцов;
+  // tableResRow - объект с данными, номер столбца - содержимое и классы;
+  // inputs - массив объектов, в объекте: номер столбца, классы, атрибуты, значения;
+  // btns - массив объектов, в объекте: номер столбца, содержимое кнопки, классы;
+
+  table.innerHTML = ""; // очищаем тело таблицы
+  const tableDataCopy = [...tableData]; // копия массива с данными
+  const columnsQuantity = Object.keys(tableDataCopy[0]).length; // количество столбцов в таблице
+
+  // если есть названия столбцов:
+  if (tableHeadData) {
+    const tableHead = document.createElement("thead");
+    const tableHeadRowEl = document.createElement("tr");
+
+    tableHead.classList.add("table__head");
+    tableHeadRowEl.classList.add("table__row");
+    tableHead.append(tableHeadRowEl);
+    table.append(tableHead);
+
+    for (let i = 0; i < tableHeadData.length; i++) {
+      const tableHeadColumn = document.createElement("th");
+      tableHeadColumn.classList.add(`table__column_${i + 1}`);
+      tableHeadColumn.textContent = tableHeadData[i];
+      tableHeadRowEl.append(tableHeadColumn);
+    }
+    table.append(tableHead);
+  }
+
+  // формирование строк c классами:
+  tableDataCopy.forEach((item) => {
+    const tableBodyRow = document.createElement("tr");
+    tableBodyRow.classList.add("table__row");
+    table.append(tableBodyRow);
+
+    let colNumber = 0; // счетчик столбцов
+    for (let key in item) {
+      colNumber++; // инкремент счетчика столбцов
+      const tableColumn = document.createElement("td");
+      tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
+      tableColumn.textContent = item[key];
+      tableBodyRow.append(tableColumn);
+
+      if (inputs) {
+        // если есть инпуты:
+        inputs.forEach((el) => {
+          if (colNumber == el.numberColumn) {
+            const input = document.createElement("input");
+            input.classList.add("table__cell-frame");
+            input.setAttribute("type", "number");
+            input.setAttribute("value", item[key]);
+            tableColumn.textContent = "";
+            tableColumn.append(input);
+          }
+        });
+      }
+
+      if (btns) {
+        // если есть кнопки:
+        btns.forEach((el) => {
+          if (colNumber == el.numberColumn) {
+            tableColumn.innerHTML = el.button;
+            tableColumn.classList.add(el.class);
+          }
+        });
+      }
+    }
+  });
+  if (tableResRow) {
+    const tableResRowEl = document.createElement("tr");
+    tableResRowEl.classList.add("table__row", tableResRow.class);
+    table.append(tableResRowEl);
+    for (let i = 0; i < columnsQuantity; i++) {
+      const tableResColumn = document.createElement("td");
+      tableResColumn.classList.add("table__column", `table__column_${i + 1}`);
+
+      for (let key in tableResRow) {
+        if (i + 1 == Number(key)) {
+          tableResColumn.textContent = tableResRow[key];
+        }
+      }
+      tableResRowEl.append(tableResColumn);
+    }
+    table.append(tableResRowEl);
+  }
+}
+
+//------------------------- end универсальная функция создания таблицы ----------------------------
