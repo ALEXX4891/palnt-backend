@@ -1,7 +1,37 @@
+//@ts-check // проверка ошибок типизации
+
+const editIcon = `<svg class="btn-edit" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M18.6665 20H3.99984V5.33333H12.8132L14.1465 4H3.99984C3.64622 4 3.30708 4.14048 3.05703 4.39052C2.80698 4.64057 2.6665 4.97971 2.6665 5.33333V20C2.6665 20.3536 2.80698 20.6928 3.05703 20.9428C3.30708 21.1929 3.64622 21.3333 3.99984 21.3333H18.6665C19.0201 21.3333 19.3593 21.1929 19.6093 20.9428C19.8594 20.6928 19.9998 20.3536 19.9998 20V10L18.6665 11.3333V20Z"
+    fill="#225F0D" fill-opacity="0.75" />
+  <path
+    d="M22.3531 3.89338L20.1065 1.64671C20.0068 1.54673 19.8883 1.46741 19.7579 1.41328C19.6275 1.35916 19.4877 1.3313 19.3465 1.3313C19.2053 1.3313 19.0655 1.35916 18.935 1.41328C18.8046 1.46741 18.6862 1.54673 18.5865 1.64671L9.44648 10.84L8.70648 14.0467C8.67495 14.2022 8.67826 14.3626 8.71618 14.5167C8.7541 14.6707 8.82567 14.8143 8.92576 14.9374C9.02585 15.0604 9.15196 15.1597 9.29502 15.2282C9.43808 15.2967 9.59454 15.3326 9.75314 15.3334C9.83512 15.3424 9.91783 15.3424 9.99981 15.3334L13.2331 14.62L22.3531 5.41338C22.4531 5.31367 22.5324 5.19522 22.5866 5.0648C22.6407 4.93439 22.6686 4.79458 22.6686 4.65338C22.6686 4.51218 22.6407 4.37237 22.5866 4.24195C22.5324 4.11154 22.4531 3.99308 22.3531 3.89338ZM12.5398 13.3867L10.0998 13.9267L10.6665 11.5067L17.5465 4.58004L19.4265 6.46004L12.5398 13.3867ZM20.1798 5.70671L18.2998 3.82671L19.3331 2.77338L21.2265 4.66671L20.1798 5.70671Z"
+    fill="#225F0D" fill-opacity="0.75" />
+</svg>`;
+
+const deleteIcon = `<svg class="popup-link btn-delete" href="#popup-del" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M20.25 5.40002H16.5V4.65002C16.5 4.05329 16.2629 3.48099 15.841 3.05903C15.419 2.63708 14.8467 2.40002 14.25 2.40002H9.75C9.15326 2.40002 8.58097 2.63708 8.15901 3.05903C7.73705 3.48099 7.5 4.05329 7.5 4.65002V5.40002H3.75C3.55109 5.40002 3.36032 5.47904 3.21967 5.61969C3.07902 5.76035 3 5.95111 3 6.15002C3 6.34894 3.07902 6.5397 3.21967 6.68035C3.36032 6.82101 3.55109 6.90002 3.75 6.90002H4.5V20.4C4.5 20.7978 4.65804 21.1794 4.93934 21.4607C5.22064 21.742 5.60217 21.9 6 21.9H18C18.3978 21.9 18.7794 21.742 19.0607 21.4607C19.342 21.1794 19.5 20.7978 19.5 20.4V6.90002H20.25C20.4489 6.90002 20.6397 6.82101 20.7803 6.68035C20.921 6.5397 21 6.34894 21 6.15002C21 5.95111 20.921 5.76035 20.7803 5.61969C20.6397 5.47904 20.4489 5.40002 20.25 5.40002ZM9 4.65002C9 4.45111 9.07902 4.26035 9.21967 4.11969C9.36032 3.97904 9.55109 3.90002 9.75 3.90002H14.25C14.4489 3.90002 14.6397 3.97904 14.7803 4.11969C14.921 4.26035 15 4.45111 15 4.65002V5.40002H9V4.65002ZM18 20.4H6V6.90002H18V20.4ZM10.5 10.65V16.65C10.5 16.8489 10.421 17.0397 10.2803 17.1804C10.1397 17.321 9.94891 17.4 9.75 17.4C9.55109 17.4 9.36032 17.321 9.21967 17.1804C9.07902 17.0397 9 16.8489 9 16.65V10.65C9 10.4511 9.07902 10.2603 9.21967 10.1197C9.36032 9.97904 9.55109 9.90002 9.75 9.90002C9.94891 9.90002 10.1397 9.97904 10.2803 10.1197C10.421 10.2603 10.5 10.4511 10.5 10.65ZM15 10.65V16.65C15 16.8489 14.921 17.0397 14.7803 17.1804C14.6397 17.321 14.4489 17.4 14.25 17.4C14.0511 17.4 13.8603 17.321 13.7197 17.1804C13.579 17.0397 13.5 16.8489 13.5 16.65V10.65C13.5 10.4511 13.579 10.2603 13.7197 10.1197C13.8603 9.97904 14.0511 9.90002 14.25 9.90002C14.4489 9.90002 14.6397 9.97904 14.7803 10.1197C14.921 10.2603 15 10.4511 15 10.65Z"
+    fill="#890000" />
+</svg>`;
+
+const saveIcon = `<svg class="btn-save" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M6 4.5C5.60217 4.5 5.22064 4.65804 4.93934 4.93934C4.65804 5.22064 4.5 5.60217 4.5 6V18C4.5 18.3978 4.65804 18.7794 4.93934 19.0607C5.22064 19.342 5.60217 19.5 6 19.5V14.25C6 13.6533 6.23705 13.081 6.65901 12.659C7.08097 12.2371 7.65326 12 8.25 12H15.75C16.3467 12 16.919 12.2371 17.341 12.659C17.7629 13.081 18 13.6533 18 14.25V19.5C18.3978 19.5 18.7794 19.342 19.0607 19.0607C19.342 18.7794 19.5 18.3978 19.5 18V8.4315C19.4999 8.03371 19.3418 7.65224 19.0605 7.371L16.629 4.9395C16.3478 4.65818 15.9663 4.50008 15.5685 4.5H15V6.75C15 7.34674 14.7629 7.91903 14.341 8.34099C13.919 8.76295 13.3467 9 12.75 9H9.75C9.15326 9 8.58097 8.76295 8.15901 8.34099C7.73705 7.91903 7.5 7.34674 7.5 6.75V4.5H6ZM9 4.5V6.75C9 6.94891 9.07902 7.13968 9.21967 7.28033C9.36032 7.42098 9.55109 7.5 9.75 7.5H12.75C12.9489 7.5 13.1397 7.42098 13.2803 7.28033C13.421 7.13968 13.5 6.94891 13.5 6.75V4.5H9ZM16.5 19.5V14.25C16.5 14.0511 16.421 13.8603 16.2803 13.7197C16.1397 13.579 15.9489 13.5 15.75 13.5H8.25C8.05109 13.5 7.86032 13.579 7.71967 13.7197C7.57902 13.8603 7.5 14.0511 7.5 14.25V19.5H16.5ZM3 6C3 5.20435 3.31607 4.44129 3.87868 3.87868C4.44129 3.31607 5.20435 3 6 3H15.5685C16.3641 3.00017 17.127 3.31635 17.6895 3.879L20.121 6.3105C20.6836 6.87298 20.9998 7.63591 21 8.4315V18C21 18.7956 20.6839 19.5587 20.1213 20.1213C19.5587 20.6839 18.7956 21 18 21H6C5.20435 21 4.44129 20.6839 3.87868 20.1213C3.31607 19.5587 3 18.7956 3 18V6Z"
+    fill="#225F0D" fill-opacity="0.75" />
+</svg>`;
+
+const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 5.35386H14.4615C15.9304 5.35386 17.3392 5.93738 18.3778 6.97604C19.4165 8.0147 20 9.42343 20 10.8923C20 12.3612 19.4165 13.7699 18.3778 14.8086C17.3392 15.8473 15.9304 16.4308 14.4615 16.4308H10.3077" stroke="#225F0D" stroke-opacity="0.75" stroke-width="2.30769" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M6.15385 9.50769L2 5.35384L6.15385 1.2" stroke="#225F0D" stroke-opacity="0.75" stroke-width="2.30769" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>`;
+
+
 // ----------------------simplebar:---------------------------------------
 // function simplebar() {
 if (document.querySelector(".my-simplebar-1")) {
-  const simpleBar1 = new SimpleBar(document.querySelector(".my-simplebar-1"), {
+  new SimpleBar(document.querySelector(".my-simplebar-1"), {
     scrollbarMaxSize: 80,
     autoHide: false,
     forceVisible: true,
@@ -9,14 +39,14 @@ if (document.querySelector(".my-simplebar-1")) {
 }
 
 if (document.querySelector(".my-simplebar-2")) {
-  const simpleBar2 = new SimpleBar(document.querySelector(".my-simplebar-2"), {
+  new SimpleBar(document.querySelector(".my-simplebar-2"), {
     scrollbarMaxSize: 80,
     autoHide: false,
     forceVisible: true,
   });
 }
 
-function simplebar() {
+function initSimpleBar() {
   if (document.querySelectorAll(".my-simplebar-input")) {
     document.querySelectorAll(".my-simplebar-input").forEach((item) => {
       new SimpleBar(item, {
@@ -28,6 +58,8 @@ function simplebar() {
     });
   }
 }
+initSimpleBar()
+
 
 // --------------------end simplebar:---------------------------------------
 
@@ -311,13 +343,21 @@ function createOrderParamsForm() {
   //создаем кнопку удаления строки:
   deleteCell.innerHTML = orderParamsDelBtn;
   // добавляем обработчик на кнопку - удаления строки
-  deleteCell.querySelector("svg").addEventListener("click", function () {
-    item.remove();
-    numberOrderTableRow--;
-  });
+  // deleteCell.querySelector("svg").addEventListener("click", function () {
+  //   item.remove();
+  //   numberOrderTableRow--;
+  // });
+  let svgElement = deleteCell.querySelector("svg");
+  if (svgElement) {
+      svgElement.addEventListener("click", function () {
+          item.remove();
+          numberOrderTableRow--;
+      });
+  }
 
   numberOrderTableRow++;
-  numberCell.textContent = numberOrderTableRow;
+  // numberCell.textContent = numberOrderTableRow;
+  numberCell.textContent = numberOrderTableRow.toString();
 
   //присвоение инпутов ячейкам таблицы:
   widthCell.append(inputwidth);
@@ -327,7 +367,14 @@ function createOrderParamsForm() {
   //добвление формы в строку:
   item.append(numberCell, widthCell, lengthCell, quantityCell, deleteCell);
 
-  orderParamsTable.append(item); // добавление контрагента в таблицу
+  // orderParamsTable.append(item); // добавление контрагента в таблицу
+  const orderParamsTable = document.querySelector(".table__body_orderParams");
+  if (orderParamsTable) {
+    // Use orderParamsTable here
+    orderParamsTable.append(item); // do not use it if it's null
+  } else {
+    console.error("orderParamsTable not found");
+  }
   return item;
 }
 
@@ -533,65 +580,77 @@ const variantTableCalculationData = [
 // 4) формирование строк c классами,
 // 5) создание таблицы.
 
+/**
+ * 
+ * @param {Object?} table 
+ * @param {Array?} tableData 
+ * @param {Array?} tableHeadData 
+ * @param {Array?} inputs 
+ * @param {Object?} tableResRow 
+ * @param {Array?} btns 
+ */
+
 function createTable(
   table,
   tableData,
-  tableHeadData = false,
-  inputs = false,
-  tableResRow = false
+  tableHeadData,
+  inputs,
+  tableResRow,
+  btns,
 ) {
+  // console.log('table: ', table);
+  // console.log('tableData: ', tableData);
+  // console.log('tableHeadData: ', tableHeadData);
+  // console.log('inputs: ', inputs);
+  // console.log('tableResRow: ', tableResRow);
+  // console.log('btns: ', btns);
+  
   // table - html элемент, таблица, либо тело таблицы;
   // tableData - массив объектов с данными;
   // tableHead - массив с названиями столбцов;
-  // tableResRow - объект с данными;
+  // tableResRow - объект с данными, номер столбца - содержимое и классы;
   // inputs - массив объектов, в объекте: номер столбца, классы, атрибуты, значения;
+  // btns - массив объектов, в объекте: номер столбца, содержимое кнопки, классы;
 
-  // 1) получение данных:
+  table.innerHTML = ""; // очищаем тело таблицы
+  const tableDataCopy = [...tableData]; // копия массива с данными
+  const columnsQuantity = Object.keys(tableDataCopy[0]).length; // количество столбцов в таблице
 
-  // 2) подготовка данных (пререндер):
-  let tableBody = table;
-  tableBody.innerHTML = "";
-  const tableDataCopy = [...tableData];
-  
+  // если есть названия столбцов:
   if (tableHeadData) {
     const tableHead = document.createElement("thead");
     const tableHeadRowEl = document.createElement("tr");
-    
+
     tableHead.classList.add("table__head");
     tableHeadRowEl.classList.add("table__row");
     tableHead.append(tableHeadRowEl);
     table.append(tableHead);
-    
+
     for (let i = 0; i < tableHeadData.length; i++) {
       const tableHeadColumn = document.createElement("th");
       tableHeadColumn.classList.add(`table__column_${i + 1}`);
       tableHeadColumn.textContent = tableHeadData[i];
       tableHeadRowEl.append(tableHeadColumn);
     }
-    
-    const tablebody = document.createElement("thead");
-    tableBody = tablebody;
-    table.append(tablebody);
+    table.append(tableHead);
   }
 
-
+  // формирование строк c классами:
   tableDataCopy.forEach((item) => {
-    // 3) формирование head (если есть) c классами:
-
-    // 4) формирование строк c классами:
     const tableBodyRow = document.createElement("tr");
     tableBodyRow.classList.add("table__row");
-    tableBody.append(tableBodyRow);
+    table.append(tableBodyRow);
 
-    let colNumber = 0;
+    let colNumber = 0; // счетчик столбцов
     for (let key in item) {
-      colNumber++;
+      colNumber++; // инкремент счетчика столбцов
       const tableColumn = document.createElement("td");
       tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
       tableColumn.textContent = item[key];
       tableBodyRow.append(tableColumn);
 
       if (inputs) {
+        // если есть инпуты:
         inputs.forEach((el) => {
           if (colNumber == el.numberColumn) {
             const input = document.createElement("input");
@@ -603,20 +662,41 @@ function createTable(
           }
         });
       }
-      // if (inputs) {
-      //   for (let i = 0; i < inputs.length; i++) {
-      //     if (key == inputs[i].numberColumn) {
-      //       const input = document.createElement("input");
-      //       input.classList.add("table__input");
-      //       input.setAttribute("type", "number");
-      //       input.setAttribute("value", item[key]);
-      //       tableColumn.append(input);
-      //     }
-      //   }
-      // }
+
+      if (btns) {
+        // если есть кнопки:
+        btns.forEach((el) => {
+          if (colNumber == el.numberColumn) {
+            tableColumn.innerHTML = el.button;
+            tableColumn.classList.add(el.class);
+          }
+        });
+      }
     }
-  });
+  })
+  if (tableResRow) {
+    const tableResRowEl = document.createElement("tr");    
+    tableResRowEl.classList.add("table__row", tableResRow.class);
+    table.append(tableResRowEl);
+    for (let i = 0; i < columnsQuantity; i++) {
+      const tableResColumn = document.createElement("td");
+      tableResColumn.classList.add('table__column', `table__column_${i + 1}`);
+
+      for (let key in tableResRow) {
+        if ((i + 1) == Number(key)) {
+          tableResColumn.textContent = tableResRow[key];
+        }
+      }
+      tableResRowEl.append(tableResColumn);
+    }
+    table.append(tableResRowEl);
+  }
 }
+
+//------------------------- end универсальная функция создания таблицы ----------------------------
+
+//------------------------- формирование таблиц: ----------------------------
+
 
 const variant1 = document.querySelector(".variant_1");
 const table2 = variant1.querySelector(".table__body_knives_res");
@@ -641,7 +721,6 @@ variantTableCalculationData.forEach((item) => {
   inputsForTable.push(obj);
 });
 
-// let headsForTable = []
 // функция формирования заголовков для таблицы ножей:
 function createKnifesTableHead(variantTableKnivesData) {
   const arr = [];
@@ -655,19 +734,44 @@ function createKnifesTableHead(variantTableKnivesData) {
   }
   return arr;
 }
-const headsForTable = createKnifesTableHead(variantTableKnivesData);
-console.log(headsForTable);
 
-createTable(variantTableKnives, variantTableKnivesData, headsForTable);
-createTable(variantTableKnivesRes, variantTableKnivesResData);
+const tableResRow = {
+  7: "ИТОГО",
+  8: 40,
+  9: 839.15,
+  class: "table__row_res",
+};
+
+// const btn = [
+//   {
+//     numberColumn: 7,
+//     class: "table__small-btn",
+//     button: saveIcon,
+//   },
+//   {
+//     numberColumn: 8,
+//     class: "table__small-btn",
+//     button: deleteIcon,
+//   },
+// ]
+
+const headsForTable = createKnifesTableHead(variantTableKnivesData);
+
+crateResultTable(cartonList);
+// createTable(tableWarehouseBody, TotalTableArr, null, null, null, btn);
+createTable(tableWarehouseBody, TotalTableArr, null, null, null, null);
+createTable(variantTableKnives, variantTableKnivesData, headsForTable, null, null, null);
+createTable(variantTableKnivesRes, variantTableKnivesResData, null, null, null, null);
 createTable(
   variantTableCalculation,
   variantTableCalculationData,
-  false,
-  inputsForTable
+  null,
+  inputsForTable,
+  tableResRow,
+  null
 );
 
-//------------------------- end универсальная функция создания таблицы ----------------------------
+//------------------------- end формирование таблиц: ----------------------------
 
 // ---------------------------setCastomInputsEvents:-------------------------
 //обрабатываем события кастомных инпутов:
@@ -712,8 +816,13 @@ function setCastomInputsEvents() {
       item.addEventListener("click", (event) => {
         item.classList.add("input_search-field_active");
       });
-      item.querySelector("input").addEventListener("input", function () {
-        if (item.querySelector("input").value.trim() !== "") {
+      // item.querySelector("input").addEventListener("input", function () {
+      //   if (item.querySelector("input").value.trim() !== "") {
+      //     item.classList.add("input_search-field_active");
+      //   }
+      // });
+      item.querySelector("input")?.addEventListener("input", function () {
+        if (item.querySelector("input")?.value.trim() !== "") {
           item.classList.add("input_search-field_active");
         }
       });
@@ -811,8 +920,13 @@ function getSelectLi(field) {
 
 //--------------------------getCastomSelect:-------------------------
 //получаем кастомный селект:
+/**
+ * 
+ * @param {Array} arr 
+ * @param {*} select 
+ */
 function getCastomSelect(arr, select) {
-  select.innerHTML = ""; // очищаем тело таблицы
+  // select.innerHTML = ""; // очищаем тело таблицы
   // console.log(contractorsSelectUl);
   let copyArr = [...arr]; // создаем копию массива
 
@@ -821,6 +935,7 @@ function getCastomSelect(arr, select) {
     const item = getSelectLi(el);
     select.append(item); // добавление контрагента в таблицу
   }
+  initSimpleBar()
 }
 //--------------------------end getCastomSelect:-------------------------
 
@@ -835,7 +950,8 @@ function crateResultTable(arr) {
   const copyArr = [...arr];
   copyArr.forEach((cartonObj) => {
     // добавляем в объект уникальное имя
-    cartonObj.idName = `${cartonObj.name} - ${cartonObj.typeCarton} - ${cartonObj.width} x ${cartonObj.lengthCarton} - ${cartonObj.price}$`;
+    cartonObj.idName = `${cartonObj.name} - ${cartonObj.typeCarton} - ${cartonObj.widthCarton} x ${cartonObj.lengthCarton} - ${cartonObj.price}$`;
+    // console.log(cartonObj.idName);
   });
   const unicNamesCarton = [
     ...new Set(copyArr.map((cartonObj) => cartonObj.idName)),
@@ -846,6 +962,7 @@ function crateResultTable(arr) {
   // console.log(CartonListForInput);
 
   // фильтруем результирующий массив:
+  // let idNumber = 1;
   for (let i = 0; i < unicNamesCarton.length; i++) {
     let filterList = copyArr.filter(
       // фильтруем по уникальному названию
@@ -859,10 +976,11 @@ function crateResultTable(arr) {
     );
     const unicObj = {
       // создаем объект с уникальным названием для рендера результирующей таблицы
-      idName: unicNamesCarton[i],
+      // idName: unicNamesCarton[i],
+      id: i + 1,
       name: filterList[0].name,
       typeCarton: filterList[0].typeCarton,
-      width: filterList[0].width,
+      width: filterList[0].widthCarton,
       lengthCarton: filterList[0].lengthCarton,
       price: filterList[0].price,
       quantity: quantity,
@@ -876,6 +994,8 @@ function crateResultTable(arr) {
 //--------------------------end crateResultTable:-------------------------
 
 crateResultTable(cartonList);
+// console.log(cartonList);
+// console.log(TotalTableArr);
 getCastomSelect(ContractorsListForInput, contractorsSelectUl);
 getCastomSelect(CartonListForInput, cartonTypesSelectUl);
 
@@ -889,88 +1009,88 @@ getCastomSelect(CartonListForInput, cartonTypesSelectUl);
 
 //-------------------------------preRender-----------------------------
 
-function preRender(arr) {
-  // пререндер нужен если мы хотим преобразовать данные перед рендером
-  let copyArr = [...arr];
+// function preRender(arr) {
+//   // пререндер нужен если мы хотим преобразовать данные перед рендером
+//   let copyArr = [...arr];
 
-  for (const cartonObj of copyArr) {
-    let cartonObjForRender = {
-      name: cartonObj.name,
-      typeCarton: cartonObj.typeCarton,
-      width: cartonObj.width,
-      lengthCarton: cartonObj.lengthCarton,
-      price: cartonObj.price,
-      quantity: cartonObj.quantity,
-      cost: cartonObj.cost,
-    };
-    cartonListForRender.push(cartonObjForRender);
-  }
-}
-preRender(TotalTableArr);
+//   for (const cartonObj of copyArr) {
+//     let cartonObjForRender = {
+//       name: cartonObj.name,
+//       typeCarton: cartonObj.typeCarton,
+//       width: cartonObj.width,
+//       lengthCarton: cartonObj.lengthCarton,
+//       price: cartonObj.price,
+//       quantity: cartonObj.quantity,
+//       cost: cartonObj.cost,
+//     };
+//     cartonListForRender.push(cartonObjForRender);
+//   }
+// }
+// preRender(TotalTableArr);
 
-let numberWarehouseTableRow = 0;
-function getWarehouseRow(cartonObj) {
-  const item = document.createElement("tr"),
-    tableNumber = document.createElement("td"),
-    tableDataName = document.createElement("td"),
-    tableDataType = document.createElement("td"),
-    tableDataWidth = document.createElement("td"),
-    tableDataLength = document.createElement("td"),
-    tableDataPrice = document.createElement("td"),
-    tableDataQuantity = document.createElement("td"),
-    tableDataCost = document.createElement("td");
+// let numberWarehouseTableRow = 0;
+// function getWarehouseRow(cartonObj) {
+//   const item = document.createElement("tr"),
+//     tableNumber = document.createElement("td"),
+//     tableDataName = document.createElement("td"),
+//     tableDataType = document.createElement("td"),
+//     tableDataWidth = document.createElement("td"),
+//     tableDataLength = document.createElement("td"),
+//     tableDataPrice = document.createElement("td"),
+//     tableDataQuantity = document.createElement("td"),
+//     tableDataCost = document.createElement("td");
 
-  item.classList.add("table__row");
-  tableNumber.classList.add("table__column", "table__column_1");
-  tableDataName.classList.add("table__column", "table__column_2");
-  tableDataType.classList.add("table__column", "table__column_3");
-  tableDataWidth.classList.add("table__column", "table__column_4");
-  tableDataLength.classList.add("table__column", "table__column_5");
-  tableDataPrice.classList.add("table__column", "table__column_6");
-  tableDataQuantity.classList.add("table__column", "table__column_7");
-  tableDataCost.classList.add("table__column", "table__column_8");
+//   item.classList.add("table__row");
+//   tableNumber.classList.add("table__column", "table__column_1");
+//   tableDataName.classList.add("table__column", "table__column_2");
+//   tableDataType.classList.add("table__column", "table__column_3");
+//   tableDataWidth.classList.add("table__column", "table__column_4");
+//   tableDataLength.classList.add("table__column", "table__column_5");
+//   tableDataPrice.classList.add("table__column", "table__column_6");
+//   tableDataQuantity.classList.add("table__column", "table__column_7");
+//   tableDataCost.classList.add("table__column", "table__column_8");
 
-  numberWarehouseTableRow++;
-  tableNumber.textContent = numberWarehouseTableRow;
-  tableDataName.textContent = cartonObj.name;
-  tableDataType.textContent = cartonObj.typeCarton;
-  tableDataWidth.textContent = cartonObj.width;
-  tableDataLength.textContent = cartonObj.lengthCarton;
-  tableDataPrice.textContent = cartonObj.price;
-  tableDataQuantity.textContent = cartonObj.quantity;
-  tableDataCost.textContent = cartonObj.cost;
+//   numberWarehouseTableRow++;
+//   tableNumber.textContent = numberWarehouseTableRow;
+//   tableDataName.textContent = cartonObj.name;
+//   tableDataType.textContent = cartonObj.typeCarton;
+//   tableDataWidth.textContent = cartonObj.width;
+//   tableDataLength.textContent = cartonObj.lengthCarton;
+//   tableDataPrice.textContent = cartonObj.price;
+//   tableDataQuantity.textContent = cartonObj.quantity;
+//   tableDataCost.textContent = cartonObj.cost;
 
-  // присваеваем id контрагента элементу и добавляем информацию в таблицу:
-  item.append(tableNumber);
-  item.append(tableDataName);
-  item.append(tableDataType);
-  item.append(tableDataWidth);
-  item.append(tableDataLength);
-  item.append(tableDataPrice);
-  item.append(tableDataQuantity);
-  item.append(tableDataCost);
+//   // присваеваем id контрагента элементу и добавляем информацию в таблицу:
+//   item.append(tableNumber);
+//   item.append(tableDataName);
+//   item.append(tableDataType);
+//   item.append(tableDataWidth);
+//   item.append(tableDataLength);
+//   item.append(tableDataPrice);
+//   item.append(tableDataQuantity);
+//   item.append(tableDataCost);
 
-  // console.log(item);
-  return item;
-}
+//   // console.log(item);
+//   return item;
+// }
 //-------------------------------end preRender-----------------------------
 
 //-------------------------------renderWarehouseTable:-------------------------
 // рендерим результирующую таблицу:
-function renderWarehouseTable(arr) {
-  tableWarehouseBody.innerHTML = ""; // очищаем тело таблицы
-  let copyList = [...arr]; // создаем копию массива
+// function renderWarehouseTable(arr) {
+//   tableWarehouseBody.innerHTML = ""; // очищаем тело таблицы
+//   let copyList = [...arr]; // создаем копию массива
 
-  // рендерим всю таблицу
-  for (const cartonrObj of copyList) {
-    const item = getWarehouseRow(cartonrObj);
-    // console.log(item);
+//   // рендерим всю таблицу
+//   for (const cartonrObj of copyList) {
+//     const item = getWarehouseRow(cartonrObj);
+//     // console.log(item);
 
-    tableWarehouseBody.append(item); // добавление контрагента в таблицу
-  }
-}
+//     tableWarehouseBody.append(item); // добавление контрагента в таблицу
+//   }
+// }
 //-------------------------------end renderWarehouseTable:-------------------------
 
-renderWarehouseTable(cartonListForRender);
-simplebar();
+// renderWarehouseTable(cartonListForRender);
+// initSimpleBar();
 setCastomInputsEvents();
