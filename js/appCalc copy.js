@@ -46,7 +46,7 @@ if (document.querySelector(".my-simplebar-2")) {
   });
 }
 
-function initSimpleBar() {
+// function initSimpleBar() {
   if (document.querySelectorAll(".my-simplebar-input")) {
     document.querySelectorAll(".my-simplebar-input").forEach((item) => {
       new SimpleBar(item, {
@@ -57,7 +57,7 @@ function initSimpleBar() {
       });
     });
   }
-}
+// }
 // initSimpleBar()
 
 
@@ -639,8 +639,6 @@ function createTable(
   tableDataCopy.forEach((item) => {
     const tableBodyRow = document.createElement("tr");
     tableBodyRow.classList.add("table__row");
-    // tableBodyRow.setAttribute("id", item.id);
-    // console.log(item);
     table.append(tableBodyRow);
 
     let colNumber = 0; // счетчик столбцов
@@ -928,7 +926,7 @@ function getSelectLi(field) {
  * @param {*} select 
  */
 function getCastomSelect(arr, select) {
-  select.innerHTML = ""; // очищаем тело таблицы
+  // select.innerHTML = ""; // очищаем тело таблицы
   // console.log(contractorsSelectUl);
   let copyArr = [...arr]; // создаем копию массива
 
@@ -938,7 +936,7 @@ function getCastomSelect(arr, select) {
     // console.log(item);
     select.append(item); // добавление контрагента в таблицу
   }
-  initSimpleBar()
+  // initSimpleBar()
 }
 //--------------------------end getCastomSelect:-------------------------
 
@@ -997,7 +995,7 @@ function crateResultTable(arr) {
 //--------------------------end crateResultTable:-------------------------
 
 crateResultTable(cartonList);
-// console.log(contractorsSelectUl);
+console.log(contractorsSelectUl);
 // console.log(TotalTableArr);
 getCastomSelect(ContractorsListForInput, contractorsSelectUl);
 getCastomSelect(CartonListForInput, cartonTypesSelectUl);

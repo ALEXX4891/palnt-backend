@@ -141,92 +141,94 @@ toggleBtn.addEventListener("click", function () {
 // как вы делали вывод одного дела в модуле 8. Функция должна вернуть html элемент
 //  с информацией и пользователе.У функции должен быть один аргумент - объект контрагента.
 
-function getRow(contractorObj, isActive = 1) {
-  //??????????????????????????????????????
-  const item = document.createElement("tr"),
-    tableDataId = document.createElement("td"),
-    tableDataName = document.createElement("td"),
-    tableDataTaxNumber = document.createElement("td"),
-    tableDataAddress = document.createElement("td"),
-    tableDataPhone = document.createElement("td"),
-    tableDataEmail = document.createElement("td"),
-    tableDataDeleteCell = document.createElement("td"),
-    tableDataEditCell = document.createElement("td"),
-    tableDataReverCell = document.createElement("td"),
-    tableDataSaveCell = document.createElement("td"),
-    tableDataEmptyCell = document.createElement("td");
+// function getRow(contractorObj, isActive = 1) {
+//   console.log(contractorObj);
 
-  item.classList.add("table__row");
-  tableDataId.classList.add("table__column", "table__column_1");
-  tableDataName.classList.add("table__column", "table__column_2");
-  tableDataTaxNumber.classList.add("table__column", "table__column_3");
-  tableDataAddress.classList.add("table__column", "table__column_4");
-  tableDataPhone.classList.add("table__column", "table__column_5");
-  tableDataEmail.classList.add("table__column", "table__column_6");
-  tableDataEditCell.classList.add(
-    "table__column",
-    "table__column_7",
-    "table__small-btn"
-  );
-  tableDataDeleteCell.classList.add(
-    "table__column",
-    "table__column_8",
-    "table__small-btn"
-  );
+//   //??????????????????????????????????????
+//   const item = document.createElement("tr"),
+//     tableDataId = document.createElement("td"),
+//     tableDataName = document.createElement("td"),
+//     tableDataTaxNumber = document.createElement("td"),
+//     tableDataAddress = document.createElement("td"),
+//     tableDataPhone = document.createElement("td"),
+//     tableDataEmail = document.createElement("td"),
+//     tableDataDeleteCell = document.createElement("td"),
+//     tableDataEditCell = document.createElement("td"),
+//     tableDataReverCell = document.createElement("td"),
+//     tableDataSaveCell = document.createElement("td"),
+//     tableDataEmptyCell = document.createElement("td");
 
-  tableDataReverCell.classList.add(
-    "table__column",
-    "table__column_7",
-    "table__small-btn"
-  );
-  tableDataSaveCell.classList.add(
-    "table__column",
-    "table__column_7",
-    "table__small-btn"
-  );
-  tableDataEmptyCell.classList.add(
-    "table__column",
-    "table__column_8",
-    "table__small-btn"
-  );
+//   item.classList.add("table__row");
+//   tableDataId.classList.add("table__column", "table__column_1");
+//   tableDataName.classList.add("table__column", "table__column_2");
+//   tableDataTaxNumber.classList.add("table__column", "table__column_3");
+//   tableDataAddress.classList.add("table__column", "table__column_4");
+//   tableDataPhone.classList.add("table__column", "table__column_5");
+//   tableDataEmail.classList.add("table__column", "table__column_6");
+//   tableDataEditCell.classList.add(
+//     "table__column",
+//     "table__column_7",
+//     "table__small-btn"
+//   );
+//   tableDataDeleteCell.classList.add(
+//     "table__column",
+//     "table__column_8",
+//     "table__small-btn"
+//   );
 
-  tableDataId.textContent = contractorObj.idContractor;
-  tableDataName.textContent = contractorObj.name;
-  tableDataTaxNumber.textContent = contractorObj.taxNumber;
-  tableDataAddress.textContent = contractorObj.address;
-  tableDataPhone.textContent = contractorObj.telephone;
-  tableDataEmail.textContent = contractorObj.email;
+//   tableDataReverCell.classList.add(
+//     "table__column",
+//     "table__column_7",
+//     "table__small-btn"
+//   );
+//   tableDataSaveCell.classList.add(
+//     "table__column",
+//     "table__column_7",
+//     "table__small-btn"
+//   );
+//   tableDataEmptyCell.classList.add(
+//     "table__column",
+//     "table__column_8",
+//     "table__small-btn"
+//   );
 
-  //создаем кнопку удаления контрагента:
-  tableDataDeleteCell.innerHTML = deleteIcon;
-  tableDataEditCell.innerHTML = editIcon;
-  tableDataReverCell.innerHTML = revertIcon;
-  tableDataSaveCell.innerHTML = saveIcon;
+//   tableDataId.textContent = contractorObj.idContractor;
+//   tableDataName.textContent = contractorObj.name;
+//   tableDataTaxNumber.textContent = contractorObj.taxNumber;
+//   tableDataAddress.textContent = contractorObj.address;
+//   tableDataPhone.textContent = contractorObj.telephone;
+//   tableDataEmail.textContent = contractorObj.email;
 
-  // присваеваем id контрагента кнопкам:
-  tableDataDeleteCell.setAttribute("id", contractorObj.idContractor);
-  tableDataEditCell.setAttribute("id", contractorObj.idContractor);
-  tableDataReverCell.setAttribute("id", contractorObj.idContractor);
-  tableDataSaveCell.setAttribute("id", contractorObj.idContractor);
+//   //создаем кнопку удаления контрагента:
+//   tableDataDeleteCell.innerHTML = deleteIcon;
+//   tableDataEditCell.innerHTML = editIcon;
+//   tableDataReverCell.innerHTML = revertIcon;
+//   tableDataSaveCell.innerHTML = saveIcon;
 
-  // присваеваем id контрагента элементу и добавляем информацию в таблицу:
-  item.setAttribute("id", contractorObj.idContractor);
-  item.append(tableDataId);
-  item.append(tableDataName);
-  item.append(tableDataTaxNumber);
-  item.append(tableDataAddress);
-  item.append(tableDataPhone);
-  item.append(tableDataEmail);
-  if (isActive == 1) {
-    item.append(tableDataEditCell);
-    item.append(tableDataDeleteCell);
-  } else {
-    item.append(tableDataReverCell);
-    item.append(tableDataEmptyCell);
-  }
+//   // присваеваем id контрагента кнопкам:
+//   tableDataDeleteCell.setAttribute("id", contractorObj.idContractor);
+//   tableDataEditCell.setAttribute("id", contractorObj.idContractor);
+//   tableDataReverCell.setAttribute("id", contractorObj.idContractor);
+//   tableDataSaveCell.setAttribute("id", contractorObj.idContractor);
 
-  return item;
-}
+//   // присваеваем id контрагента элементу и добавляем информацию в таблицу:
+//   item.setAttribute("id", contractorObj.idContractor);
+//   item.append(tableDataId);
+//   item.append(tableDataName);
+//   item.append(tableDataTaxNumber);
+//   item.append(tableDataAddress);
+//   item.append(tableDataPhone);
+//   item.append(tableDataEmail);
+//   if (isActive == 1) {
+//     item.append(tableDataEditCell);
+//     item.append(tableDataDeleteCell);
+//   } else {
+//     item.append(tableDataReverCell);
+//     item.append(tableDataEmptyCell);
+//   }
+//   console.log(item);
+//   return item;
+// }
 
 // добавляем обработчик на кнопку - удаление контрагента
 function setBtnEvents() {
@@ -236,7 +238,6 @@ function setBtnEvents() {
     delBtns.forEach((item) => {
       item.addEventListener("click", function () {
         const row = this.closest(".table__row");
-        console.log(row);
         row.classList.add("table__row_deletable");
         setNoActive(row);
       });
@@ -376,6 +377,11 @@ contractorSearch.addEventListener("input", () => {
 // ----------------- события на кнопки в таблице ------------------
 function setNoActive(item) {
   const agreeBtn = document.querySelector("#btn-delete");
+  const popup = agreeBtn.closest(".popup__content");
+  const title = popup.querySelector(".popup__title");
+  title.textContent = contractorListForRender.filter(
+    (contractor) => contractor.idContractor == item.getAttribute("id")
+  )[0].name;
   const id = item.getAttribute("id");
 
   agreeBtn.addEventListener("click", function (e) {
@@ -399,8 +405,12 @@ function setNoActive(item) {
 }
 
 function setActive(item) {
-  console.log(item);
   const agreeBtn = document.querySelector("#btn-revert");
+  const popup = agreeBtn.closest(".popup__content");
+  const title = popup.querySelector(".popup__title");
+  title.textContent = contractorListForRender.filter(
+    (contractor) => contractor.idContractor == item.getAttribute("id")
+  )[0].name;
   const id = item.getAttribute("id");
 
   agreeBtn.addEventListener("click", function (e) {
@@ -849,7 +859,103 @@ function setPopupEvent() {
 
 // --------------------end popup:------------------------
 
+function preRender(tableDataCopyObj) { //пререндер, приводи объект в нужный нам формат
+  const object = {
+    idContractor: tableDataCopyObj.idContractor,
+    name: tableDataCopyObj.name,
+    taxNumber: tableDataCopyObj.taxNumber,
+    address: tableDataCopyObj.address,
+    telephone: tableDataCopyObj.telephone,
+    email: tableDataCopyObj.email,
+    emptyCell: "",
+    emptyCell2: "",
+  };
+
+  return object;
+}
+
+function setBtns() {
+  let btn = null;
+  if (isActive == 1) {
+    return btn = [
+      {
+        numberColumn: 7,
+        class: "table__small-btn",
+        button: editIcon,
+      },
+      {
+        numberColumn: 8,
+        class: "table__small-btn",
+        button: deleteIcon,
+      },
+    ];
+  } else {
+    return btn = [
+      {
+        numberColumn: 7,
+        class: "table__small-btn",
+        button: revertIcon,
+      },
+    ];
+  }
+
+}
+
+setBtns();
+
+
 //------------------------- универсальная функция создания таблицы ----------------------------
+function getRow(tableDataCopyObj, inputs, btns) {
+  // function getRow2(tableDataCopyObj, inputs, btns) {
+
+  let copyTableDataCopyObj = preRender(tableDataCopyObj);
+
+  btns =  setBtns();
+  inputs = null;
+  // tableDataCopy.forEach((tableDataCopyObj) => {
+  const tableBodyRow = document.createElement("tr");
+  tableBodyRow.classList.add("table__row");
+  tableBodyRow.setAttribute("id", copyTableDataCopyObj.idContractor); // добавляем атрибут id для каждой строки
+
+  let colNumber = 0; // счетчик столбцов
+  for (let key in copyTableDataCopyObj) {
+    colNumber++; // инкремент счетчика столбцов
+    const tableColumn = document.createElement("td");
+    tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
+    tableColumn.textContent = copyTableDataCopyObj[key];
+    tableBodyRow.append(tableColumn);
+
+    if (inputs) {
+      // если есть инпуты:
+      inputs.forEach((el) => {
+        if (colNumber == el.numberColumn) {
+          const input = document.createElement("input");
+          input.classList.add("table__cell-frame");
+          input.setAttribute("type", "number");
+          input.setAttribute("value", copyTableDataCopyObj[key]);
+          tableColumn.textContent = "";
+          tableColumn.append(input);
+        }
+      });
+    }
+
+    if (btns) {
+      // если есть кнопки:
+      btns.forEach((el) => {
+        if (colNumber == el.numberColumn) {
+          tableColumn.innerHTML = el.button;
+          tableColumn.classList.add(el.class);
+        }
+      });
+    }
+  }
+  // console.log(tableBodyRow);  
+  return tableBodyRow;
+
+
+  // });
+}
+
 // создание таблицы:
 // 1) получение данных,
 // 2) подготовка данных (пререндер),
