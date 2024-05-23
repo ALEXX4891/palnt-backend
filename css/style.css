@@ -1792,8 +1792,8 @@ img {
     gap: 20px 40px;
   }
 }
-.warehouse .table-body-wrapper {
-  height: calc(100vh - 310px);
+.warehouse .btn-wrapper {
+  margin: 0 auto;
 }
 @media (max-width: 1560px) {
   .warehouse .table-body-wrapper {

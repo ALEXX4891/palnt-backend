@@ -87,7 +87,7 @@ await fetchToDB(options); // требуется подключить скрип�
 //--------------------------end Запрос к БД----------------------------
 
 // выбираем только активных контрагентов:
-let contractorListForRender = [...infoList];
+let cartonListForRender = [...infoList];
 let isActive = 1; // признак содержания таблицы
 
 //поиск максимального id в списке контрагентов:
@@ -106,7 +106,9 @@ const addContractorBtn = document.getElementById("addContractorBtn");
 addContractorBtn.onclick = function () {
   maxId += 1;
   const item = createRowForm(maxId);
+  tableBody.append(item); // добавление контрагента в таблицу
   item.scrollIntoView(); // переход к созданной строке
+  setBtnEvents();
 };
 
 //функция переключения активности таблицы, так-же скрывает кнопку "добавить контрагента":
@@ -116,7 +118,7 @@ function toggleBtnFunc() {
     addContractorBtn.parentElement.style.display = "none"; // скрываем кнопку
     tableBodyWrapper.style.height = "calc(100vh - 300px)"; // увеличиваем высоту таблицы
     tableBodyWrapper.style.marginBottom = "0"; // убираем отступ снизу таблицы
-    getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
+    getMaxId(cartonListForRender); // поиск максимального id в списке контрагентов
     simpleBar.getScrollElement().scrollTo(0, 0);
   }
   if (!toggleBtn.checked) {
@@ -124,7 +126,7 @@ function toggleBtnFunc() {
     addContractorBtn.parentElement.style.display = "block"; // показываем кнопку
     tableBodyWrapper.style.height = "calc(100vh - 360px)"; // уменьшаем высоту таблицы
     tableBodyWrapper.style.marginBottom = "30px"; // добавляем отступ снизу таблицы
-    getMaxId(contractorListForRender); // поиск максимального id в списке контрагентов
+    getMaxId(cartonListForRender); // поиск максимального id в списке контрагентов
     simpleBar.getScrollElement().scrollTo(0, 0);
   }
 }
@@ -132,7 +134,7 @@ function toggleBtnFunc() {
 //логика фильтрации активных и не активных контрагентов:
 toggleBtn.addEventListener("click", function () {
   toggleBtnFunc(); //проверить выбранную активность контрагентов
-  renderTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
+  renderTable(cartonListForRender, isActive); //рендер таблицы контрагнетов
   setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
   setBtnEvents(); // навесить заново события удаления и редактирования контрагента
 });
@@ -279,7 +281,7 @@ function setBtnEvents() {
   }
 }
 
-getMaxId(contractorListForRender);
+getMaxId(cartonListForRender);
 
 function filterTable(search, isActive, arr) {
   let copy = [...arr];
@@ -327,9 +329,12 @@ function renderTable(arr, isActive) {
   setBtnEvents();
 }
 
-renderTable(contractorListForRender, isActive);
+renderTable(cartonListForRender, isActive);
 setBtnEvents();
 setPopupEvent();
+
+
+// ---------------------------------- сортировка таблицы -----------------------------
 
 // Функция сортировки массива контрагентов, события кликов на соответствующие колонки:
 let sortDirectionId = true; // индикотор сортировки по id
@@ -357,7 +362,7 @@ nameContractorBtn.addEventListener("click", () => {
   sortDirectionName = !sortDirectionName; // меняем индикатор сортировки
   iconTransmorm = sortDirectionName ? "rotate(0deg)" : "rotate(180deg)"; // задаем угол поворота иконки
   nameContractorBtnIcon.style.transform = iconTransmorm; // меняем положение иконки
-  sortArr(contractorListForRender, "name", sortDirectionName, isActive); // сортируем массив
+  sortArr(cartonListForRender, "name", sortDirectionName, isActive); // сортируем массив
 });
 
 idContractorBtn.addEventListener("click", () => {
@@ -365,27 +370,29 @@ idContractorBtn.addEventListener("click", () => {
   sortDirectionId = !sortDirectionId;
   iconTransmorm = sortDirectionId ? "rotate(0deg)" : "rotate(180deg)";
   idContractorBtnIcon.style.transform = iconTransmorm;
-  sortArr(contractorListForRender, "idContractor", sortDirectionId, isActive);
+  sortArr(cartonListForRender, "idContractor", sortDirectionId, isActive);
 });
 
 // Фильтрация массива контрагентов при вводе текста инпут, ищет по всем столбцам
 contractorSearch.addEventListener("input", () => {
-  renderTable(contractorListForRender, isActive); //рендер таблицы контрагнетов
+  renderTable(cartonListForRender, isActive); //рендер таблицы контрагнетов
   setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
 });
+// ----------------------------------end сортировка таблицы -----------------------------
+
 
 // ----------------- события на кнопки в таблице ------------------
 function setNoActive(item) {
   const agreeBtn = document.querySelector("#btn-delete");
   const popup = agreeBtn.closest(".popup__content");
   const title = popup.querySelector(".popup__title");
-  title.textContent = contractorListForRender.filter(
+  title.textContent = cartonListForRender.filter(
     (contractor) => contractor.idContractor == item.getAttribute("id")
   )[0].name;
   const id = item.getAttribute("id");
 
   agreeBtn.addEventListener("click", function (e) {
-    contractorListForRender.filter(
+    cartonListForRender.filter(
       // смена активности в массиве контрагентов
       (contractor) => contractor.idContractor == id
     )[0].isActive = 0;
@@ -408,13 +415,13 @@ function setActive(item) {
   const agreeBtn = document.querySelector("#btn-revert");
   const popup = agreeBtn.closest(".popup__content");
   const title = popup.querySelector(".popup__title");
-  title.textContent = contractorListForRender.filter(
+  title.textContent = cartonListForRender.filter(
     (contractor) => contractor.idContractor == item.getAttribute("id")
   )[0].name;
   const id = item.getAttribute("id");
 
   agreeBtn.addEventListener("click", function (e) {
-    contractorListForRender.filter(
+    cartonListForRender.filter(
       (contractor) => contractor.idContractor == id
     )[0].isActive = 1;
     item.remove();
@@ -432,7 +439,7 @@ function setActive(item) {
 
 function editItem(item) {
   const id = item.getAttribute("id");
-  const contractorObj = contractorListForRender.filter(
+  const contractorObj = cartonListForRender.filter(
     (contractor) => contractor.idContractor == id
   );
   // console.log(contractorObj);
@@ -498,14 +505,14 @@ function saveItem(item) {
   };
 
   // определяем надо обновить контрагента или добавить нового (по idContractor):
-  const index = contractorListForRender.findIndex(
+  const index = cartonListForRender.findIndex(
     (contractor) => contractor.idContractor == id
   );
   if (index !== -1) {
-    contractorListForRender[index] = contractor; // обновление текущего контрагента
+    cartonListForRender[index] = contractor; // обновление текущего контрагента
     options.function = "update"; // определение типа запроса
   } else {
-    contractorListForRender.push(contractor); // добавление нового контрагента
+    cartonListForRender.push(contractor); // добавление нового контрагента
     options.function = "create"; // определение типа запроса
   }
 
@@ -525,7 +532,7 @@ function setAttributes(el, attrs) {
   }
 }
 
-// функция создания формы для добавления/редактирования контрагента:
+// ---------------------------создание формы для добавления/редактирования контрагента:-------------------------
 function createRowForm(maxId, contractorObj) {
   const item = document.createElement("tr"),
     tableFormId = document.createElement("td"),
@@ -638,10 +645,12 @@ function createRowForm(maxId, contractorObj) {
   item.append(tableFormSaveCell);
   item.append(tableFormEmptyCell);
 
-  tableBody.append(item); // добавление контрагента в таблицу
+  // tableBody.append(item); // добавление контрагента в таблицу
   setBtnEvents();
   return item;
 }
+// ---------------------------end создание формы для добавления/редактирования контрагента:-------------------------
+
 
 //--------------------------разное----------------------------
 
@@ -859,7 +868,9 @@ function setPopupEvent() {
 
 // --------------------end popup:------------------------
 
-function preRender(tableDataCopyObj) { //пререндер, приводи объект в нужный нам формат
+// --------------------пререндер:------------------------
+function preRender(tableDataCopyObj) {
+  //пререндер, приводи объект в нужный нам формат
   const object = {
     idContractor: tableDataCopyObj.idContractor,
     name: tableDataCopyObj.name,
@@ -877,7 +888,7 @@ function preRender(tableDataCopyObj) { //пререндер, приводи об
 function setBtns() {
   let btn = null;
   if (isActive == 1) {
-    return btn = [
+    return (btn = [
       {
         numberColumn: 7,
         class: "table__small-btn",
@@ -888,29 +899,29 @@ function setBtns() {
         class: "table__small-btn",
         button: deleteIcon,
       },
-    ];
+    ]);
   } else {
-    return btn = [
+    return (btn = [
       {
         numberColumn: 7,
         class: "table__small-btn",
         button: revertIcon,
       },
-    ];
+    ]);
   }
-
 }
 
 setBtns();
+// --------------------end пререндер:------------------------
 
 
-//------------------------- универсальная функция создания таблицы ----------------------------
+//-------------------------- создание строки ------------------------------------
 function getRow(tableDataCopyObj, inputs, btns) {
   // function getRow2(tableDataCopyObj, inputs, btns) {
 
   let copyTableDataCopyObj = preRender(tableDataCopyObj);
 
-  btns =  setBtns();
+  btns = setBtns();
   inputs = null;
   // tableDataCopy.forEach((tableDataCopyObj) => {
   const tableBodyRow = document.createElement("tr");
@@ -949,131 +960,133 @@ function getRow(tableDataCopyObj, inputs, btns) {
       });
     }
   }
-  // console.log(tableBodyRow);  
+  // console.log(tableBodyRow);
   return tableBodyRow;
-
 
   // });
 }
+//-------------------------- end создание строки ------------------------------------
 
-// создание таблицы:
-// 1) получение данных,
-// 2) подготовка данных (пререндер),
-// 3) формирование head (если есть) c классами,
-// 4) формирование строк c классами,
-// 5) создание таблицы.
 
-/**
- *
- * @param {Object?} table
- * @param {Array?} tableData
- * @param {Array?} tableHeadData
- * @param {Array?} inputs
- * @param {Object?} tableResRow
- * @param {Array?} btns
- */
+// //------------------------- универсальная функция создания таблицы ----------------------------
+// // создание таблицы:
+// // 1) получение данных,
+// // 2) подготовка данных (пререндер),
+// // 3) формирование head (если есть) c классами,
+// // 4) формирование строк c классами,
+// // 5) создание таблицы.
 
-function createTable(
-  table,
-  tableData,
-  tableHeadData,
-  inputs,
-  tableResRow,
-  btns
-) {
-  // console.log('table: ', table);
-  // console.log('tableData: ', tableData);
-  // console.log('tableHeadData: ', tableHeadData);
-  // console.log('inputs: ', inputs);
-  // console.log('tableResRow: ', tableResRow);
-  // console.log('btns: ', btns);
+// /**
+//  *
+//  * @param {Object?} table
+//  * @param {Array?} tableData
+//  * @param {Array?} tableHeadData
+//  * @param {Array?} inputs
+//  * @param {Object?} tableResRow
+//  * @param {Array?} btns
+//  */
 
-  // table - html элемент, таблица, либо тело таблицы;
-  // tableData - массив объектов с данными;
-  // tableHead - массив с названиями столбцов;
-  // tableResRow - объект с данными, номер столбца - содержимое и классы;
-  // inputs - массив объектов, в объекте: номер столбца, классы, атрибуты, значения;
-  // btns - массив объектов, в объекте: номер столбца, содержимое кнопки, классы;
+// function createTable(
+//   table,
+//   tableData,
+//   tableHeadData,
+//   inputs,
+//   tableResRow,
+//   btns
+// ) {
+//   // console.log('table: ', table);
+//   // console.log('tableData: ', tableData);
+//   // console.log('tableHeadData: ', tableHeadData);
+//   // console.log('inputs: ', inputs);
+//   // console.log('tableResRow: ', tableResRow);
+//   // console.log('btns: ', btns);
 
-  table.innerHTML = ""; // очищаем тело таблицы
-  const tableDataCopy = [...tableData]; // копия массива с данными
-  const columnsQuantity = Object.keys(tableDataCopy[0]).length; // количество столбцов в таблице
+//   // table - html элемент, таблица, либо тело таблицы;
+//   // tableData - массив объектов с данными;
+//   // tableHead - массив с названиями столбцов;
+//   // tableResRow - объект с данными, номер столбца - содержимое и классы;
+//   // inputs - массив объектов, в объекте: номер столбца, классы, атрибуты, значения;
+//   // btns - массив объектов, в объекте: номер столбца, содержимое кнопки, классы;
 
-  // если есть названия столбцов:
-  if (tableHeadData) {
-    const tableHead = document.createElement("thead");
-    const tableHeadRowEl = document.createElement("tr");
+//   table.innerHTML = ""; // очищаем тело таблицы
+//   const tableDataCopy = [...tableData]; // копия массива с данными
+//   const columnsQuantity = Object.keys(tableDataCopy[0]).length; // количество столбцов в таблице
 
-    tableHead.classList.add("table__head");
-    tableHeadRowEl.classList.add("table__row");
-    tableHead.append(tableHeadRowEl);
-    table.append(tableHead);
+//   // если есть названия столбцов:
+//   if (tableHeadData) {
+//     const tableHead = document.createElement("thead");
+//     const tableHeadRowEl = document.createElement("tr");
 
-    for (let i = 0; i < tableHeadData.length; i++) {
-      const tableHeadColumn = document.createElement("th");
-      tableHeadColumn.classList.add(`table__column_${i + 1}`);
-      tableHeadColumn.textContent = tableHeadData[i];
-      tableHeadRowEl.append(tableHeadColumn);
-    }
-    table.append(tableHead);
-  }
+//     tableHead.classList.add("table__head");
+//     tableHeadRowEl.classList.add("table__row");
+//     tableHead.append(tableHeadRowEl);
+//     table.append(tableHead);
 
-  // формирование строк c классами:
-  tableDataCopy.forEach((item) => {
-    const tableBodyRow = document.createElement("tr");
-    tableBodyRow.classList.add("table__row");
-    table.append(tableBodyRow);
+//     for (let i = 0; i < tableHeadData.length; i++) {
+//       const tableHeadColumn = document.createElement("th");
+//       tableHeadColumn.classList.add(`table__column_${i + 1}`);
+//       tableHeadColumn.textContent = tableHeadData[i];
+//       tableHeadRowEl.append(tableHeadColumn);
+//     }
+//     table.append(tableHead);
+//   }
 
-    let colNumber = 0; // счетчик столбцов
-    for (let key in item) {
-      colNumber++; // инкремент счетчика столбцов
-      const tableColumn = document.createElement("td");
-      tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
-      tableColumn.textContent = item[key];
-      tableBodyRow.append(tableColumn);
+//   // формирование строк c классами:
+//   tableDataCopy.forEach((item) => {
+//     const tableBodyRow = document.createElement("tr");
+//     tableBodyRow.classList.add("table__row");
+//     table.append(tableBodyRow);
 
-      if (inputs) {
-        // если есть инпуты:
-        inputs.forEach((el) => {
-          if (colNumber == el.numberColumn) {
-            const input = document.createElement("input");
-            input.classList.add("table__cell-frame");
-            input.setAttribute("type", "number");
-            input.setAttribute("value", item[key]);
-            tableColumn.textContent = "";
-            tableColumn.append(input);
-          }
-        });
-      }
+//     let colNumber = 0; // счетчик столбцов
+//     for (let key in item) {
+//       colNumber++; // инкремент счетчика столбцов
+//       const tableColumn = document.createElement("td");
+//       tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
+//       tableColumn.textContent = item[key];
+//       tableBodyRow.append(tableColumn);
 
-      if (btns) {
-        // если есть кнопки:
-        btns.forEach((el) => {
-          if (colNumber == el.numberColumn) {
-            tableColumn.innerHTML = el.button;
-            tableColumn.classList.add(el.class);
-          }
-        });
-      }
-    }
-  });
-  if (tableResRow) {
-    const tableResRowEl = document.createElement("tr");
-    tableResRowEl.classList.add("table__row", tableResRow.class);
-    table.append(tableResRowEl);
-    for (let i = 0; i < columnsQuantity; i++) {
-      const tableResColumn = document.createElement("td");
-      tableResColumn.classList.add("table__column", `table__column_${i + 1}`);
+//       if (inputs) {
+//         // если есть инпуты:
+//         inputs.forEach((el) => {
+//           if (colNumber == el.numberColumn) {
+//             const input = document.createElement("input");
+//             input.classList.add("table__cell-frame");
+//             input.setAttribute("type", "number");
+//             input.setAttribute("value", item[key]);
+//             tableColumn.textContent = "";
+//             tableColumn.append(input);
+//           }
+//         });
+//       }
 
-      for (let key in tableResRow) {
-        if (i + 1 == Number(key)) {
-          tableResColumn.textContent = tableResRow[key];
-        }
-      }
-      tableResRowEl.append(tableResColumn);
-    }
-    table.append(tableResRowEl);
-  }
-}
+//       if (btns) {
+//         // если есть кнопки:
+//         btns.forEach((el) => {
+//           if (colNumber == el.numberColumn) {
+//             tableColumn.innerHTML = el.button;
+//             tableColumn.classList.add(el.class);
+//           }
+//         });
+//       }
+//     }
+//   });
+//   if (tableResRow) {
+//     const tableResRowEl = document.createElement("tr");
+//     tableResRowEl.classList.add("table__row", tableResRow.class);
+//     table.append(tableResRowEl);
+//     for (let i = 0; i < columnsQuantity; i++) {
+//       const tableResColumn = document.createElement("td");
+//       tableResColumn.classList.add("table__column", `table__column_${i + 1}`);
 
-//------------------------- end универсальная функция создания таблицы ----------------------------
+//       for (let key in tableResRow) {
+//         if (i + 1 == Number(key)) {
+//           tableResColumn.textContent = tableResRow[key];
+//         }
+//       }
+//       tableResRowEl.append(tableResColumn);
+//     }
+//     table.append(tableResRowEl);
+//   }
+// }
+
+// //------------------------- end универсальная функция создания таблицы ----------------------------
