@@ -244,7 +244,7 @@
               </table>
             </div>
             <div class="btn-wrapper">
-              <button class="btn btn-reset table-btn popup-link" href="#popup-form" id="addCartonBtn">
+              <button class="btn btn-reset table-btn" id="addCartonBtn">
                 Добавить клиента
                 <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -265,7 +265,7 @@
     </section>
   </main>
 
-  <div class="popup" id="popup">
+  <div class="popup" id="popup-del">
     <!-- закрыть модалку по клике на область вокруг -->
     <div class="popup__body">
       <div class="popup__content popup-deal">
@@ -277,8 +277,8 @@
           Вы действительно хотите удалить товар со склада?
         </p>
         <div class="popup__btn-wrapper">
-          <button class="btn btn-reset popup__btn popup-close" href="#">Отменить</button>
-          <button class="btn btn_red btn-reset popup__btn popup-approval" href="#">Удалить</button>
+          <button class="btn btn-reset popup__btn popup-close" href="#" id="btn-cancel">Отменить</button>
+          <button class="btn btn_red btn-reset popup__btn popup-approval" href="#" id="btn-delete">Удалить</button>
         </div>
 
         <div class="popup__close popup-close">

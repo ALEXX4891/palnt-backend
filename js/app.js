@@ -83,6 +83,7 @@ async function fetchToDB(options) {
   }
 }
 
+console.log(options);
 await fetchToDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
 //--------------------------end Запрос к БД----------------------------
 
@@ -108,7 +109,7 @@ addContractorBtn.onclick = function () {
   const item = createRowForm(maxId);
   tableBody.append(item); // добавление контрагента в таблицу
   item.scrollIntoView(); // переход к созданной строке
-  setBtnEvents();
+  // setBtnEvents();
 };
 
 //функция переключения активности таблицы, так-же скрывает кнопку "добавить контрагента":
@@ -135,8 +136,8 @@ function toggleBtnFunc() {
 toggleBtn.addEventListener("click", function () {
   toggleBtnFunc(); //проверить выбранную активность контрагентов
   renderTable(cartonListForRender, isActive); //рендер таблицы контрагнетов
-  setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
-  setBtnEvents(); // навесить заново события удаления и редактирования контрагента
+  // setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
+  // setBtnEvents(); // навесить заново события удаления и редактирования контрагента
 });
 
 // Этап 3. Создайте функцию вывода одного контрагента в таблицу, по аналогии с тем,
@@ -232,13 +233,42 @@ toggleBtn.addEventListener("click", function () {
 //   return item;
 // }
 
+function setDelEvent() {
+  console.log("delBtns");
+  const row = this.closest(".table__row");
+  row.classList.add("table__row_deletable");
+  setNoActive(row);
+}
+
+function setRevertEvent() {
+  console.log("revertBtns");
+  const row = this.closest(".table__row");
+  row.classList.add("table__row_deletable");
+  setActive(row);
+}
+
+function setEditEvent() {
+  console.log("editBtns");
+  const row = this.closest(".table__row");
+  editItem(row);
+}
+
+function setSaveEvent() {
+  console.log("saveBtns");
+  const row = this.closest(".table__row");
+  saveItem(row);
+}
+
 // добавляем обработчик на кнопку - удаление контрагента
 function setBtnEvents() {
   let delBtns = document.querySelectorAll(".btn-delete");
-  // console.log(delBtns);
+
+  console.log("setBtnEvents");
+
   if (delBtns) {
     delBtns.forEach((item) => {
       item.addEventListener("click", function () {
+        console.log("delBtns");
         const row = this.closest(".table__row");
         row.classList.add("table__row_deletable");
         setNoActive(row);
@@ -251,6 +281,7 @@ function setBtnEvents() {
   if (revertBtns) {
     revertBtns.forEach((item) => {
       item.addEventListener("click", function () {
+        console.log("revertBtns");        
         const row = this.closest(".table__row");
         row.classList.add("table__row_deletable");
         setActive(row);
@@ -263,6 +294,7 @@ function setBtnEvents() {
   if (editBtns) {
     editBtns.forEach((item) => {
       item.addEventListener("click", function () {
+        console.log("editBtns");
         const row = this.closest(".table__row");
         editItem(row);
       });
@@ -273,7 +305,7 @@ function setBtnEvents() {
   if (saveBtns) {
     saveBtns.forEach((item) => {
       item.addEventListener("click", function () {
-        console.log("save");
+        console.log("saveBtns");
         const row = this.closest(".table__row");
         saveItem(row);
       });
@@ -326,12 +358,11 @@ function renderTable(arr, isActive) {
     const item = getRow(contractorObj, isActive); //??????????????????????????????????????????????
     tableBody.append(item); // добавление контрагента в таблицу
   }
-  setBtnEvents();
+  // setBtnEvents();
+  // setPopupEvent();
 }
 
 renderTable(cartonListForRender, isActive);
-setBtnEvents();
-setPopupEvent();
 
 
 // ---------------------------------- сортировка таблицы -----------------------------
@@ -353,7 +384,7 @@ const sortArr = (arr, property, sortDirection, isActive) => {
       : 1
   );
   renderTable(arr, isActive);
-  setPopupEvent();
+  // setPopupEvent();
 };
 
 // обработчик события сортировки:
@@ -376,7 +407,7 @@ idContractorBtn.addEventListener("click", () => {
 // Фильтрация массива контрагентов при вводе текста инпут, ищет по всем столбцам
 contractorSearch.addEventListener("input", () => {
   renderTable(cartonListForRender, isActive); //рендер таблицы контрагнетов
-  setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
+  // setPopupEvent(); // навесить заново события открытия и закрытия модльного окна
 });
 // ----------------------------------end сортировка таблицы -----------------------------
 
@@ -403,10 +434,10 @@ function setNoActive(item) {
     options = {
       function: "noActive",
       table: "contractor",
-      update: "UPDATE",
       idContractor: id,
       isActive: "0",
     };
+    console.log(options);
     fetchToDB(options); // смена активности в БД
   });
 }
@@ -433,6 +464,7 @@ function setActive(item) {
       idContractor: id,
       isActive: "1",
     };
+    console.log(options);
     fetchToDB(options);
   });
 }
@@ -444,7 +476,6 @@ function editItem(item) {
   );
   // console.log(contractorObj);
   const newItem = createRowForm(id, contractorObj);
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   item.replaceWith(newItem);
   setPopupEvent(); // требуется для корректной работы событий
 }
@@ -518,8 +549,8 @@ function saveItem(item) {
 
   const newItem = getRow(contractor); // создаем строку с новым контрагентом!!!!!!!!!!!!!!!!!!!!!!!!
   item.replaceWith(newItem); // заменяем старую строку на новую
-  setPopupEvent(); // требуется для корректной работы событий
-  setBtnEvents();
+  // setPopupEvent(); // требуется для корректной работы событий
+  // setBtnEvents();
   fetchToDB(options); // отправляем запрос к БД
 }
 
@@ -620,9 +651,9 @@ function createRowForm(maxId, contractorObj) {
     required: true,
     placeholder: "Заполните почту",
   });
-  console.log("maxId: ", maxId);
-  console.log("contractorObj: ", contractorObj);
-  console.log("item: ", item);
+  // console.log("maxId: ", maxId);
+  // console.log("contractorObj: ", contractorObj);
+  // console.log("item: ", item);
 
   // присваеваем значения внутренним элементам формы:
   tableFormSaveCell.innerHTML = saveIcon;
@@ -645,8 +676,10 @@ function createRowForm(maxId, contractorObj) {
   item.append(tableFormSaveCell);
   item.append(tableFormEmptyCell);
 
+  item.querySelector(".btn-save").addEventListener("click", setSaveEvent)
+
   // tableBody.append(item); // добавление контрагента в таблицу
-  setBtnEvents();
+  // setBtnEvents();
   return item;
 }
 // ---------------------------end создание формы для добавления/редактирования контрагента:-------------------------
@@ -965,6 +998,9 @@ function getRow(tableDataCopyObj, inputs, btns) {
 
   // });
 }
+
+setBtnEvents();
+
 //-------------------------- end создание строки ------------------------------------
 
 
@@ -1089,4 +1125,7 @@ function getRow(tableDataCopyObj, inputs, btns) {
 //   }
 // }
 
+
 // //------------------------- end универсальная функция создания таблицы ----------------------------
+
+

@@ -98,7 +98,7 @@ function setPopupEvent() {
       // console.log(curentPopup);
       curentPopup.classList.add("open");
       curentPopup.addEventListener("click", function (e) {
-        if (!e.target.closest(".popup__content")) {
+        if (!e.target.closest(".popup-del")) {
           // если клик был по области вокруг попапа то ничего не делаем
           popupClose(e.target.closest(".popup"));
         }
@@ -126,7 +126,7 @@ const editIcon = `<svg class="btn-edit" width="24" height="24" viewBox="0 0 24 2
     fill="#225F0D" fill-opacity="0.75" />
 </svg>`;
 
-const deleteIcon = `<svg class="popup-link btn-delete" href="#popup-del" width="24" height="24" viewBox="0 0 24 24" fill="none"
+const deleteIcon = `<svg class="popup-link btn-del" href="#popup-del" width="24" height="24" viewBox="0 0 24 24" fill="none"
   xmlns="http://www.w3.org/2000/svg">
   <path
     d="M20.25 5.40002H16.5V4.65002C16.5 4.05329 16.2629 3.48099 15.841 3.05903C15.419 2.63708 14.8467 2.40002 14.25 2.40002H9.75C9.15326 2.40002 8.58097 2.63708 8.15901 3.05903C7.73705 3.48099 7.5 4.05329 7.5 4.65002V5.40002H3.75C3.55109 5.40002 3.36032 5.47904 3.21967 5.61969C3.07902 5.76035 3 5.95111 3 6.15002C3 6.34894 3.07902 6.5397 3.21967 6.68035C3.36032 6.82101 3.55109 6.90002 3.75 6.90002H4.5V20.4C4.5 20.7978 4.65804 21.1794 4.93934 21.4607C5.22064 21.742 5.60217 21.9 6 21.9H18C18.3978 21.9 18.7794 21.742 19.0607 21.4607C19.342 21.1794 19.5 20.7978 19.5 20.4V6.90002H20.25C20.4489 6.90002 20.6397 6.82101 20.7803 6.68035C20.921 6.5397 21 6.34894 21 6.15002C21 5.95111 20.921 5.76035 20.7803 5.61969C20.6397 5.47904 20.4489 5.40002 20.25 5.40002ZM9 4.65002C9 4.45111 9.07902 4.26035 9.21967 4.11969C9.36032 3.97904 9.55109 3.90002 9.75 3.90002H14.25C14.4489 3.90002 14.6397 3.97904 14.7803 4.11969C14.921 4.26035 15 4.45111 15 4.65002V5.40002H9V4.65002ZM18 20.4H6V6.90002H18V20.4ZM10.5 10.65V16.65C10.5 16.8489 10.421 17.0397 10.2803 17.1804C10.1397 17.321 9.94891 17.4 9.75 17.4C9.55109 17.4 9.36032 17.321 9.21967 17.1804C9.07902 17.0397 9 16.8489 9 16.65V10.65C9 10.4511 9.07902 10.2603 9.21967 10.1197C9.36032 9.97904 9.55109 9.90002 9.75 9.90002C9.94891 9.90002 10.1397 9.97904 10.2803 10.1197C10.421 10.2603 10.5 10.4511 10.5 10.65ZM15 10.65V16.65C15 16.8489 14.921 17.0397 14.7803 17.1804C14.6397 17.321 14.4489 17.4 14.25 17.4C14.0511 17.4 13.8603 17.321 13.7197 17.1804C13.579 17.0397 13.5 16.8489 13.5 16.65V10.65C13.5 10.4511 13.579 10.2603 13.7197 10.1197C13.8603 9.97904 14.0511 9.90002 14.25 9.90002C14.4489 9.90002 14.6397 9.97904 14.7803 10.1197C14.921 10.2603 15 10.4511 15 10.65Z"
@@ -171,8 +171,8 @@ async function fetchToDB(options) {
   } catch (err) {
     // Блок catch сработает только если будут какие-то ошибки в блоке try:
     // Выведем в консоли информацию об ошибке:
-    console.log("При запросе к БД произошла ошибка, детали ниже:");
-    console.error(err);
+    // console.log("При запросе к БД произошла ошибка, детали ниже:");
+    // console.error(err);
     // Вернем исключение с текстом поясняющим детали ошибки:
     alert("Произошла ошибка при запросе к БД!");
     throw new Error("Запрос завершился неудачно.");
@@ -182,7 +182,7 @@ async function fetchToDB(options) {
 await fetchToDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
 //--------------------------end Запрос к БД----------------------------
 
-let cartonListForRender = [...infoList];
+let cartonListFromDB = [...infoList];
 // console.log(cartonListForRender);
 
 let maxId = 0;
@@ -198,9 +198,12 @@ function getMaxId(arr) {
 
 // Добавляем событие на кнопку "Добавить контрагента":
 const addCartonBtn = document.getElementById("addCartonBtn");
+// console.log(addCartonBtn);
 addCartonBtn.onclick = function () {
   maxId += 1;
   const item = createRowForm(maxId);
+  tableBody.append(item); // добавление контрагента в таблицу
+  setBtnEvents();
   item.scrollIntoView(); // переход к созданной строке
 };
 
@@ -233,14 +236,14 @@ addCartonBtn.onclick = function () {
 // });
 
 function setBtnEvents() {
-  let delBtns = document.querySelectorAll(".btn-delete");
+  let delBtns = document.querySelectorAll(".btn-del");
   // console.log(delBtns);
   if (delBtns) {
     delBtns.forEach((item) => {
       item.addEventListener("click", function () {
         const row = this.closest(".table__row");
         row.classList.add("table__row_deletable");
-        setNoActive(row);
+        delItem(row);
       });
     });
   }
@@ -274,12 +277,13 @@ function setBtnEvents() {
       item.addEventListener("click", function () {
         // console.log("save");
         const row = this.closest(".table__row");
-        saveItem(row);
+        const id = row.getAttribute("data-id");
+        saveItem(row, id);
       });
     });
   }
 }
-getMaxId(cartonListForRender);
+getMaxId(cartonListFromDB);
 
 function filterTable(search, arr) {
   let copy = [...arr];
@@ -328,18 +332,21 @@ function renderTable(arr) {
   setBtnEvents();
 }
 // console.log(cartonListForRender);
-const newArr = []
-for (const carton of cartonListForRender) {
-  newArr.push(preRender(carton));
+const cartonListForRender = [];
+for (const carton of cartonListFromDB) {
+  cartonListForRender.push(preRender(carton));
 }
+
+// console.log(newArr);
+// console.log(cartonListForRender);
 // const Arr = [...cartonListForRender.forEach((carton) => {
-  // return preRender(carton);
+// return preRender(carton);
 // })];
 // let copyTableDataCopyObj = preRender(tableDataCopyObj);
-renderTable(newArr);
+renderTable(cartonListForRender);
 
 // renderTable(cartonListForRender);
-setBtnEvents();
+// setBtnEvents();
 setPopupEvent();
 
 // // ---------------------------------- сортировка таблицы -----------------------------
@@ -388,14 +395,13 @@ setPopupEvent();
 // // ----------------------------------end сортировка таблицы -----------------------------
 
 // ----------------- события на кнопки в таблице ------------------
-function setNoActive(item) {
+function delItem(item) {
   const agreeBtn = document.querySelector("#btn-delete");
-  const popup = agreeBtn.closest(".popup__content");
+  const popup = agreeBtn.closest(".popup-deal");
   const title = popup.querySelector(".popup__title");
-  title.textContent = cartonListForRender.filter(
-    (carton) => carton.idCarton == item.getAttribute("id")
-  )[0].name;
-  const id = item.getAttribute("id");
+  console.log(item);
+  title.textContent = item.querySelector(".table__column_2").textContent;
+  const id = item.getAttribute("data-id");
 
   agreeBtn.addEventListener("click", function (e) {
     cartonListForRender.filter(
@@ -407,109 +413,104 @@ function setNoActive(item) {
     popupClose(e.target.closest(".popup"));
 
     options = {
-      function: "noActive",
+      function: "delete",
       table: "carton",
-      update: "UPDATE",
       idCarton: id,
-      isActive: "0",
     };
     fetchToDB(options); // смена активности в БД
   });
 }
 
-function setActive(item) {
-  const agreeBtn = document.querySelector("#btn-revert");
-  const popup = agreeBtn.closest(".popup__content");
-  const title = popup.querySelector(".popup__title");
-  title.textContent = cartonListForRender.filter(
-    (carton) => carton.idCarton == item.getAttribute("id")
-  )[0].name;
-  const id = item.getAttribute("id");
-
-  agreeBtn.addEventListener("click", function (e) {
-    cartonListForRender.filter(
-      (carton) => carton.idCarton == id
-    )[0].isActive = 1;
-    item.remove();
-    popupClose(e.target.closest(".popup"));
-
-    options = {
-      function: "goActive",
-      table: "carton",
-      idCarton: id,
-      isActive: "1",
-    };
-    fetchToDB(options);
-  });
-}
-
 function editItem(item) {
-  console.log(item);
-  const id = item.getAttribute("id");
-  const cartonObj = cartonListForRender.filter(
-    (carton) => carton.idCarton == id
-  );
+  const id = item.getAttribute("data-id");
+  // console.log(id);
+  let cartonObj = cartonListForRender.filter((carton) => carton.idCarton == id);
+
+  // console.log(cartonListForRender);
+
+  cartonObj = cartonObj[0];
+
   // console.log(cartonObj);
   const newItem = createRowForm(id, cartonObj);
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   item.replaceWith(newItem);
+  setBtnEvents();
   setPopupEvent(); // требуется для корректной работы событий
 }
 
-function saveItem(item) {
-  const id = item.querySelector(".table__column_1").innerText;
+function saveItem(item, id) {
+  const date = item.querySelector(".table__column_1").innerText;
   const name = item
     .querySelector(".table__column_2")
     .querySelector(".table__input_name").value;
-  const width = item
-    .querySelector(".table__column_2")
-    .querySelector(".table__input_width").value;
-  const length = item
-    .querySelector(".table__column_2")
-    .querySelector(".table__input_length").value;
-  const type = item
+  const widthCarton = Number(
+    item.querySelector(".table__column_2").querySelector(".table__input_width")
+      .value
+  );
+  const lengthCarton = Number(
+    item.querySelector(".table__column_2").querySelector(".table__input_length")
+      .value
+  );
+  const typeCarton = item
     .querySelector(".table__column_3")
     .querySelector("input").value;
-  const coming = item
-    .querySelector(".table__column_4")
-    .querySelector("input").value;
-  const expense = item
-    .querySelector(".table__column_5")
-    .querySelector("input").value;
+  const coming = Number(
+    item.querySelector(".table__column_4").querySelector("input").value
+  );
+  const expense = Number(
+    item.querySelector(".table__column_5").querySelector("input").value
+  );
   const price = item
     .querySelector(".table__column_6")
     .querySelector("input").value;
-  const cost = item.querySelector(".table__column_7").innerText;
-  const contractor = item
+  const cost = coming * price;
+  const nameContractor = item
     .querySelector(".table__column_8")
     .querySelector("input").value;
   const carton = {
-    idCarton: Number(id),
-    name: `${name} ${width} x ${length}`,
-    type: type,
+    date: date,
+    name: `${name} ${widthCarton} x ${lengthCarton}`,
+    typeCarton: typeCarton,
     coming: coming,
     expense: expense,
     price: price,
     cost: cost,
-    contractor: contractor,
+    nameContractor: nameContractor,
+    emptyCell1: "",
+    emptyCell2: "",
+    idCarton: id,
   };
   // console.log(carton);
 
-  //проверки на заполянность полей:
-  // if (!Number.isInteger(carton.taxNumber)) {
-  //   alert("Номер ИНН должен быть числом");
-  //   return;
-  // }
+  // проверки на заполянность полей:
+  if (!Number.isInteger(widthCarton)) {
+    alert("Ширина должен быть числом");
+    return;
+  }
+
+  if (!Number.isInteger(lengthCarton)) {
+    alert("Длина должна быть числом");
+    return;
+  }
+
+  if (!Number.isInteger(coming)) {
+    alert("Приход должно быть числом");
+    return;
+  }
+
+  if (!Number.isInteger(expense)) {
+    alert("Расход должно быть числом");
+    return;
+  }
 
   if (
     !name ||
-    !width ||
-    !length ||
-    !type ||
-    !coming ||
-    !expense ||
+    !widthCarton ||
+    !lengthCarton ||
+    !typeCarton ||
+    // !coming ||
+    // !expense ||
     !price ||
-    !contractor
+    !nameContractor
   ) {
     alert("Заполните все поля таблицы");
     return;
@@ -517,24 +518,24 @@ function saveItem(item) {
 
   // компановка параметров для запроса к БД:
   options = {
+    function: "update",
     table: "carton",
     idCarton: id,
+    date: date,
     name: name,
-    widthCarton: Number(width),
-    lengthCarton: Number(length),
-    typeCarton: type,
+    widthCarton: Number(widthCarton),
+    lengthCarton: Number(lengthCarton),
+    typeCarton: typeCarton,
     coming: Number(coming),
     expense: Number(expense),
     price: parseFloat(price),
-    nameContractor: contractor,
+    nameContractor: nameContractor,
   };
 
   console.log(options);
 
   // определяем надо обновить контрагента или добавить нового (по idCarton):
-  const index = cartonListForRender.findIndex(
-    (carton) => carton.idCarton == id
-  );
+  const index = cartonListForRender.findIndex((carton) => carton.idCarton == id);
   if (index !== -1) {
     cartonListForRender[index] = carton; // обновление текущего контрагента
     options.function = "update"; // определение типа запроса
@@ -561,9 +562,9 @@ function setAttributes(el, attrs) {
 
 // ---------------------------создание формы для добавления/редактирования контрагента:-------------------------
 function createRowForm(maxId, cartonObj) {
-  console.log(cartonObj);
+  // console.log(cartonObj);
   const item = document.createElement("tr"),
-    tableFormId = document.createElement("td"),
+    tableFormDate = document.createElement("td"),
     tableFormName = document.createElement("td"),
     tableFormType = document.createElement("td"),
     tableFormComing = document.createElement("td"),
@@ -584,8 +585,9 @@ function createRowForm(maxId, cartonObj) {
 
   //присвоение классов созданным элементам:
   item.classList.add("table__row", "table__row_editable");
+  item.setAttribute("data-id", maxId);
 
-  tableFormId.classList.add("table__column", "table__column_1");
+  tableFormDate.classList.add("table__column", "table__column_1");
   tableFormName.classList.add("table__column", "table__column_2");
   tableFormType.classList.add("table__column", "table__column_3");
   tableFormComing.classList.add("table__column", "table__column_4");
@@ -614,17 +616,23 @@ function createRowForm(maxId, cartonObj) {
   tableFormInputPrice.classList.add("table__input");
   tableFormInputContractor.classList.add("table__input");
 
+  tableFormSaveCell.innerHTML = saveIcon;
+  tableFormDate.innerText = new Date().toLocaleDateString("ru-RU");
+
   if (cartonObj) {
-    console.log(cartonObj);
-    tableFormInputName.value = cartonObj[0].name;
-    tableFormInputWidth.value = cartonObj[0].widthCarton;
-    tableFormInputLength.value = cartonObj[0].lengthCarton;
-    tableFormInputType.value = cartonObj[0].typeCarton;
-    tableFormInputComing.value = cartonObj[0].coming;
-    tableFormInputExpense.value = cartonObj[0].expense;
-    tableFormInputPrice.value = cartonObj[0].price;
-    tableFormInputContractor.value = cartonObj[0].nameContractor;
-    tableFormCost.innerText = cartonObj[0].price * cartonObj[0].coming;
+    // console.log(cartonObj);
+    tableFormInputName.value = cartonObj.name.split(" ")[0];
+    tableFormInputWidth.value = cartonObj.name.split(" ")[1];
+    tableFormInputLength.value = cartonObj.name.split(" ")[3];
+    tableFormInputType.value = cartonObj.typeCarton;
+    tableFormInputComing.value = cartonObj.coming;
+    tableFormInputExpense.value = cartonObj.expense;
+    tableFormInputPrice.value = cartonObj.price;
+    tableFormInputContractor.value = cartonObj.nameContractor;
+    tableFormCost.innerText = cartonObj.price * cartonObj.coming;
+    tableFormDate.innerText = new Date(cartonObj.date).toLocaleDateString(
+      "ru-RU"
+    );
   }
 
   //присвоение атрибутов созданным инпутам:
@@ -681,8 +689,6 @@ function createRowForm(maxId, cartonObj) {
   // console.log("item: ", item);
 
   // присваеваем значения внутренним элементам формы:
-  tableFormSaveCell.innerHTML = saveIcon;
-  tableFormId.innerText = maxId;
 
   //присвоение инпутов ячейкам таблицы:
   tableFormName.append(tableFormInputName);
@@ -696,7 +702,7 @@ function createRowForm(maxId, cartonObj) {
   tableFormContractor.append(tableFormInputContractor);
 
   //добвление формы в строку:
-  item.append(tableFormId);
+  item.append(tableFormDate);
   item.append(tableFormName);
   item.append(tableFormType);
   item.append(tableFormComing);
@@ -708,7 +714,7 @@ function createRowForm(maxId, cartonObj) {
   item.append(tableFormEmptyCell);
 
   // tableBody.append(item); // добавление контрагента в таблицу
-  setBtnEvents();
+  // setBtnEvents();
   return item;
 }
 // ---------------------------end создание формы для добавления/редактирования контрагента:-------------------------
@@ -834,10 +840,12 @@ function preRender(tableDataCopyObj) {
     price: tableDataCopyObj.price,
     cost: tableDataCopyObj.price * tableDataCopyObj.coming,
     nameContractor: tableDataCopyObj.nameContractor,
-    emptyCell: "",
+    emptyCell1: "",
     emptyCell2: "",
+    idCarton: tableDataCopyObj.idCarton, // элемент не выводится в таблицу, нужен только для передачи id
   };
 
+  // console.log('preRender: ', object);
   // console.log(object);
   return object;
 }
@@ -863,9 +871,8 @@ setBtns();
 
 //-------------------------- создание строки ------------------------------------
 function getRow(copyTableDataCopyObj, inputs, btns) {
-  console.log(copyTableDataCopyObj);
+  // console.log(copyTableDataCopyObj);
   // function getRow2(tableDataCopyObj, inputs, btns) {
-
 
   btns = setBtns();
   inputs = null;
@@ -873,14 +880,17 @@ function getRow(copyTableDataCopyObj, inputs, btns) {
   const tableBodyRow = document.createElement("tr");
   tableBodyRow.classList.add("table__row");
   //надо найти id и присвоить его строке, можно поискать через связку контрагент + товар + длина + ширина + дата + тип + приход + цена
-  tableBodyRow.setAttribute("id", copyTableDataCopyObj.idCarton); // добавляем атрибут id для каждой строки
+  tableBodyRow.setAttribute("data-id", copyTableDataCopyObj.idCarton); // добавляем атрибут id для каждой строки
 
   let colNumber = 0; // счетчик столбцов
-  for (let key in copyTableDataCopyObj) {
+  // отсекаем вывод последнего элемента объекта - id:
+  for (let i = 0; i < Object.keys(copyTableDataCopyObj).length - 1; i++) {
     colNumber++; // инкремент счетчика столбцов
     const tableColumn = document.createElement("td");
     tableColumn.classList.add(`table__column`, `table__column_${colNumber}`);
-    tableColumn.textContent = copyTableDataCopyObj[key];
+    tableColumn.textContent =
+      copyTableDataCopyObj[Object.keys(copyTableDataCopyObj)[i]];
+    // console.log(copyTableDataCopyObj[Object.keys(copyTableDataCopyObj)[i]]);
     tableBodyRow.append(tableColumn);
 
     if (inputs) {
@@ -890,7 +900,10 @@ function getRow(copyTableDataCopyObj, inputs, btns) {
           const input = document.createElement("input");
           input.classList.add("table__cell-frame");
           input.setAttribute("type", "number");
-          input.setAttribute("value", copyTableDataCopyObj[key]);
+          input.setAttribute(
+            "value",
+            copyTableDataCopyObj[Object.keys(copyTableDataCopyObj)[i]]
+          );
           tableColumn.textContent = "";
           tableColumn.append(input);
         }

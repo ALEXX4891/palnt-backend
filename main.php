@@ -46,8 +46,8 @@ if ($inputData) {
       $table = $data[$key];
     }
     if ($key == 'idContractor') {
-      $arrData['idContractor'] = $data[$key];
-      $idContractor = $data[$key];
+      $arrData['id'] = $data[$key];
+      $id = $data[$key];
     }
     if ($key == 'name') {
       $arrData['name'] = $data[$key];
@@ -73,6 +73,43 @@ if ($inputData) {
       $arrData['isActive'] = $data[$key];
       $isActive = $data[$key];
     }
+    if ($key == 'idCarton') {
+      $arrData['id'] = $data[$key];
+      $id = $data[$key];
+    }
+    if ($key == 'date') {
+      $arrData['date'] = $data[$key];
+      $date = $data[$key];
+    }
+    if ($key == 'widthCarton') {
+      $arrData['widthCarton'] = $data[$key];
+      $widthCarton = $data[$key];
+    }
+    if ($key == 'lengthCarton') {
+      $arrData['lengthCarton'] = $data[$key];
+      $lengthCarton = $data[$key];
+    }
+    if ($key == 'typeCarton') {
+      $arrData['typeCarton'] = $data[$key];
+      $typeCarton = $data[$key];
+    }
+    if ($key == 'coming') {
+      $arrData['coming'] = $data[$key];
+      $coming = $data[$key];
+    }
+    if ($key == 'expense') {
+      $arrData['expense'] = $data[$key];
+      $expense = $data[$key];
+    }
+    if ($key == 'price') {
+      $arrData['price'] = $data[$key];
+      $price = $data[$key];
+    }
+    if ($key == 'nameContractor') {
+      $arrData['nameContractor'] = $data[$key];
+      $nameContractor = $data[$key];
+    }
+
   }
 
   // if ($operation == 'UPDATE') {
@@ -114,7 +151,7 @@ if ($function == 'getAll') {
   } 
 }
 
-if ($function == 'noActive' || $function == 'goActive') {
+if ($function == 'noActive' || $function == 'goActive') { // не работает
   $sql = 'UPDATE ' . $table . ' SET ' . 'isActive = ' . $isActive . ' WHERE ' . 'idContractor = ' . $idContractor;
 
   if ($mode == 'dev') {
@@ -122,20 +159,49 @@ if ($function == 'noActive' || $function == 'goActive') {
     echo '<br>';
   } 
 }
-if ($function == 'update') {
+if ($function == 'update' && $table == 'contractor') { //работает
   $sql = "UPDATE `contractor` SET 
   `name` = '$name', 
   `taxNumber` = '$taxNumber', 
   `address` = '$address', 
   `telephone` = '$telephone', 
   `email` = '$email' 
-  WHERE `idContractor` = $idContractor";
+  WHERE `idContractor` = $id";
 
   if ($mode == 'dev') {
     echo $sql;
     echo '<br>';
   } 
 }
+
+if ($function == 'update' && $table == 'carton') { // не работает
+  $sql = "UPDATE `carton` SET 
+  `date` = '$date',
+  `name` = '$name',
+  `widthCarton` = '$widthCarton',
+  `lengthCarton` = '$lengthCarton',
+  `typeCarton` = '$typeCarton',
+  `coming` = '$coming',
+  `expense` = '$expense',
+  `price` = '$price',
+  `nameContractor` = '$nameContractor'
+  WHERE `idCarton` = $idCarton";
+
+  if ($mode == 'dev') {
+    echo $sql;
+    echo '<br>';
+  } 
+}
+
+// if ($function == 'delete') {
+//   $sql = "DELETE FROM $table WHERE `idCarton` = $idCarton";
+//   if ($mode == 'dev') {
+//     echo $sql;
+//     echo '<br>';
+//   }
+// }
+
+ 
 if ($function == 'create') {
   $sql = "INSERT INTO `contractor` (`name`, `taxNumber`, `address`, `telephone`, `email`, `idContractor`) VALUES ('$name', '$taxNumber', '$address', '$telephone', '$email', '$idContractor')";
   if ($mode == 'dev') {
