@@ -676,6 +676,7 @@ function createRowForm(maxId, contractorObj) {
   item.append(tableFormSaveCell);
   item.append(tableFormEmptyCell);
 
+  // TODO добить это!!!:
   item.querySelector(".btn-save").addEventListener("click", setSaveEvent)
 
   // tableBody.append(item); // добавление контрагента в таблицу
