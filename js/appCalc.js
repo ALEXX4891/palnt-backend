@@ -317,25 +317,25 @@ function createOrderParamsForm() {
 
   //присвоение классов созданным инпутам:
   inputwidth.classList.add("table__cell-frame");
+  inputwidth.name = "inputWidth_" + numberOrderTableRow;
   inputlength.classList.add("table__cell-frame");
+  inputlength.name = "inputLength_" + numberOrderTableRow;
   inputquantity.classList.add("table__cell-frame");
+  inputquantity.name = "inputQuantity_" + numberOrderTableRow;
 
   //присвоение атрибутов созданным инпутам:
   setAttributes(inputwidth, {
     type: "number",
-    name: "width",
     value: "",
     required: true,
   });
   setAttributes(inputlength, {
     type: "number",
-    name: "length",
     value: "",
     required: true,
   });
   setAttributes(inputquantity, {
     type: "number",
-    name: "quantity",
     value: "",
     required: true,
   });

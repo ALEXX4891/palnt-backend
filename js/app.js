@@ -83,7 +83,7 @@ async function fetchToDB(options) {
   }
 }
 
-console.log(options);
+// console.log(options);
 await fetchToDB(options); // требуется подключить скрипт как модуль, иначе await не работает!!!
 //--------------------------end Запрос к БД----------------------------
 
@@ -263,7 +263,7 @@ function setSaveEvent() {
 function setBtnEvents() {
   let delBtns = document.querySelectorAll(".btn-delete");
 
-  console.log("setBtnEvents");
+  // console.log("setBtnEvents");
 
   if (delBtns) {
     delBtns.forEach((item) => {
