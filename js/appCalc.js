@@ -28,6 +28,12 @@ const revertIcon = `<svg class="popup-link btn-revert" href="#popup-revert" widt
 </svg>`;
 
 
+
+
+
+
+
+
 // ----------------------simplebar:---------------------------------------
 // function simplebar() {
 if (document.querySelector(".my-simplebar-1")) {
@@ -64,7 +70,7 @@ function initSimpleBar() {
 // --------------------end simplebar:---------------------------------------
 
 // --------------------popup:------------------------
-let unlock = true;
+let unlock = true;  
 const timeout = 300;
 const lockPadding = document.querySelectorAll(".lock-padding");
 const body = document.querySelector("body");
@@ -316,11 +322,11 @@ function createOrderParamsForm() {
   deleteCell.classList.add("table__column", "table__column_5");
 
   //присвоение классов созданным инпутам:
-  inputwidth.classList.add("table__cell-frame");
+  inputwidth.classList.add("table__cell-frame", "table__cell-frame_width");
   inputwidth.name = "inputWidth_" + numberOrderTableRow;
-  inputlength.classList.add("table__cell-frame");
+  inputlength.classList.add("table__cell-frame", "table__cell-frame_length");
   inputlength.name = "inputLength_" + numberOrderTableRow;
-  inputquantity.classList.add("table__cell-frame");
+  inputquantity.classList.add("table__cell-frame", "table__cell-frame_quantity");
   inputquantity.name = "inputQuantity_" + numberOrderTableRow;
 
   //присвоение атрибутов созданным инпутам:
@@ -328,16 +334,22 @@ function createOrderParamsForm() {
     type: "number",
     value: "",
     required: true,
+    step: "1",
+    min: "0",
   });
   setAttributes(inputlength, {
     type: "number",
     value: "",
     required: true,
+    step: "1",
+    min: "0",
   });
   setAttributes(inputquantity, {
     type: "number",
     value: "",
     required: true,
+    step: "500",
+    min: "0",
   });
 
   //создаем кнопку удаления строки:
@@ -1097,3 +1109,98 @@ getCastomSelect(CartonListForInput, cartonTypesSelectUl);
 // renderWarehouseTable(cartonListForRender);
 // initSimpleBar();
 setCastomInputsEvents();
+
+// добавляем и заполняем новые строки заказа:
+addOrderParamsBtn.dispatchEvent(new Event("click")); // добавит новую строку
+addOrderParamsBtn.dispatchEvent(new Event("click")); // добавит новую строку
+addOrderParamsBtn.dispatchEvent(new Event("click")); // добавит новую строку
+addOrderParamsBtn.dispatchEvent(new Event("click")); // добавит новую строку
+
+let widthInputs = document.querySelectorAll(".table__cell-frame_width");
+let widthData = 14;
+for (let i = 0; i < widthInputs.length; i++) {
+  widthInputs[i].value = widthData;
+  widthData += 1;
+}
+
+let lengthInputs = document.querySelectorAll(".table__cell-frame_length");
+let lengthData = 18;
+for (let i = 0; i < lengthInputs.length; i++) {
+  lengthInputs[i].value = lengthData;
+}
+
+let quantityInputs = document.querySelectorAll(".table__cell-frame_quantity");
+for (let i = 0; i < quantityInputs.length; i++) {
+  if (i < 2) {
+    quantityInputs[i].value = 1000;    
+  } else {
+    quantityInputs[i].value = 2000;
+  }
+
+}
+
+// формируем массив с параметрами для расчета:
+function getParams() {
+  let blankSize = 1150; // предать сюда ширину или длину листа в сантиметрах!!!!!!!!!!!!!!!!!!!
+  let orderParams = [];
+  let blank = []; 
+  blank.push(blankSize);
+  let orderSize = [];
+
+  for (let i = 0; i < widthInputs.length; i++) {
+    const arr = [];
+    arr.push(widthInputs[i].value * 10, 
+      Math.ceil(
+        quantityInputs[i].value / Math.ceil(blank[0] / (lengthInputs[i].value * 10))
+        ));
+    orderSize.push(arr);
+  }
+
+  orderParams.push(blank);
+  orderParams.push(orderSize);
+
+  console.log(orderParams);
+
+  return orderParams;
+}
+
+let cspResponce;
+let scpResult;
+
+async function CalcCSP(data) {
+  // Блок try выполнится полностью, если не будет ошибок:
+  try {
+    // Выполняем запрос:
+    cspResponce = await fetch("csp_php.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    scpResult = await cspResponce.json();
+    return scpResult; // Возвращаем результат запроса
+  } catch (err) {
+    // Блок catch сработает только если будут какие-то ошибки в блоке try:
+    // Выведем в консоли информацию об ошибке:
+    console.log("При запросе произошла ошибка, детали ниже:");
+    console.error(err);
+    // Вернем исключение с текстом поясняющим детали ошибки:
+    // alert("Произошла ошибка при запросе!");
+    throw new Error("Запрос завершился неудачно.");
+  }
+}
+
+btnPrintLabels.addEventListener("click", async (event) => {
+  // const form = document.getElementById("form");
+  // const formData = new FormData(form);
+  event.preventDefault();
+  const orderParams = getParams();
+  await CalcCSP(orderParams);
+  console.log(scpResult[0]);
+  console.log(scpResult[0].reduce(function(acc, el) {
+    return acc = acc + el;
+  }));
+  console.log(scpResult[1].sort(function(a, b) { return a[0] - b[0]}));
+
+});

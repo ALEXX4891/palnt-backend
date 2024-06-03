@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Структура таблицы `Carton`
 --
 
-CREATE TABLE `Carton` (
+CREATE TABLE `carton` (
   `idCarton` int NOT NULL,
   `date` date NOT NULL,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `Carton` (
 -- Дамп данных таблицы `Carton`
 --
 
-INSERT INTO `Carton` (`idCarton`, `date`, `name`, `widthCarton`, `lengthCarton`, `typeCarton`, `coming`, `expense`, `price`, `nameContractor`) VALUES
+INSERT INTO `carton` (`idCarton`, `date`, `name`, `widthCarton`, `lengthCarton`, `typeCarton`, `coming`, `expense`, `price`, `nameContractor`) VALUES
 (1, '2023-11-09', 'Лист', 72, 123, 'Тип №1', 300, 0, '1.00', 'ООО « Длинное большое название 21»'),
 (2, '2023-11-10', 'Лист', 72, 123, 'Тип №1', 0, 100, '1.00', 'ООО « Длинное большое название 21»'),
 (3, '2023-11-09', 'Полоска', 15, 72, 'Тип №1', 0, 100, '0.60', 'ООО « Длинное большое название 21»'),
@@ -69,7 +69,7 @@ INSERT INTO `Carton` (`idCarton`, `date`, `name`, `widthCarton`, `lengthCarton`,
 -- Структура таблицы `Contractor`
 --
 
-CREATE TABLE `Contractor` (
+CREATE TABLE `contractor` (
   `idContractor` int NOT NULL,
   `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `taxNumber` int NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE `Contractor` (
 -- Дамп данных таблицы `Contractor`
 --
 
-INSERT INTO `Contractor` (`idContractor`, `name`, `taxNumber`, `address`, `telephone`, `email`, `isActive`) VALUES
+INSERT INTO `contractor` (`idContractor`, `name`, `taxNumber`, `address`, `telephone`, `email`, `isActive`) VALUES
 (1, 'ООО « Длинное большое название песня»12345', 978777111, 'г. Тюмень. ул. Фармана Салманова, д. 1,', '+7 987 333 33-33', 'email1@example.com', 1),
 (2, 'ООО « Жизнь большое название 6671»', 978777112, 'г. Тюмень. ул. Фармана Салманова, д. 2', '+7 987 333 31-12', 'email2@example.com', 0),
 (3, 'ООО « Короткое большое название 333»', 978777223, 'г. Тюмень. ул. Фармана Салманова, д. 3', '+7 987 333 31-13', 'email3@example.com', 1),
@@ -116,7 +116,7 @@ INSERT INTO `Contractor` (`idContractor`, `name`, `taxNumber`, `address`, `telep
 -- Структура таблицы `Deal`
 --
 
-CREATE TABLE `Deal` (
+CREATE TABLE `deal` (
   `date` date NOT NULL,
   `idContractor` int NOT NULL,
   `idDeal` int NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE `Deal` (
 -- Дамп данных таблицы `Deal`
 --
 
-INSERT INTO `Deal` (`date`, `idContractor`, `idDeal`, `amount`, `VAT`) VALUES
+INSERT INTO `deal` (`date`, `idContractor`, `idDeal`, `amount`, `VAT`) VALUES
 ('2023-11-09', 21, 1, 300, 15),
 ('2023-11-10', 21, 2, 300, 20),
 ('2023-11-09', 1, 3, 300, 15),
@@ -153,7 +153,7 @@ INSERT INTO `Deal` (`date`, `idContractor`, `idDeal`, `amount`, `VAT`) VALUES
 -- Структура таблицы `Invoice`
 --
 
-CREATE TABLE `Invoice` (
+CREATE TABLE `invoice` (
   `idInvoice` int NOT NULL,
   `idDeal` int NOT NULL,
   `typeCarton` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE `Invoice` (
 -- Дамп данных таблицы `Invoice`
 --
 
-INSERT INTO `Invoice` (`idInvoice`, `idDeal`, `typeCarton`, `numberLabels`) VALUES
+INSERT INTO `invoice` (`idInvoice`, `idDeal`, `typeCarton`, `numberLabels`) VALUES
 (1, 1, 'Тип №1', 5),
 (2, 2, 'Тип №1', 5),
 (3, 3, 'Тип №1', 10),
@@ -190,21 +190,21 @@ INSERT INTO `Invoice` (`idInvoice`, `idDeal`, `typeCarton`, `numberLabels`) VALU
 --
 -- Индексы таблицы `Carton`
 --
-ALTER TABLE `Carton`
+ALTER TABLE `carton`
   ADD PRIMARY KEY (`idCarton`),
   ADD UNIQUE KEY `idCarton` (`idCarton`);
 
 --
 -- Индексы таблицы `Contractor`
 --
-ALTER TABLE `Contractor`
+ALTER TABLE `contractor`
   ADD PRIMARY KEY (`idContractor`),
   ADD UNIQUE KEY `idContractor` (`idContractor`);
 
 --
 -- Индексы таблицы `Deal`
 --
-ALTER TABLE `Deal`
+ALTER TABLE `deal`
   ADD PRIMARY KEY (`idDeal`),
   ADD UNIQUE KEY `idDeal` (`idDeal`),
   ADD KEY `Deal_fk1` (`idContractor`);
@@ -212,7 +212,7 @@ ALTER TABLE `Deal`
 --
 -- Индексы таблицы `Invoice`
 --
-ALTER TABLE `Invoice`
+ALTER TABLE `invoice`
   ADD PRIMARY KEY (`idInvoice`),
   ADD UNIQUE KEY `idInvoice` (`idInvoice`),
   ADD KEY `Invoice_fk1` (`idDeal`);
@@ -224,25 +224,25 @@ ALTER TABLE `Invoice`
 --
 -- AUTO_INCREMENT для таблицы `Carton`
 --
-ALTER TABLE `Carton`
+ALTER TABLE `carton`
   MODIFY `idCarton` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
 
 --
 -- AUTO_INCREMENT для таблицы `Contractor`
 --
-ALTER TABLE `Contractor`
+ALTER TABLE `contractor`
   MODIFY `idContractor` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT для таблицы `Deal`
 --
-ALTER TABLE `Deal`
+ALTER TABLE `deal`
   MODIFY `idDeal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT для таблицы `Invoice`
 --
-ALTER TABLE `Invoice`
+ALTER TABLE `invoice`
   MODIFY `idInvoice` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
@@ -252,14 +252,14 @@ ALTER TABLE `Invoice`
 --
 -- Ограничения внешнего ключа таблицы `Deal`
 --
-ALTER TABLE `Deal`
-  ADD CONSTRAINT `Deal_fk1` FOREIGN KEY (`idContractor`) REFERENCES `Contractor` (`idContractor`);
+ALTER TABLE `deal`
+  ADD CONSTRAINT `deal_fk1` FOREIGN KEY (`idContractor`) REFERENCES `contractor` (`idContractor`);
 
 --
 -- Ограничения внешнего ключа таблицы `Invoice`
 --
-ALTER TABLE `Invoice`
-  ADD CONSTRAINT `Invoice_fk1` FOREIGN KEY (`idDeal`) REFERENCES `Deal` (`idDeal`);
+ALTER TABLE `invoice`
+  ADD CONSTRAINT `invoice_fk1` FOREIGN KEY (`idDeal`) REFERENCES `deal` (`idDeal`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
